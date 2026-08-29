@@ -38,7 +38,7 @@ const recommendedCourses = [
 
 export default function DashboardPage() {
   return (
-    <main className="min-h-screen bg-zinc-50 text-zinc-950">
+    <main className="min-h-screen bg-zinc-50 text-zinc-950 transition-colors dark:bg-zinc-950 dark:text-zinc-50">
       <Navbar />
 
       <div className="mx-auto max-w-7xl px-6 py-10">
@@ -50,18 +50,18 @@ export default function DashboardPage() {
               LEARNING DASHBOARD
             </p>
 
-            <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
+            <h1 className="mt-2 text-3xl font-bold tracking-tight text-zinc-950 dark:text-white sm:text-4xl">
               Good morning, Salman 👋
             </h1>
 
-            <p className="mt-2 text-zinc-500">
+            <p className="mt-2 text-zinc-500 dark:text-zinc-400">
               Keep going. You're making progress.
             </p>
           </div>
 
           <Link
             href="/courses"
-            className="flex w-fit items-center gap-2 rounded-xl bg-zinc-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-zinc-800"
+            className="flex w-fit items-center gap-2 rounded-xl bg-zinc-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
           >
             <Search size={17} />
             Find a course
@@ -71,49 +71,83 @@ export default function DashboardPage() {
         {/* Stats */}
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
 
-          <div className="rounded-2xl border border-zinc-200 bg-white p-5">
+          {/* Streak */}
+          <div className="rounded-2xl border border-zinc-200 bg-white p-5 transition-colors dark:border-zinc-800 dark:bg-zinc-900">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-zinc-500">Learning streak</p>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                Learning streak
+              </p>
+
               <Flame size={19} className="text-orange-500" />
             </div>
 
-            <p className="mt-3 text-3xl font-bold">7 days</p>
+            <p className="mt-3 text-3xl font-bold text-zinc-950 dark:text-white">
+              7 days
+            </p>
+
             <p className="mt-1 text-xs text-zinc-400">
               Keep it going 🔥
             </p>
           </div>
 
-          <div className="rounded-2xl border border-zinc-200 bg-white p-5">
+          {/* Enrolled */}
+          <div className="rounded-2xl border border-zinc-200 bg-white p-5 transition-colors dark:border-zinc-800 dark:bg-zinc-900">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-zinc-500">Courses enrolled</p>
-              <BookOpen size={19} className="text-indigo-600" />
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                Courses enrolled
+              </p>
+
+              <BookOpen
+                size={19}
+                className="text-indigo-600 dark:text-indigo-400"
+              />
             </div>
 
-            <p className="mt-3 text-3xl font-bold">4</p>
+            <p className="mt-3 text-3xl font-bold text-zinc-950 dark:text-white">
+              4
+            </p>
+
             <p className="mt-1 text-xs text-zinc-400">
               2 currently active
             </p>
           </div>
 
-          <div className="rounded-2xl border border-zinc-200 bg-white p-5">
+          {/* Hours */}
+          <div className="rounded-2xl border border-zinc-200 bg-white p-5 transition-colors dark:border-zinc-800 dark:bg-zinc-900">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-zinc-500">Hours learned</p>
-              <Clock3 size={19} className="text-emerald-600" />
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                Hours learned
+              </p>
+
+              <Clock3
+                size={19}
+                className="text-emerald-600 dark:text-emerald-400"
+              />
             </div>
 
-            <p className="mt-3 text-3xl font-bold">18.5</p>
+            <p className="mt-3 text-3xl font-bold text-zinc-950 dark:text-white">
+              18.5
+            </p>
+
             <p className="mt-1 text-xs text-zinc-400">
               This month
             </p>
           </div>
 
-          <div className="rounded-2xl border border-zinc-200 bg-white p-5">
+          {/* Quizzes */}
+          <div className="rounded-2xl border border-zinc-200 bg-white p-5 transition-colors dark:border-zinc-800 dark:bg-zinc-900">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-zinc-500">Quizzes completed</p>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                Quizzes completed
+              </p>
+
               <Trophy size={19} className="text-amber-500" />
             </div>
 
-            <p className="mt-3 text-3xl font-bold">12</p>
+            <p className="mt-3 text-3xl font-bold text-zinc-950 dark:text-white">
+              12
+            </p>
+
             <p className="mt-1 text-xs text-zinc-400">
               86% average score
             </p>
@@ -127,28 +161,35 @@ export default function DashboardPage() {
           {/* Continue learning */}
           <section>
             <div className="flex items-center justify-between">
+
               <div>
-                <h2 className="text-xl font-bold">Continue learning</h2>
-                <p className="mt-1 text-sm text-zinc-500">
+                <h2 className="text-xl font-bold text-zinc-950 dark:text-white">
+                  Continue learning
+                </h2>
+
+                <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
                   Pick up where you left off.
                 </p>
               </div>
 
               <Link
                 href="/my-learning"
-                className="hidden items-center gap-1 text-sm font-medium text-indigo-600 sm:flex"
+                className="hidden items-center gap-1 text-sm font-medium text-indigo-600 dark:text-indigo-400 sm:flex"
               >
                 View all
                 <ArrowRight size={15} />
               </Link>
             </div>
 
-            <div className="mt-5 overflow-hidden rounded-2xl border border-zinc-200 bg-white">
+            {/* Current course */}
+            <div className="mt-5 overflow-hidden rounded-2xl border border-zinc-200 bg-white transition-colors dark:border-zinc-800 dark:bg-zinc-900">
+
               <div className="grid md:grid-cols-[190px_1fr]">
 
                 {/* Course visual */}
-                <div className="flex min-h-[190px] items-center justify-center bg-zinc-950">
+                <div className="flex min-h-[190px] items-center justify-center bg-zinc-950 dark:bg-black">
                   <div className="text-center text-white">
+
                     <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-600">
                       <BookOpen size={25} />
                     </div>
@@ -160,96 +201,129 @@ export default function DashboardPage() {
                     <p className="mt-1 text-sm font-semibold">
                       Python
                     </p>
+
                   </div>
                 </div>
 
                 {/* Course information */}
                 <div className="p-6">
+
                   <div className="flex items-start justify-between gap-4">
+
                     <div>
-                      <span className="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-medium text-indigo-600">
+
+                      <span className="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-medium text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400">
                         Programming
                       </span>
 
-                      <h3 className="mt-3 text-xl font-bold">
+                      <h3 className="mt-3 text-xl font-bold text-zinc-950 dark:text-white">
                         Python Fundamentals
                       </h3>
 
-                      <p className="mt-2 text-sm text-zinc-500">
+                      <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
                         Conditional Statements
                       </p>
+
                     </div>
 
-                    <span className="text-sm font-semibold text-indigo-600">
+                    <span className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">
                       72%
                     </span>
+
                   </div>
 
-                  <div className="mt-6 h-2 overflow-hidden rounded-full bg-zinc-100">
+                  {/* Progress */}
+                  <div className="mt-6 h-2 overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
                     <div className="h-full w-[72%] rounded-full bg-indigo-600" />
                   </div>
 
                   <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
+
                     <p className="text-xs text-zinc-400">
                       30 of 42 lessons completed
                     </p>
 
                     <Link
                       href="/learn/python-fundamentals"
-                      className="flex items-center gap-2 rounded-xl bg-zinc-950 px-4 py-2.5 text-sm font-semibold text-white hover:bg-zinc-800"
+                      className="flex items-center gap-2 rounded-xl bg-zinc-950 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
                     >
                       <Play size={15} fill="currentColor" />
                       Continue
                     </Link>
-                  </div>
-                </div>
 
+                  </div>
+
+                </div>
               </div>
             </div>
           </section>
 
-          {/* Daily goal */}
+          {/* Sidebar */}
           <aside>
-            <div className="rounded-2xl border border-zinc-200 bg-white p-6">
+
+            {/* Daily goal */}
+            <div className="rounded-2xl border border-zinc-200 bg-white p-6 transition-colors dark:border-zinc-800 dark:bg-zinc-900">
+
               <div className="flex items-center justify-between">
+
                 <div>
-                  <h2 className="font-bold">Today's goal</h2>
-                  <p className="mt-1 text-xs text-zinc-500">
+                  <h2 className="font-bold text-zinc-950 dark:text-white">
+                    Today's goal
+                  </h2>
+
+                  <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
                     30 minutes of learning
                   </p>
                 </div>
 
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400">
                   <Target size={19} />
                 </div>
+
               </div>
 
               <div className="mt-7 flex items-center gap-5">
-                <div className="relative flex h-24 w-24 items-center justify-center rounded-full border-[8px] border-indigo-600">
+
+                <div className="relative flex h-24 w-24 shrink-0 items-center justify-center rounded-full border-[8px] border-indigo-600">
+
                   <div className="text-center">
-                    <p className="text-xl font-bold">21</p>
-                    <p className="text-[10px] text-zinc-400">MIN</p>
+
+                    <p className="text-xl font-bold text-zinc-950 dark:text-white">
+                      21
+                    </p>
+
+                    <p className="text-[10px] text-zinc-400">
+                      MIN
+                    </p>
+
                   </div>
+
                 </div>
 
                 <div>
-                  <p className="text-sm font-semibold">
+
+                  <p className="text-sm font-semibold text-zinc-900 dark:text-white">
                     Almost there!
                   </p>
-                  <p className="mt-1 text-xs leading-5 text-zinc-500">
+
+                  <p className="mt-1 text-xs leading-5 text-zinc-500 dark:text-zinc-400">
                     Just 9 more minutes to complete today's goal.
                   </p>
+
                 </div>
+
               </div>
 
-              <button className="mt-7 flex w-full items-center justify-center gap-2 rounded-xl bg-zinc-100 py-3 text-sm font-semibold text-zinc-800 transition hover:bg-zinc-200">
+              <button className="mt-7 flex w-full items-center justify-center gap-2 rounded-xl bg-zinc-100 py-3 text-sm font-semibold text-zinc-800 transition hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700">
                 Start learning
                 <ArrowRight size={16} />
               </button>
+
             </div>
 
             {/* AI suggestion */}
             <div className="mt-4 rounded-2xl bg-indigo-600 p-6 text-white">
+
               <Sparkles size={20} />
 
               <h3 className="mt-4 font-bold">
@@ -263,43 +337,56 @@ export default function DashboardPage() {
 
               <Link
                 href="/courses"
-                className="mt-5 inline-flex items-center gap-2 text-sm font-semibold"
+                className="mt-5 inline-flex items-center gap-2 text-sm font-semibold transition hover:text-indigo-100"
               >
                 Explore recommendations
                 <ArrowRight size={15} />
               </Link>
-            </div>
-          </aside>
 
+            </div>
+
+          </aside>
         </div>
 
         {/* Recommended courses */}
         <section className="mt-12 pb-10">
+
           <div className="flex items-end justify-between">
+
             <div>
-              <h2 className="text-xl font-bold">Recommended for you</h2>
-              <p className="mt-1 text-sm text-zinc-500">
+              <h2 className="text-xl font-bold text-zinc-950 dark:text-white">
+                Recommended for you
+              </h2>
+
+              <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
                 Courses selected based on your learning interests.
               </p>
             </div>
 
             <Link
               href="/courses"
-              className="hidden items-center gap-1 text-sm font-medium text-indigo-600 sm:flex"
+              className="hidden items-center gap-1 text-sm font-medium text-indigo-600 dark:text-indigo-400 sm:flex"
             >
               Browse all
               <ArrowRight size={15} />
             </Link>
+
           </div>
 
           <div className="mt-5 grid gap-5 md:grid-cols-3">
+
             {recommendedCourses.map((course, index) => (
+
               <div
                 key={course.title}
-                className="group overflow-hidden rounded-2xl border border-zinc-200 bg-white transition hover:-translate-y-1 hover:shadow-lg"
+                className="group overflow-hidden rounded-2xl border border-zinc-200 bg-white transition hover:-translate-y-1 hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700 dark:hover:shadow-2xl"
               >
-                <div className="flex h-36 items-center justify-center bg-zinc-100">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-indigo-600 shadow-sm">
+
+                {/* Course image */}
+                <div className="flex h-36 items-center justify-center bg-zinc-100 dark:bg-zinc-800">
+
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-indigo-600 shadow-sm dark:bg-zinc-900 dark:text-indigo-400">
+
                     {index === 0 ? (
                       <BookOpen size={23} />
                     ) : index === 1 ? (
@@ -307,34 +394,46 @@ export default function DashboardPage() {
                     ) : (
                       <Sparkles size={23} />
                     )}
+
                   </div>
+
                 </div>
 
+                {/* Course content */}
                 <div className="p-5">
+
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-indigo-600">
+
+                    <span className="text-xs font-medium text-indigo-600 dark:text-indigo-400">
                       {course.category}
                     </span>
 
                     <span className="text-xs text-zinc-400">
                       {course.level}
                     </span>
+
                   </div>
 
-                  <h3 className="mt-3 font-bold">{course.title}</h3>
+                  <h3 className="mt-3 font-bold text-zinc-950 dark:text-white">
+                    {course.title}
+                  </h3>
 
                   <div className="mt-4 flex items-center justify-between text-xs text-zinc-400">
                     <span>{course.lessons} lessons</span>
                     <span>{course.duration}</span>
                   </div>
 
-                  <button className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl border border-zinc-200 py-2.5 text-sm font-semibold text-zinc-700 transition group-hover:border-zinc-950 group-hover:bg-zinc-950 group-hover:text-white">
+                  <button className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl border border-zinc-200 py-2.5 text-sm font-semibold text-zinc-700 transition group-hover:border-zinc-950 group-hover:bg-zinc-950 group-hover:text-white dark:border-zinc-700 dark:text-zinc-300 dark:group-hover:border-white dark:group-hover:bg-white dark:group-hover:text-zinc-950">
                     View course
                     <ArrowRight size={15} />
                   </button>
+
                 </div>
+
               </div>
+
             ))}
+
           </div>
         </section>
 
