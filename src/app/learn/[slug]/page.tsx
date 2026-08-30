@@ -1,3 +1,7 @@
+import LessonVideo from "@/components/lesson-video";
+import { getCurrentUser } from "@/lib/auth";
+import { redirect } from "next/navigation";
+
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -15,18 +19,39 @@ import {
 
 import { eq, asc } from "drizzle-orm";
 import { db } from "@/db";
-import { courses, lessons } from "@/db/schema";
+import { courses, lessons, progress } from "@/db/schema";
 
 type LearningPageProps = {
   params: Promise<{
     slug: string;
   }>;
+
+  searchParams: Promise<{
+    lesson?: string;
+  }>;
 };
 
 export default async function LearningPage({
   params,
+  searchParams,
 }: LearningPageProps) {
+
+  // =========================
+  // AUTHENTICATION CHECK
+  // =========================
+
+  const user = await getCurrentUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  // =========================
+  // GET PARAMETERS
+  // =========================
+
   const { slug } = await params;
+  const { lesson } = await searchParams;
 
   // =========================
   // GET COURSE
@@ -66,7 +91,7 @@ export default async function LearningPage({
   }
 
   // =========================
-  // GET LESSONS
+  // GET COURSE LESSONS
   // =========================
 
   const courseLessons = await db
@@ -76,28 +101,17 @@ export default async function LearningPage({
     .orderBy(asc(lessons.order));
 
   // =========================
-  // CURRENT LESSON
-  // =========================
-  //
-  // For now we start with lesson 1.
-  // Later we can make this dynamic using:
-  // /learn/[slug]?lesson=4
-  //
-  const currentLessonIndex = 0;
-  const currentLesson = courseLessons[currentLessonIndex];
-
-  // =========================
   // NO LESSONS
   // =========================
 
-  if (!currentLesson) {
+  if (courseLessons.length === 0) {
     return (
-      <main className="min-h-screen bg-zinc-50 text-zinc-950 dark:bg-zinc-950 dark:text-zinc-50">
+      <main className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
         <header className="border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
           <div className="mx-auto flex h-16 max-w-7xl items-center px-6">
             <Link
               href={`/courses/${course.slug}`}
-              className="flex items-center gap-2 text-sm font-medium text-zinc-500 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
+              className="flex items-center gap-2 text-sm font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
             >
               <ArrowLeft size={16} />
               Back to course
@@ -105,14 +119,14 @@ export default async function LearningPage({
           </div>
         </header>
 
-        <div className="flex min-h-[70vh] items-center justify-center px-6">
+        <div className="flex min-h-[70vh] items-center justify-center">
           <div className="text-center">
             <BookOpen
               size={40}
               className="mx-auto text-zinc-300 dark:text-zinc-700"
             />
 
-            <h1 className="mt-5 text-2xl font-bold text-zinc-950 dark:text-white">
+            <h1 className="mt-5 text-2xl font-bold text-zinc-900 dark:text-white">
               No lessons available
             </h1>
 
@@ -126,22 +140,24 @@ export default async function LearningPage({
   }
 
   // =========================
-  // PROGRESS
+  // FIND CURRENT LESSON
   // =========================
 
-  // Temporary frontend progress.
-  // We will connect this to the progress table later.
-  const completedLessons = 0;
+  const requestedLessonId = lesson
+    ? Number.parseInt(lesson, 10)
+    : courseLessons[0].id;
 
-  const progressPercentage =
-    courseLessons.length > 0
-      ? Math.round((completedLessons / courseLessons.length) * 100)
-      : 0;
+  const currentLessonIndex = Math.max(
+    0,
+    courseLessons.findIndex(
+      (item) => item.id === requestedLessonId,
+    ),
+  );
 
-  const lessonNumber = currentLessonIndex + 1;
+  const currentLesson = courseLessons[currentLessonIndex];
 
   // =========================
-  // PREVIOUS / NEXT LESSON
+  // PREVIOUS / NEXT
   // =========================
 
   const previousLesson =
@@ -153,6 +169,42 @@ export default async function LearningPage({
     currentLessonIndex < courseLessons.length - 1
       ? courseLessons[currentLessonIndex + 1]
       : null;
+
+  // =========================
+  // GET USER PROGRESS
+  // =========================
+
+  const userProgress = await db
+    .select()
+    .from(progress)
+    .where(eq(progress.userId, user.id));
+
+  const currentLessonProgress = userProgress.find(
+    (item) => item.lessonId === currentLesson.id
+  );
+
+  const completedLessonIds = new Set(
+    userProgress
+      .filter((item) => item.completed)
+      .map((item) => item.lessonId)
+  );
+
+  const completedLessons = courseLessons.filter((lesson) =>
+    completedLessonIds.has(lesson.id)
+  ).length;
+
+  const progressPercentage =
+    courseLessons.length > 0
+      ? Math.round(
+        (completedLessons / courseLessons.length) * 100
+      )
+      : 0;
+
+  const currentLessonCompleted = completedLessonIds.has(
+    currentLesson.id
+  );
+
+  const lessonNumber = currentLessonIndex + 1;
 
   return (
     <main className="min-h-screen bg-zinc-50 text-zinc-950 transition-colors dark:bg-zinc-950 dark:text-zinc-50">
@@ -186,7 +238,6 @@ export default async function LearningPage({
               </div>
 
               <div>
-
                 <p className="text-sm font-semibold text-zinc-900 dark:text-white">
                   {course.title}
                 </p>
@@ -194,7 +245,6 @@ export default async function LearningPage({
                 <p className="text-[11px] text-zinc-400">
                   Lesson {lessonNumber} of {courseLessons.length}
                 </p>
-
               </div>
 
             </div>
@@ -210,14 +260,12 @@ export default async function LearningPage({
             </span>
 
             <div className="h-2 w-24 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800">
-
               <div
                 className="h-full rounded-full bg-indigo-600 transition-all"
                 style={{
                   width: `${progressPercentage}%`,
                 }}
               />
-
             </div>
 
             <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-300">
@@ -234,35 +282,29 @@ export default async function LearningPage({
 
       <div className="grid min-h-[calc(100vh-4rem)] lg:grid-cols-[1fr_330px]">
 
-        {/* ================= MAIN LEARNING AREA ================= */}
+        {/* ================= MAIN AREA ================= */}
 
         <section className="min-w-0">
 
           {/* ================= VIDEO ================= */}
 
-          <div className="aspect-video w-full bg-zinc-900 dark:bg-black">
-
+          <div className="w-full bg-zinc-900 dark:bg-black">
             {currentLesson.videoUrl ? (
-              <iframe
-                src={currentLesson.videoUrl}
-                title={currentLesson.title}
-                className="h-full w-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
+              <LessonVideo
+                lessonId={currentLesson.id}
+                videoUrl={currentLesson.videoUrl}
+                startSeconds={currentLessonProgress?.watchedSeconds ?? 0}
               />
             ) : (
-              <div className="flex h-full items-center justify-center">
-
+              <div className="aspect-video flex items-center justify-center">
                 <div className="text-center">
 
                   <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-white text-zinc-950 shadow-2xl transition hover:scale-105 dark:bg-zinc-100">
-
                     <Play
                       size={30}
                       fill="currentColor"
                       className="ml-1"
                     />
-
                   </div>
 
                   <p className="mt-5 text-sm font-medium text-zinc-200">
@@ -274,10 +316,8 @@ export default async function LearningPage({
                   </p>
 
                 </div>
-
               </div>
             )}
-
           </div>
 
 
@@ -305,16 +345,6 @@ export default async function LearningPage({
                 </p>
 
               </div>
-
-              {/* MARK COMPLETE */}
-
-              <button
-                type="button"
-                className="flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700"
-              >
-                <CheckCircle2 size={16} />
-                Mark complete
-              </button>
 
             </div>
 
@@ -345,11 +375,10 @@ export default async function LearningPage({
                 <button
                   key={label}
                   type="button"
-                  className={`flex shrink-0 items-center gap-2 border-b-2 pb-3 text-sm font-medium ${
-                    index === 0
-                      ? "border-indigo-600 text-indigo-600 dark:text-indigo-400"
-                      : "border-transparent text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
-                  }`}
+                  className={`flex shrink-0 items-center gap-2 border-b-2 pb-3 text-sm font-medium ${index === 0
+                    ? "border-indigo-600 text-indigo-600 dark:text-indigo-400"
+                    : "border-transparent text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
+                    }`}
                 >
                   <Icon size={16} />
                   <span>{label}</span>
@@ -374,7 +403,7 @@ export default async function LearningPage({
               </p>
 
 
-              {/* ================= AI FEATURE CARDS ================= */}
+              {/* AI FEATURES */}
 
               <div className="mt-8 grid gap-4 sm:grid-cols-2">
 
@@ -396,7 +425,7 @@ export default async function LearningPage({
 
                   <button
                     type="button"
-                    className="mt-4 text-xs font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
+                    className="mt-4 text-xs font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400"
                   >
                     Generate notes →
                   </button>
@@ -422,7 +451,7 @@ export default async function LearningPage({
 
                   <button
                     type="button"
-                    className="mt-4 text-xs font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
+                    className="mt-4 text-xs font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400"
                   >
                     Start quiz →
                   </button>
@@ -432,7 +461,7 @@ export default async function LearningPage({
               </div>
 
 
-              {/* ================= NAVIGATION ================= */}
+              {/* ================= LESSON NAVIGATION ================= */}
 
               <div className="mt-10 flex justify-between border-t border-zinc-200 pt-6 dark:border-zinc-800">
 
@@ -537,38 +566,35 @@ export default async function LearningPage({
           </div>
 
 
-          {/* LESSONS */}
+          {/* LESSON LIST */}
 
           <div className="max-h-[calc(100vh-150px)] overflow-y-auto">
 
-            {courseLessons.map((lesson, index) => {
+            {courseLessons.map((lessonItem, index) => {
 
-              const current = index === currentLessonIndex;
+              const current = lessonItem.id === currentLesson.id;
 
-              // Progress table will replace this later.
-              const completed = index < completedLessons;
+              const completed = completedLessonIds.has(lessonItem.id);
 
               return (
                 <Link
-                  key={lesson.id}
-                  href={`/learn/${course.slug}?lesson=${lesson.id}`}
-                  className={`flex w-full items-center gap-3 border-b border-zinc-100 px-5 py-4 text-left transition dark:border-zinc-900 ${
-                    current
-                      ? "bg-indigo-50 dark:bg-indigo-950/40"
-                      : "hover:bg-zinc-50 dark:hover:bg-zinc-900"
-                  }`}
+                  key={lessonItem.id}
+                  href={`/learn/${course.slug}?lesson=${lessonItem.id}`}
+                  className={`flex w-full items-center gap-3 border-b border-zinc-100 px-5 py-4 text-left transition dark:border-zinc-900 ${current
+                    ? "bg-indigo-50 dark:bg-indigo-950/40"
+                    : "hover:bg-zinc-50 dark:hover:bg-zinc-900"
+                    }`}
                 >
 
-                  {/* LESSON NUMBER */}
+                  {/* NUMBER */}
 
                   <div
-                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-xs font-semibold ${
-                      completed
-                        ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400"
-                        : current
-                          ? "bg-indigo-600 text-white"
-                          : "bg-zinc-100 text-zinc-400 dark:bg-zinc-900 dark:text-zinc-500"
-                    }`}
+                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-xs font-semibold ${completed
+                      ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400"
+                      : current
+                        ? "bg-indigo-600 text-white"
+                        : "bg-zinc-100 text-zinc-400 dark:bg-zinc-900 dark:text-zinc-500"
+                      }`}
                   >
 
                     {completed ? (
@@ -580,34 +606,33 @@ export default async function LearningPage({
                   </div>
 
 
-                  {/* LESSON DETAILS */}
+                  {/* DETAILS */}
 
                   <div className="min-w-0 flex-1">
 
                     <p
-                      className={`truncate text-sm ${
-                        current
-                          ? "font-semibold text-indigo-700 dark:text-indigo-400"
-                          : completed
-                            ? "text-zinc-500 dark:text-zinc-500"
-                            : "text-zinc-600 dark:text-zinc-300"
-                      }`}
+                      className={`truncate text-sm ${current
+                        ? "font-semibold text-indigo-700 dark:text-indigo-400"
+                        : completed
+                          ? "text-zinc-500 dark:text-zinc-500"
+                          : "text-zinc-600 dark:text-zinc-300"
+                        }`}
                     >
-                      {lesson.title}
+                      {lessonItem.title}
                     </p>
 
                     <p className="mt-1 flex items-center gap-1 text-[10px] text-zinc-400">
 
                       <Clock3 size={11} />
 
-                      {lesson.duration || "20 min"}
+                      {lessonItem.duration || "20 min"}
 
                     </p>
 
                   </div>
 
 
-                  {/* CURRENT INDICATOR */}
+                  {/* CURRENT PLAY ICON */}
 
                   {current && (
                     <Play

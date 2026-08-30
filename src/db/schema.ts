@@ -107,10 +107,24 @@ export const progress = pgTable(
         onDelete: "cascade",
       }),
 
-    completed: boolean("completed").default(false).notNull(),
+    // Last watched position in seconds
+    watchedSeconds: integer("watched_seconds")
+      .default(0)
+      .notNull(),
+
+    // Video watch percentage: 0–100
+    watchPercentage: integer("watch_percentage")
+      .default(0)
+      .notNull(),
+
+    // Automatically becomes true at 90%
+    completed: boolean("completed")
+      .default(false)
+      .notNull(),
 
     completedAt: timestamp("completed_at"),
   },
+
   (table) => ({
     userLessonUnique: unique().on(
       table.userId,

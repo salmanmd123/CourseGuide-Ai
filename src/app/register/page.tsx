@@ -1,21 +1,74 @@
+"use client";
+
 import Link from "next/link";
-import { ArrowLeft, Sparkles } from "lucide-react";
+import { ArrowLeft, Loader2, Sparkles } from "lucide-react";
+import { useState } from "react";
 
 export default function RegisterPage() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function handleRegister(
+    e: React.FormEvent<HTMLFormElement>,
+  ) {
+    e.preventDefault();
+
+    setError("");
+    setSuccess("");
+    setLoading(true);
+
+    try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Registration failed");
+        return;
+      }
+
+      setSuccess("Account created successfully.");
+
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 800);
+    } catch (error) {
+      console.error("Registration error:", error);
+      setError("Unable to connect to the server");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <main className="min-h-screen w-full bg-zinc-50 text-zinc-950 transition-colors dark:bg-zinc-950 dark:text-white">
       <div className="grid min-h-screen w-full lg:grid-cols-2">
 
         {/* =========================================================
-            LEFT SIDE
-        ========================================================= */}
+                    LEFT SIDE
+                ========================================================= */}
         <div
           className="
-            relative hidden overflow-hidden p-10 text-white
-            lg:flex lg:flex-col lg:justify-between
-            bg-gradient-to-br from-[#17152b] via-[#171827] to-[#101116]
-            dark:from-[#15132a] dark:via-[#11121c] dark:to-[#09090b]
-          "
+                        relative hidden overflow-hidden p-10 text-white
+                        lg:flex lg:flex-col lg:justify-between
+                        bg-gradient-to-br from-[#17152b] via-[#171827] to-[#101116]
+                        dark:from-[#15132a] dark:via-[#11121c] dark:to-[#09090b]
+                    "
         >
           {/* Background glow */}
           <div className="pointer-events-none absolute -left-32 top-1/4 h-96 w-96 rounded-full bg-indigo-600/20 blur-3xl" />
@@ -32,30 +85,42 @@ export default function RegisterPage() {
             }}
           />
 
-          <div className="relative z-10 flex h-full flex-col justify-between">
+          <div className="relative z-10 flex h-full flex-col gap-15">
 
             {/* Logo */}
-            <Link href="/" className="flex w-fit items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600 text-sm font-bold text-white shadow-lg shadow-indigo-600/20">
-                C
-              </div>
+            <Link href="/" className="flex items-center gap-3">
+
+              <img
+                src="/logo.png"
+                alt="CourseGuide"
+                className="h-10 w-10 rounded-xl object-contain"
+              />
 
               <div>
-                <p className="text-[16px] font-bold leading-none tracking-tight">
-                  CourseGuide
-                </p>
+                <div className="translate-y-1">
+                  <span className="text-[16px] font-bold leading-none tracking-tight text-white">
+                    Course
+                  </span>
 
-                <p className="mt-1 text-[10px] font-medium uppercase tracking-[0.18em] text-indigo-400">
+                  <span className="text-[16px] font-bold leading-none tracking-tight text-indigo-400">
+                    Guide
+                  </span>
+                </div>
+
+                <p className="mt-0 mb-1 text-[10px] font-medium uppercase tracking-[0.18em] text-indigo-400">
                   AI Learning
                 </p>
               </div>
-            </Link>
 
+            </Link>
             {/* Main content */}
             <div className="max-w-lg">
 
               <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-3.5 py-2 text-xs font-medium text-zinc-300 backdrop-blur-sm">
-                <Sparkles size={14} className="text-indigo-400" />
+                <Sparkles
+                  size={14}
+                  className="text-indigo-400"
+                />
                 Start your journey
               </div>
 
@@ -64,16 +129,20 @@ export default function RegisterPage() {
                 <br />
                 starts
                 <br />
-                <span className="text-indigo-400">here.</span>
+                <span className="text-indigo-400">
+                  here.
+                </span>
               </h1>
 
               <p className="mt-7 max-w-md text-[15px] leading-7 text-zinc-400">
-                Build your learning path, discover quality courses, and improve
-                your skills one lesson at a time.
+                Build your learning path, discover quality
+                courses, and improve your skills one lesson
+                at a time.
               </p>
 
               {/* Feature pills */}
               <div className="mt-8 flex flex-wrap gap-2">
+
                 <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-zinc-400">
                   Personalized learning
                 </span>
@@ -85,6 +154,7 @@ export default function RegisterPage() {
                 <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-zinc-400">
                   Learn at your pace
                 </span>
+
               </div>
 
             </div>
@@ -98,8 +168,8 @@ export default function RegisterPage() {
         </div>
 
         {/* =========================================================
-            RIGHT SIDE
-        ========================================================= */}
+                    RIGHT SIDE
+                ========================================================= */}
         <div className="flex min-h-screen items-center justify-center bg-white px-6 py-12 dark:bg-zinc-950 sm:px-10">
 
           <div className="w-full max-w-md">
@@ -108,11 +178,12 @@ export default function RegisterPage() {
             <Link
               href="/"
               className="
-                mb-10 inline-flex items-center gap-2
-                text-sm font-medium text-zinc-500
-                transition hover:text-zinc-900
-                dark:text-zinc-400 dark:hover:text-white
-              "
+                                mb-10 inline-flex items-center gap-2
+                                text-sm font-medium text-zinc-500
+                                transition hover:text-zinc-900
+                                dark:text-zinc-400
+                                dark:hover:text-white
+                            "
             >
               <ArrowLeft size={16} />
               Back to home
@@ -121,8 +192,10 @@ export default function RegisterPage() {
             {/* Mobile logo */}
             <div className="mb-8 lg:hidden">
 
-              <Link href="/" className="flex items-center gap-3">
-
+              <Link
+                href="/"
+                className="flex items-center gap-3"
+              >
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600 font-bold text-white">
                   C
                 </div>
@@ -154,8 +227,25 @@ export default function RegisterPage() {
 
             </div>
 
+            {/* Error */}
+            {error && (
+              <div className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-400">
+                {error}
+              </div>
+            )}
+
+            {/* Success */}
+            {success && (
+              <div className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-600 dark:border-emerald-900/50 dark:bg-emerald-950/30 dark:text-emerald-400">
+                {success}
+              </div>
+            )}
+
             {/* Form */}
-            <form className="mt-8 space-y-5">
+            <form
+              onSubmit={handleRegister}
+              className="mt-8 space-y-5"
+            >
 
               {/* Name */}
               <div>
@@ -170,20 +260,25 @@ export default function RegisterPage() {
                 <input
                   id="name"
                   type="text"
+                  value={name}
+                  onChange={(e) =>
+                    setName(e.target.value)
+                  }
                   placeholder="Your name"
+                  required
                   className="
-                    h-12 w-full rounded-xl
-                    border border-zinc-200 bg-white
-                    px-4 text-sm text-zinc-900
-                    outline-none transition
-                    placeholder:text-zinc-400
-                    focus:border-indigo-500
-                    focus:ring-4 focus:ring-indigo-500/10
-                    dark:border-zinc-800
-                    dark:bg-zinc-900
-                    dark:text-white
-                    dark:placeholder:text-zinc-600
-                  "
+                                        h-12 w-full rounded-xl
+                                        border border-zinc-200 bg-white
+                                        px-4 text-sm text-zinc-900
+                                        outline-none transition
+                                        placeholder:text-zinc-400
+                                        focus:border-indigo-500
+                                        focus:ring-4 focus:ring-indigo-500/10
+                                        dark:border-zinc-800
+                                        dark:bg-zinc-900
+                                        dark:text-white
+                                        dark:placeholder:text-zinc-600
+                                    "
                 />
 
               </div>
@@ -201,20 +296,25 @@ export default function RegisterPage() {
                 <input
                   id="email"
                   type="email"
+                  value={email}
+                  onChange={(e) =>
+                    setEmail(e.target.value)
+                  }
                   placeholder="you@example.com"
+                  required
                   className="
-                    h-12 w-full rounded-xl
-                    border border-zinc-200 bg-white
-                    px-4 text-sm text-zinc-900
-                    outline-none transition
-                    placeholder:text-zinc-400
-                    focus:border-indigo-500
-                    focus:ring-4 focus:ring-indigo-500/10
-                    dark:border-zinc-800
-                    dark:bg-zinc-900
-                    dark:text-white
-                    dark:placeholder:text-zinc-600
-                  "
+                                        h-12 w-full rounded-xl
+                                        border border-zinc-200 bg-white
+                                        px-4 text-sm text-zinc-900
+                                        outline-none transition
+                                        placeholder:text-zinc-400
+                                        focus:border-indigo-500
+                                        focus:ring-4 focus:ring-indigo-500/10
+                                        dark:border-zinc-800
+                                        dark:bg-zinc-900
+                                        dark:text-white
+                                        dark:placeholder:text-zinc-600
+                                    "
                 />
 
               </div>
@@ -232,37 +332,61 @@ export default function RegisterPage() {
                 <input
                   id="password"
                   type="password"
+                  value={password}
+                  onChange={(e) =>
+                    setPassword(e.target.value)
+                  }
                   placeholder="Create a password"
+                  required
+                  minLength={6}
                   className="
-                    h-12 w-full rounded-xl
-                    border border-zinc-200 bg-white
-                    px-4 text-sm text-zinc-900
-                    outline-none transition
-                    placeholder:text-zinc-400
-                    focus:border-indigo-500
-                    focus:ring-4 focus:ring-indigo-500/10
-                    dark:border-zinc-800
-                    dark:bg-zinc-900
-                    dark:text-white
-                    dark:placeholder:text-zinc-600
-                  "
+                                        h-12 w-full rounded-xl
+                                        border border-zinc-200 bg-white
+                                        px-4 text-sm text-zinc-900
+                                        outline-none transition
+                                        placeholder:text-zinc-400
+                                        focus:border-indigo-500
+                                        focus:ring-4 focus:ring-indigo-500/10
+                                        dark:border-zinc-800
+                                        dark:bg-zinc-900
+                                        dark:text-white
+                                        dark:placeholder:text-zinc-600
+                                    "
                 />
+
+                <p className="mt-2 text-xs text-zinc-400">
+                  Must be at least 6 characters.
+                </p>
 
               </div>
 
               {/* Create account */}
               <button
                 type="submit"
+                disabled={loading}
                 className="
-                  flex h-12 w-full items-center justify-center
-                  rounded-xl bg-zinc-950
-                  text-sm font-semibold text-white
-                  transition hover:bg-zinc-800
-                  dark:bg-white dark:text-zinc-950
-                  dark:hover:bg-zinc-200
-                "
+                                    flex h-12 w-full items-center justify-center gap-2
+                                    rounded-xl bg-zinc-950
+                                    text-sm font-semibold text-white
+                                    transition hover:bg-zinc-800
+                                    disabled:cursor-not-allowed
+                                    disabled:opacity-60
+                                    dark:bg-white
+                                    dark:text-zinc-950
+                                    dark:hover:bg-zinc-200
+                                "
               >
-                Create account
+                {loading ? (
+                  <>
+                    <Loader2
+                      size={17}
+                      className="animate-spin"
+                    />
+                    Creating account...
+                  </>
+                ) : (
+                  "Create account"
+                )}
               </button>
 
             </form>
@@ -284,15 +408,15 @@ export default function RegisterPage() {
             <button
               type="button"
               className="
-                flex h-12 w-full items-center justify-center gap-3
-                rounded-xl border border-zinc-200 bg-white
-                text-sm font-medium text-zinc-700
-                transition hover:bg-zinc-50
-                dark:border-zinc-800
-                dark:bg-zinc-900
-                dark:text-zinc-300
-                dark:hover:bg-zinc-800
-              "
+                                flex h-12 w-full items-center justify-center gap-3
+                                rounded-xl border border-zinc-200 bg-white
+                                text-sm font-medium text-zinc-700
+                                transition hover:bg-zinc-50
+                                dark:border-zinc-800
+                                dark:bg-zinc-900
+                                dark:text-zinc-300
+                                dark:hover:bg-zinc-800
+                            "
             >
               <span className="font-bold">
                 G
@@ -303,19 +427,21 @@ export default function RegisterPage() {
 
             {/* Login */}
             <p className="mt-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
+
               Already have an account?{" "}
 
               <Link
                 href="/login"
                 className="
-                  font-semibold text-indigo-600
-                  hover:text-indigo-700
-                  dark:text-indigo-400
-                  dark:hover:text-indigo-300
-                "
+                                    font-semibold text-indigo-600
+                                    hover:text-indigo-700
+                                    dark:text-indigo-400
+                                    dark:hover:text-indigo-300
+                                "
               >
                 Sign in
               </Link>
+
             </p>
 
           </div>
