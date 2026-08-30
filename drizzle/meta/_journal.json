@@ -15,6 +15,13 @@
       "when": 1788029786838,
       "tag": "0001_vengeful_black_widow",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1788112210259,
+      "tag": "0002_minor_junta",
+      "breakpoints": true
     }
   ]
 }

@@ -43,19 +43,104 @@ export const courses = pgTable("courses", {
 
   level: varchar("level", { length: 50 }).notNull(),
 
-  duration: varchar("duration", { length: 50 }).notNull(),
+  /* =========================
+     COURSE TYPE
+     VIDEO = one complete video
+     PLAYLIST = YouTube playlist
+  ========================= */
 
-  lessonsCount: integer("lessons_count").notNull(),
+  courseType: varchar("course_type", {
+    length: 20,
+  })
+    .default("VIDEO")
+    .notNull(),
 
-  rating: varchar("rating", { length: 10 }).default("0"),
+  /* =========================
+     LANGUAGE
+     ENGLISH / HINDI / HINGLISH
+  ========================= */
 
-  students: varchar("students", { length: 50 }).default("0"),
+  language: varchar("language", {
+    length: 20,
+  })
+    .default("English")
+    .notNull(),
 
-  source: varchar("source", { length: 100 }).default("YouTube"),
+  /* =========================
+     YOUTUBE INFORMATION
+  ========================= */
 
-  featured: boolean("featured").default(false),
+  youtubeUrl: text("youtube_url"),
 
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  youtubeId: varchar("youtube_id", {
+    length: 100,
+  }),
+
+  channelName: varchar("channel_name", {
+    length: 200,
+  }),
+
+  thumbnailUrl: text("thumbnail_url"),
+
+  /* =========================
+     YOUTUBE METADATA
+  ========================= */
+
+  views: integer("views").default(0).notNull(),
+
+  likes: integer("likes").default(0).notNull(),
+
+  /* =========================
+     COURSE INFORMATION
+  ========================= */
+
+  duration: varchar("duration", {
+    length: 50,
+  }).notNull(),
+
+  lessonsCount: integer("lessons_count")
+    .default(0)
+    .notNull(),
+
+  rating: varchar("rating", {
+    length: 10,
+  }).default("0"),
+
+  students: varchar("students", {
+    length: 50,
+  }).default("0"),
+
+  source: varchar("source", {
+    length: 100,
+  }).default("YouTube"),
+
+  /* =========================
+     RECOMMENDATION
+  ========================= */
+
+  recommendationScore: integer("recommendation_score")
+    .default(0)
+    .notNull(),
+
+  adminRecommended: boolean("admin_recommended")
+    .default(false)
+    .notNull(),
+
+  featured: boolean("featured")
+    .default(false)
+    .notNull(),
+
+  /* =========================
+     TIMESTAMPS
+  ========================= */
+
+  createdAt: timestamp("created_at")
+    .defaultNow()
+    .notNull(),
+
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .notNull(),
 });
 
 
