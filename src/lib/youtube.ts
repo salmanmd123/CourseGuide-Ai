@@ -5,10 +5,16 @@ type YouTubeCourseResult = {
     thumbnail: string;
     channelName: string;
     publishedAt: string;
+    language: string;
 };
 
 type YouTubeVideoStatistics = {
     id: string;
+
+    snippet?: {
+        defaultAudioLanguage?: string;
+        defaultLanguage?: string;
+    };
 
     statistics?: {
         viewCount?: string;
@@ -21,9 +27,9 @@ type YouTubeVideoStatistics = {
 };
 
 
-/* =========================
+/* =========================================================
    NORMALIZE TEXT
-========================= */
+========================================================= */
 
 function normalizeText(text: string): string {
     return text
@@ -37,18 +43,271 @@ function normalizeText(text: string): string {
 }
 
 
-/* =========================
+/* =========================================================
    NORMALIZE QUERY
-========================= */
+========================================================= */
 
 function normalizeQuery(query: string): string {
     return normalizeText(query);
 }
 
 
-/* =========================
+/* =========================================================
+   NORMALIZE LANGUAGE
+========================================================= */
+
+export function normalizeLanguage(
+    language: string | null | undefined
+): string {
+
+    const value =
+        (language || "")
+            .toLowerCase()
+            .trim();
+
+    /* English */
+
+    if (
+        value === "en" ||
+        value === "eng" ||
+        value === "english" ||
+        value === "en-us" ||
+        value === "en-gb"
+    ) {
+        return "english";
+    }
+
+    /* Hindi */
+
+    if (
+        value === "hi" ||
+        value === "hin" ||
+        value === "hindi" ||
+        value === "hi-in" ||
+        value === "हिंदी" ||
+        value === "हिन्दी"
+    ) {
+        return "hindi";
+    }
+
+    /* Tamil */
+
+    if (
+        value === "ta" ||
+        value === "tam" ||
+        value === "tamil" ||
+        value === "ta-in"
+    ) {
+        return "tamil";
+    }
+
+    /* Telugu */
+
+    if (
+        value === "te" ||
+        value === "tel" ||
+        value === "telugu" ||
+        value === "te-in"
+    ) {
+        return "telugu";
+    }
+
+    /* Kannada */
+
+    if (
+        value === "kn" ||
+        value === "kan" ||
+        value === "kannada" ||
+        value === "kn-in"
+    ) {
+        return "kannada";
+    }
+
+    /* Malayalam */
+
+    if (
+        value === "ml" ||
+        value === "mal" ||
+        value === "malayalam" ||
+        value === "ml-in"
+    ) {
+        return "malayalam";
+    }
+
+    /* Bengali */
+
+    if (
+        value === "bn" ||
+        value === "ben" ||
+        value === "bengali" ||
+        value === "bn-in"
+    ) {
+        return "bengali";
+    }
+
+    /* Marathi */
+
+    if (
+        value === "mr" ||
+        value === "mar" ||
+        value === "marathi" ||
+        value === "mr-in"
+    ) {
+        return "marathi";
+    }
+
+    /* Gujarati */
+
+    if (
+        value === "gu" ||
+        value === "guj" ||
+        value === "gujarati" ||
+        value === "gu-in"
+    ) {
+        return "gujarati";
+    }
+
+    /* Punjabi */
+
+    if (
+        value === "pa" ||
+        value === "pan" ||
+        value === "punjabi" ||
+        value === "pa-in"
+    ) {
+        return "punjabi";
+    }
+
+    /* Urdu */
+
+    if (
+        value === "ur" ||
+        value === "urd" ||
+        value === "urdu" ||
+        value === "ur-in"
+    ) {
+        return "urdu";
+    }
+
+    /* Odia */
+
+    if (
+        value === "or" ||
+        value === "ori" ||
+        value === "odia" ||
+        value === "oriya" ||
+        value === "or-in"
+    ) {
+        return "odia";
+    }
+
+    /* Assamese */
+
+    if (
+        value === "as" ||
+        value === "asm" ||
+        value === "assamese" ||
+        value === "as-in"
+    ) {
+        return "assamese";
+    }
+
+    /* Nepali */
+
+    if (
+        value === "ne" ||
+        value === "nep" ||
+        value === "nepali" ||
+        value === "ne-np"
+    ) {
+        return "nepali";
+    }
+
+    /* French */
+
+    if (
+        value === "fr" ||
+        value === "fra" ||
+        value === "fre" ||
+        value === "french"
+    ) {
+        return "french";
+    }
+
+    /* Spanish */
+
+    if (
+        value === "es" ||
+        value === "spa" ||
+        value === "spanish"
+    ) {
+        return "spanish";
+    }
+
+    /* German */
+
+    if (
+        value === "de" ||
+        value === "deu" ||
+        value === "ger" ||
+        value === "german"
+    ) {
+        return "german";
+    }
+
+    /* Portuguese */
+
+    if (
+        value === "pt" ||
+        value === "por" ||
+        value === "portuguese"
+    ) {
+        return "portuguese";
+    }
+
+    return value;
+}
+
+
+/* =========================================================
+   DISPLAY LANGUAGE
+========================================================= */
+
+export function displayLanguage(
+    language: string | null | undefined
+): string {
+
+    const normalized =
+        normalizeLanguage(language);
+
+    const languageMap: Record<string, string> = {
+        english: "English",
+        hindi: "Hindi",
+        tamil: "Tamil",
+        telugu: "Telugu",
+        kannada: "Kannada",
+        malayalam: "Malayalam",
+        bengali: "Bengali",
+        marathi: "Marathi",
+        gujarati: "Gujarati",
+        punjabi: "Punjabi",
+        urdu: "Urdu",
+        odia: "Odia",
+        assamese: "Assamese",
+        nepali: "Nepali",
+        french: "French",
+        spanish: "Spanish",
+        german: "German",
+        portuguese: "Portuguese",
+    };
+
+    return languageMap[normalized] || "Unknown";
+}
+
+
+/* =========================================================
    CHECK BAD VIDEO
-========================= */
+========================================================= */
 
 function isBadVideo(
     title: string,
@@ -65,14 +324,14 @@ function isBadVideo(
         `${normalizedTitle} ${normalizedDescription}`;
 
 
-    /* =========================
-       1. SHORTS
-    ========================= */
+    /* =====================================================
+       SHORTS
+    ===================================================== */
 
     const shortsPatterns = [
         "#shorts",
-        "shorts",
         "youtube shorts",
+        "short video",
     ];
 
     for (const pattern of shortsPatterns) {
@@ -90,9 +349,9 @@ function isBadVideo(
     }
 
 
-    /* =========================
-       2. CAREER / SALARY CONTENT
-    ========================= */
+    /* =====================================================
+       CAREER / SALARY
+    ===================================================== */
 
     const careerPatterns = [
         "salary of",
@@ -112,6 +371,7 @@ function isBadVideo(
         "is it worth it",
         "worth learning",
         "should you learn",
+        "part",
     ];
 
     for (const pattern of careerPatterns) {
@@ -129,9 +389,9 @@ function isBadVideo(
     }
 
 
-    /* =========================
-       3. ROADMAP CONTENT
-    ========================= */
+    /* =====================================================
+       ROADMAP
+    ===================================================== */
 
     const roadmapPatterns = [
         "roadmap",
@@ -155,9 +415,9 @@ function isBadVideo(
     }
 
 
-    /* =========================
-       4. INTERVIEW CONTENT
-    ========================= */
+    /* =====================================================
+       INTERVIEW
+    ===================================================== */
 
     const interviewPatterns = [
         "interview questions",
@@ -184,9 +444,9 @@ function isBadVideo(
     }
 
 
-    /* =========================
-       5. COMPARISON CONTENT
-    ========================= */
+    /* =====================================================
+       COMPARISON
+    ===================================================== */
 
     const comparisonPatterns = [
         " vs ",
@@ -213,9 +473,9 @@ function isBadVideo(
     }
 
 
-    /* =========================
-       6. REVIEW CONTENT
-    ========================= */
+    /* =====================================================
+       REVIEW
+    ===================================================== */
 
     const reviewPatterns = [
         "course review",
@@ -240,9 +500,9 @@ function isBadVideo(
     }
 
 
-    /* =========================
-       7. VERY SHORT VIDEOS
-    ========================= */
+    /* =====================================================
+       VERY SHORT CONTENT
+    ===================================================== */
 
     const shortDurationPatterns = [
         "in 30 seconds",
@@ -259,7 +519,9 @@ function isBadVideo(
         "in 1 hour",
     ];
 
-    for (const pattern of shortDurationPatterns) {
+    for (
+        const pattern of shortDurationPatterns
+    ) {
 
         if (
             normalizedTitle.includes(pattern)
@@ -274,9 +536,9 @@ function isBadVideo(
     }
 
 
-    /* =========================
-       8. INTRODUCTION ONLY
-    ========================= */
+    /* =====================================================
+       INTRODUCTION ONLY
+    ===================================================== */
 
     const introductionPatterns = [
         "what is",
@@ -293,7 +555,9 @@ function isBadVideo(
         normalizedTitle.includes("full tutorial") ||
         normalizedTitle.includes("complete tutorial");
 
-    for (const pattern of introductionPatterns) {
+    for (
+        const pattern of introductionPatterns
+    ) {
 
         if (
             normalizedTitle.startsWith(pattern) &&
@@ -309,49 +573,13 @@ function isBadVideo(
     }
 
 
-    /* =========================
-       9. PURE TUTORIAL / SINGLE TOPIC
-    ========================= */
-
-    const singleTopicPatterns = [
-        "what is",
-        "variables",
-        "variable tutorial",
-        "data types",
-        "datatype",
-        "functions tutorial",
-        "loops tutorial",
-        "operators tutorial",
-        "syntax tutorial",
-        "input tags",
-    ];
-
-    for (const pattern of singleTopicPatterns) {
-
-        if (
-            normalizedTitle === pattern
-        ) {
-
-            console.log(
-                `[REMOVE - SINGLE TOPIC] ${title}`
-            );
-
-            return true;
-        }
-    }
-
-
-    /* =========================
-       EVERYTHING ELSE
-    ========================= */
-
     return false;
 }
 
 
-/* =========================
+/* =========================================================
    CHECK COURSE SIGNAL
-========================= */
+========================================================= */
 
 function hasCourseSignal(
     title: string,
@@ -382,6 +610,7 @@ function hasCourseSignal(
         "beginner course",
 
         "full stack course",
+
         "complete course for beginners",
 
         "learn from scratch",
@@ -393,19 +622,19 @@ function hasCourseSignal(
         "all in one",
 
         "fundamentals full course",
-        "fundamentals [full course]",
 
+        "fundamentals [full course]",
     ];
 
 
     for (
-        const pattern
-        of strongCoursePatterns
+        const pattern of strongCoursePatterns
     ) {
 
         if (
             text.includes(pattern)
         ) {
+
             return true;
         }
     }
@@ -415,9 +644,9 @@ function hasCourseSignal(
 }
 
 
-/* =========================
+/* =========================================================
    CHECK COURSE RELEVANCE
-========================= */
+========================================================= */
 
 function isRelevantCourse(
     title: string,
@@ -438,9 +667,9 @@ function isRelevantCourse(
         `${normalizedTitle} ${normalizedDescription}`;
 
 
-    /* =========================
+    /* =====================================================
        C++
-    ========================= */
+    ===================================================== */
 
     if (
         normalizedQuery === "c++" ||
@@ -465,9 +694,9 @@ function isRelevantCourse(
     }
 
 
-    /* =========================
+    /* =====================================================
        C PROGRAMMING
-    ========================= */
+    ===================================================== */
 
     if (
         normalizedQuery === "c" ||
@@ -482,9 +711,9 @@ function isRelevantCourse(
     }
 
 
-    /* =========================
+    /* =====================================================
        JAVA
-    ========================= */
+    ===================================================== */
 
     if (
         normalizedQuery === "java"
@@ -497,9 +726,9 @@ function isRelevantCourse(
     }
 
 
-    /* =========================
+    /* =====================================================
        JAVASCRIPT
-    ========================= */
+    ===================================================== */
 
     if (
         normalizedQuery === "javascript" ||
@@ -515,9 +744,9 @@ function isRelevantCourse(
     }
 
 
-    /* =========================
+    /* =====================================================
        TYPESCRIPT
-    ========================= */
+    ===================================================== */
 
     if (
         normalizedQuery === "typescript" ||
@@ -532,24 +761,22 @@ function isRelevantCourse(
     }
 
 
-    /* =========================
+    /* =====================================================
        PYTHON
-    ========================= */
+    ===================================================== */
 
     if (
         normalizedQuery === "python" ||
         normalizedQuery === "py"
     ) {
 
-        return (
-            /\bpython\b/i.test(text)
-        );
+        return /\bpython\b/i.test(text);
     }
 
 
-    /* =========================
+    /* =====================================================
        REACT
-    ========================= */
+    ===================================================== */
 
     if (
         normalizedQuery === "react" ||
@@ -563,24 +790,21 @@ function isRelevantCourse(
     }
 
 
-    /* =========================
+    /* =====================================================
        PHP
-    ========================= */
+    ===================================================== */
 
     if (
         normalizedQuery === "php"
     ) {
 
-        return (
-            /\bphp\b/i.test(normalizedTitle) ||
-            /\bphp\b/i.test(normalizedDescription)
-        );
+        return /\bphp\b/i.test(text);
     }
 
 
-    /* =========================
-       MERN STACK
-    ========================= */
+    /* =====================================================
+       MERN
+    ===================================================== */
 
     if (
         normalizedQuery === "mern" ||
@@ -594,23 +818,21 @@ function isRelevantCourse(
     }
 
 
-    /* =========================
+    /* =====================================================
        SQL
-    ========================= */
+    ===================================================== */
 
     if (
         normalizedQuery === "sql"
     ) {
 
-        return (
-            /\bsql\b/i.test(text)
-        );
+        return /\bsql\b/i.test(text);
     }
 
 
-    /* =========================
+    /* =====================================================
        HTML
-    ========================= */
+    ===================================================== */
 
     if (
         normalizedQuery === "html" ||
@@ -624,9 +846,9 @@ function isRelevantCourse(
     }
 
 
-    /* =========================
+    /* =====================================================
        CSS
-    ========================= */
+    ===================================================== */
 
     if (
         normalizedQuery === "css" ||
@@ -640,9 +862,9 @@ function isRelevantCourse(
     }
 
 
-    /* =========================
+    /* =====================================================
        NODE.JS
-    ========================= */
+    ===================================================== */
 
     if (
         normalizedQuery === "node" ||
@@ -657,9 +879,9 @@ function isRelevantCourse(
     }
 
 
-    /* =========================
+    /* =====================================================
        MONGODB
-    ========================= */
+    ===================================================== */
 
     if (
         normalizedQuery === "mongodb" ||
@@ -673,9 +895,9 @@ function isRelevantCourse(
     }
 
 
-    /* =========================
+    /* =====================================================
        EXPRESS
-    ========================= */
+    ===================================================== */
 
     if (
         normalizedQuery === "express" ||
@@ -689,9 +911,9 @@ function isRelevantCourse(
     }
 
 
-    /* =========================
+    /* =====================================================
        NORMAL SEARCH
-    ========================= */
+    ===================================================== */
 
     const words =
         normalizedQuery
@@ -701,9 +923,9 @@ function isRelevantCourse(
     if (
         words.length === 0
     ) {
+
         return false;
     }
-
 
     return words.every(
         (word) =>
@@ -712,9 +934,9 @@ function isRelevantCourse(
 }
 
 
-/* =========================
+/* =========================================================
    CREATE YOUTUBE SEARCH QUERY
-========================= */
+========================================================= */
 
 function createYouTubeSearchQuery(
     query: string
@@ -864,12 +1086,455 @@ function createYouTubeSearchQuery(
 }
 
 
-/* =========================
+/* =========================================================
+   KNOWN VIDEO LANGUAGE OVERRIDES
+========================================================= */
+
+const KNOWN_VIDEO_LANGUAGE_OVERRIDES:
+    Record<string, string> = {
+
+    /*
+     * Add manually verified videos here.
+     *
+     * Example:
+     *
+     * "VIDEO_ID": "Hindi",
+     * "VIDEO_ID": "English",
+     */
+
+    hlGoQC332VM: "Hindi",
+};
+
+
+/* =========================================================
+   GET KNOWN VIDEO LANGUAGE
+========================================================= */
+
+export function getKnownVideoLanguage(
+    videoId: string
+): string | null {
+
+    return (
+        KNOWN_VIDEO_LANGUAGE_OVERRIDES[videoId] ||
+        null
+    );
+}
+
+
+/* =========================================================
+   DETECT LANGUAGE FROM YOUTUBE CODE
+========================================================= */
+
+function detectFromYouTubeLanguageCode(
+    languageCode: string | null | undefined
+): string | null {
+
+    if (!languageCode) {
+        return null;
+    }
+
+    const normalized =
+        languageCode
+            .toLowerCase()
+            .trim();
+
+    const language =
+        normalizeLanguage(normalized);
+
+    /*
+     * If it is a recognized language,
+     * return it.
+     */
+
+    const recognizedLanguages = [
+        "english",
+        "hindi",
+        "tamil",
+        "telugu",
+        "kannada",
+        "malayalam",
+        "bengali",
+        "marathi",
+        "gujarati",
+        "punjabi",
+        "urdu",
+        "odia",
+        "assamese",
+        "nepali",
+        "french",
+        "spanish",
+        "german",
+        "portuguese",
+    ];
+
+    if (
+        recognizedLanguages.includes(language)
+    ) {
+
+        return displayLanguage(language);
+    }
+
+    return null;
+}
+
+
+/* =========================================================
+   DETECT NON-ENGLISH SCRIPT
+========================================================= */
+
+function detectIndianScriptLanguage(
+    text: string
+): string | null {
+
+    /*
+     * Devanagari
+     *
+     * Hindi / Marathi / Nepali
+     */
+
+    if (
+        /[\u0900-\u097F]/.test(text)
+    ) {
+
+        /*
+         * Marathi-specific common words.
+         */
+
+        if (
+            /\b(आहे|आणि|मध्ये|करण्यासाठी|मराठी)\b/.test(text)
+        ) {
+
+            return "Marathi";
+        }
+
+        /*
+         * Nepali-specific common words.
+         */
+
+        if (
+            /\b(नेपाली|छ|छन्|लाई|बाट|को)\b/.test(text)
+        ) {
+
+            return "Nepali";
+        }
+
+        return "Hindi";
+    }
+
+
+    /*
+     * Tamil
+     */
+
+    if (
+        /[\u0B80-\u0BFF]/.test(text)
+    ) {
+
+        return "Tamil";
+    }
+
+
+    /*
+     * Telugu
+     */
+
+    if (
+        /[\u0C00-\u0C7F]/.test(text)
+    ) {
+
+        return "Telugu";
+    }
+
+
+    /*
+     * Kannada
+     */
+
+    if (
+        /[\u0C80-\u0CFF]/.test(text)
+    ) {
+
+        return "Kannada";
+    }
+
+
+    /*
+     * Malayalam
+     */
+
+    if (
+        /[\u0D00-\u0D7F]/.test(text)
+    ) {
+
+        return "Malayalam";
+    }
+
+
+    /*
+     * Bengali / Assamese
+     */
+
+    if (
+        /[\u0980-\u09FF]/.test(text)
+    ) {
+
+        if (
+            /[\u0985-\u0994]/.test(text)
+        ) {
+
+            return "Bengali";
+        }
+
+        return "Bengali";
+    }
+
+
+    /*
+     * Gujarati
+     */
+
+    if (
+        /[\u0A80-\u0AFF]/.test(text)
+    ) {
+
+        return "Gujarati";
+    }
+
+
+    /*
+     * Punjabi / Gurmukhi
+     */
+
+    if (
+        /[\u0A00-\u0A7F]/.test(text)
+    ) {
+
+        return "Punjabi";
+    }
+
+
+    /*
+     * Odia
+     */
+
+    if (
+        /[\u0B00-\u0B7F]/.test(text)
+    ) {
+
+        return "Odia";
+    }
+
+
+    /*
+     * Urdu / Arabic script
+     *
+     * This is intentionally broad.
+     */
+
+    if (
+        /[\u0600-\u06FF]/.test(text)
+    ) {
+
+        return "Urdu";
+    }
+
+
+    return null;
+}
+
+
+/* =========================================================
+   DETECT LANGUAGE FROM TEXT
+========================================================= */
+
+function detectCourseLanguageFromText(
+    title: string,
+    description: string,
+    channelName: string
+): string | null {
+
+    const titleText =
+        normalizeText(title);
+
+    const descriptionText =
+        normalizeText(description);
+
+    const channelText =
+        normalizeText(channelName);
+
+    const combinedText =
+        `${titleText} ${descriptionText} ${channelText}`;
+
+
+    /* =====================================================
+       FIRST: INDIAN SCRIPTS
+    ===================================================== */
+
+    const scriptLanguage =
+        detectIndianScriptLanguage(
+            combinedText
+        );
+
+    if (
+        scriptLanguage
+    ) {
+
+        return scriptLanguage;
+    }
+
+
+    /* =====================================================
+       HINDI KEYWORDS
+    ===================================================== */
+
+    const hindiSignals = [
+
+        "hindi",
+        "in hindi",
+        "hindi tutorial",
+        "hindi course",
+        "hindi mein",
+        "hindi me",
+
+        "हिंदी",
+        "हिन्दी",
+        "हिंदी में",
+        "हिन्दी में",
+    ];
+
+    for (
+        const signal of hindiSignals
+    ) {
+
+        if (
+            titleText.includes(signal) ||
+            descriptionText.includes(signal)
+        ) {
+
+            return "Hindi";
+        }
+    }
+
+
+    /* =====================================================
+       ENGLISH KEYWORDS
+    ===================================================== */
+
+    const englishSignals = [
+
+        "english",
+        "in english",
+        "english tutorial",
+        "english course",
+        "english language",
+
+    ];
+
+    for (
+        const signal of englishSignals
+    ) {
+
+        if (
+            titleText.includes(signal) ||
+            descriptionText.includes(signal)
+        ) {
+
+            return "English";
+        }
+    }
+
+
+    /*
+     * We intentionally DO NOT automatically return
+     * English here.
+     *
+     * This is important because a Tamil / Telugu /
+     * Malayalam video may have an English title.
+     */
+
+    return null;
+}
+
+
+/* =========================================================
+   RESOLVE VIDEO LANGUAGE
+========================================================= */
+
+export function resolveVideoLanguage(
+    storedLanguage: string | null | undefined,
+    youtubeLanguageCode?: string | null
+): string {
+
+    /*
+     * 1. YouTube metadata first.
+     */
+
+    const youtubeLanguage =
+        detectFromYouTubeLanguageCode(
+            youtubeLanguageCode
+        );
+
+    if (
+        youtubeLanguage
+    ) {
+
+        return youtubeLanguage;
+    }
+
+
+    /*
+     * 2. Stored language.
+     */
+
+    const normalizedStored =
+        normalizeLanguage(
+            storedLanguage
+        );
+
+    const recognizedLanguages = [
+        "english",
+        "hindi",
+        "tamil",
+        "telugu",
+        "kannada",
+        "malayalam",
+        "bengali",
+        "marathi",
+        "gujarati",
+        "punjabi",
+        "urdu",
+        "odia",
+        "assamese",
+        "nepali",
+        "french",
+        "spanish",
+        "german",
+        "portuguese",
+    ];
+
+    if (
+        recognizedLanguages.includes(
+            normalizedStored
+        )
+    ) {
+
+        return displayLanguage(
+            normalizedStored
+        );
+    }
+
+
+    return "Unknown";
+}
+
+
+/* =========================================================
    SEARCH YOUTUBE COURSES
-========================= */
+========================================================= */
 
 export async function searchYouTubeCourses(
-    query: string
+    query: string,
+    preferredLanguage: string = "English"
 ): Promise<YouTubeCourseResult[]> {
 
     const apiKey =
@@ -887,21 +1552,75 @@ export async function searchYouTubeCourses(
         createYouTubeSearchQuery(query);
 
 
+    const language =
+        normalizeLanguage(
+            preferredLanguage
+        );
+
+
+    /*
+     * Only English and Hindi are supported
+     * as requested.
+     */
+
+    if (
+        language !== "english" &&
+        language !== "hindi"
+    ) {
+
+        console.log(
+            "Unsupported language:",
+            preferredLanguage
+        );
+
+        return [];
+    }
+
+
+    /*
+     * Language-specific search query.
+     */
+
+    let languageQuery =
+        youtubeQuery;
+
+    if (
+        language === "hindi"
+    ) {
+
+        languageQuery =
+            `${youtubeQuery} Hindi`;
+    }
+
+
+    if (
+        language === "english"
+    ) {
+
+        languageQuery =
+            `${youtubeQuery} English`;
+    }
+
+
     console.log(
         "YouTube search query:",
-        youtubeQuery
+        languageQuery
+    );
+
+    console.log(
+        "Required language:",
+        language
     );
 
 
-    /* =========================
+    /* =====================================================
        YOUTUBE SEARCH API
-    ========================= */
+    ===================================================== */
 
     const url =
         new URL(
             "https://www.googleapis.com/youtube/v3/search"
         );
-
 
     url.searchParams.set(
         "part",
@@ -910,7 +1629,7 @@ export async function searchYouTubeCourses(
 
     url.searchParams.set(
         "q",
-        youtubeQuery
+        languageQuery
     );
 
     url.searchParams.set(
@@ -928,10 +1647,41 @@ export async function searchYouTubeCourses(
         "true"
     );
 
+    /*
+     * Get many results because language filtering
+     * happens after the API response.
+     */
+
     url.searchParams.set(
         "maxResults",
-        "25"
+        "50"
     );
+
+
+    /*
+     * relevanceLanguage is ONLY a hint.
+     */
+
+    if (
+        language === "english"
+    ) {
+
+        url.searchParams.set(
+            "relevanceLanguage",
+            "en"
+        );
+    }
+
+    if (
+        language === "hindi"
+    ) {
+
+        url.searchParams.set(
+            "relevanceLanguage",
+            "hi"
+        );
+    }
+
 
     url.searchParams.set(
         "key",
@@ -968,11 +1718,11 @@ export async function searchYouTubeCourses(
         await response.json();
 
 
-    /* =========================
-       CONVERT RESULTS
-    ========================= */
+    /* =====================================================
+       INITIAL RESULTS
+    ===================================================== */
 
-    const results:
+    const initialResults:
         YouTubeCourseResult[] =
 
         (data.items || [])
@@ -982,62 +1732,201 @@ export async function searchYouTubeCourses(
                     item.snippet
             )
             .map(
-                (item: any) => ({
+                (item: any) => {
 
-                    videoId:
-                        item.id.videoId,
+                    const title =
+                        item.snippet.title || "";
 
-                    title:
-                        item.snippet.title ||
-                        "",
+                    const description =
+                        item.snippet.description || "";
 
-                    description:
-                        item.snippet.description ||
-                        "",
+                    const channelName =
+                        item.snippet.channelTitle || "";
 
-                    thumbnail:
-                        item.snippet
-                            .thumbnails
-                            ?.high?.url ||
 
-                        item.snippet
-                            .thumbnails
-                            ?.medium?.url ||
+                    const textLanguage =
+                        detectCourseLanguageFromText(
+                            title,
+                            description,
+                            channelName
+                        );
 
-                        item.snippet
-                            .thumbnails
-                            ?.default?.url ||
 
-                        "",
+                    return {
 
-                    channelName:
-                        item.snippet.channelTitle ||
-                        "",
+                        videoId:
+                            item.id.videoId,
 
-                    publishedAt:
-                        item.snippet.publishedAt ||
-                        "",
-                })
+                        title,
+
+                        description,
+
+                        thumbnail:
+                            item.snippet
+                                .thumbnails
+                                ?.high?.url ||
+                            item.snippet
+                                .thumbnails
+                                ?.medium?.url ||
+                            item.snippet
+                                .thumbnails
+                                ?.default?.url ||
+                            "",
+
+                        channelName,
+
+                        publishedAt:
+                            item.snippet
+                                .publishedAt ||
+                            "",
+
+                        language:
+                            getKnownVideoLanguage(
+                                item.id.videoId
+                            ) ||
+                            textLanguage ||
+                            "Unknown",
+                    };
+                }
             );
 
 
     console.log(
         "YouTube raw results:",
-        results.length
+        initialResults.length
     );
 
 
-    /* =========================
+    /* =====================================================
+       GET ACTUAL VIDEO METADATA
+    ===================================================== */
+
+    const videoIds =
+        initialResults.map(
+            (video) =>
+                video.videoId
+        );
+
+
+    const statistics =
+        await getYouTubeVideoStatistics(
+            videoIds
+        );
+
+
+    const statisticsMap =
+        new Map(
+            statistics.map(
+                (item) => [
+                    item.id,
+                    item,
+                ]
+            )
+        );
+
+
+    /* =====================================================
+       RESOLVE ACTUAL LANGUAGE
+    ===================================================== */
+
+    const results =
+        initialResults.map(
+            (video) => {
+
+                const stats =
+                    statisticsMap.get(
+                        video.videoId
+                    );
+
+
+                const knownLanguage =
+                    getKnownVideoLanguage(
+                        video.videoId
+                    );
+
+
+                /*
+                 * YouTube's actual metadata.
+                 */
+
+                const youtubeLanguage =
+                    detectFromYouTubeLanguageCode(
+                        stats
+                            ?.snippet
+                            ?.defaultAudioLanguage
+                    ) ||
+                    detectFromYouTubeLanguageCode(
+                        stats
+                            ?.snippet
+                            ?.defaultLanguage
+                    );
+
+
+                /*
+                 * Detect from title,
+                 * description and channel.
+                 */
+
+                const textLanguage =
+                    detectCourseLanguageFromText(
+                        video.title,
+                        video.description,
+                        video.channelName
+                    );
+
+
+                /*
+                 * Priority:
+                 *
+                 * 1. Manual override
+                 * 2. YouTube language metadata
+                 * 3. Script/text detection
+                 * 4. Unknown
+                 */
+
+                const actualLanguage =
+                    knownLanguage ||
+                    youtubeLanguage ||
+                    textLanguage ||
+                    "Unknown";
+
+
+                return {
+
+                    ...video,
+
+                    language:
+                        actualLanguage,
+                };
+            }
+        );
+
+
+    console.log(
+        "YouTube detected languages:",
+        results.map(
+            (video) => ({
+                title:
+                    video.title,
+
+                language:
+                    video.language,
+            })
+        )
+    );
+
+
+    /* =====================================================
        FILTER RESULTS
-    ========================= */
+    ===================================================== */
 
     const relevantResults =
         results.filter(
             (video) => {
 
-                /* =========================
+                /* =========================================
                    BAD CONTENT
-                ========================= */
+                ========================================= */
 
                 if (
                     isBadVideo(
@@ -1050,9 +1939,9 @@ export async function searchYouTubeCourses(
                 }
 
 
-                /* =========================
+                /* =========================================
                    RELEVANCE
-                ========================= */
+                ========================================= */
 
                 if (
                     !isRelevantCourse(
@@ -1070,9 +1959,9 @@ export async function searchYouTubeCourses(
                 }
 
 
-                /* =========================
+                /* =========================================
                    COURSE SIGNAL
-                ========================= */
+                ========================================= */
 
                 if (
                     !hasCourseSignal(
@@ -1089,9 +1978,87 @@ export async function searchYouTubeCourses(
                 }
 
 
+                /* =========================================
+                   LANGUAGE HARD FILTER
+                ========================================= */
+
+                const actualLanguage =
+                    normalizeLanguage(
+                        video.language
+                    );
+
+
+                /*
+                 * NEVER allow unknown.
+                 */
+
+                if (
+                    actualLanguage === "" ||
+                    actualLanguage === "unknown"
+                ) {
+
+                    console.log(
+                        `[REMOVE - UNKNOWN LANGUAGE] ${video.title}`
+                    );
+
+                    return false;
+                }
+
+
+                /*
+                 * ENGLISH SEARCH
+                 *
+                 * Only English.
+                 *
+                 * This is the important part that prevents
+                 * Tamil, Telugu, Kannada, Malayalam, etc.
+                 * from appearing in English search.
+                 */
+
+                if (
+                    language === "english"
+                ) {
+
+                    if (
+                        actualLanguage !== "english"
+                    ) {
+
+                        console.log(
+                            `[REMOVE - NON-ENGLISH] ${video.title} -> ${video.language}`
+                        );
+
+                        return false;
+                    }
+                }
+
+
+                /*
+                 * HINDI SEARCH
+                 *
+                 * Only Hindi.
+                 */
+
+                if (
+                    language === "hindi"
+                ) {
+
+                    if (
+                        actualLanguage !== "hindi"
+                    ) {
+
+                        console.log(
+                            `[REMOVE - NON-HINDI] ${video.title} -> ${video.language}`
+                        );
+
+                        return false;
+                    }
+                }
+
+
                 console.log(
-                    `[KEEP - COURSE] ${video.title}`
+                    `[KEEP - ${preferredLanguage}] ${video.title}`
                 );
+
 
                 return true;
             }
@@ -1104,9 +2071,9 @@ export async function searchYouTubeCourses(
     );
 
 
-    /* =========================
+    /* =====================================================
        REMOVE DUPLICATES
-    ========================= */
+    ===================================================== */
 
     const uniqueResults =
         Array.from(
@@ -1131,9 +2098,9 @@ export async function searchYouTubeCourses(
 }
 
 
-/* =========================
+/* =========================================================
    GET VIDEO STATISTICS
-========================= */
+========================================================= */
 
 export async function getYouTubeVideoStatistics(
     videoIds: string[]
@@ -1159,12 +2126,13 @@ export async function getYouTubeVideoStatistics(
     }
 
 
-    /* =========================
+    /* =====================================================
        CHUNK IDS
        MAX 50 PER REQUEST
-    ========================= */
+    ===================================================== */
 
     const chunks: string[][] = [];
+
 
     for (
         let i = 0;
@@ -1197,13 +2165,15 @@ export async function getYouTubeVideoStatistics(
 
         url.searchParams.set(
             "part",
-            "statistics,contentDetails"
+            "snippet,statistics,contentDetails"
         );
+
 
         url.searchParams.set(
             "id",
             chunk.join(",")
         );
+
 
         url.searchParams.set(
             "key",
@@ -1250,15 +2220,18 @@ export async function getYouTubeVideoStatistics(
 }
 
 
-/* =========================
+/* =========================================================
    FORMAT YOUTUBE DURATION
-========================= */
+========================================================= */
 
 export function formatYouTubeDuration(
     isoDuration: string
 ): string {
 
-    if (!isoDuration) {
+    if (
+        !isoDuration
+    ) {
+
         return "Unknown";
     }
 
@@ -1269,19 +2242,28 @@ export function formatYouTubeDuration(
         );
 
 
-    if (!match) {
+    if (
+        !match
+    ) {
+
         return "Unknown";
     }
 
 
     const hours =
-        Number(match[1] || 0);
+        Number(
+            match[1] || 0
+        );
 
     const minutes =
-        Number(match[2] || 0);
+        Number(
+            match[2] || 0
+        );
 
     const seconds =
-        Number(match[3] || 0);
+        Number(
+            match[3] || 0
+        );
 
 
     const parts: string[] = [];
@@ -1330,15 +2312,18 @@ export function formatYouTubeDuration(
 }
 
 
-/* =========================
+/* =========================================================
    GET DURATION SECONDS
-========================= */
+========================================================= */
 
 export function getDurationSeconds(
     isoDuration: string
 ): number {
 
-    if (!isoDuration) {
+    if (
+        !isoDuration
+    ) {
+
         return 0;
     }
 
@@ -1349,19 +2334,28 @@ export function getDurationSeconds(
         );
 
 
-    if (!match) {
+    if (
+        !match
+    ) {
+
         return 0;
     }
 
 
     const hours =
-        Number(match[1] || 0);
+        Number(
+            match[1] || 0
+        );
 
     const minutes =
-        Number(match[2] || 0);
+        Number(
+            match[2] || 0
+        );
 
     const seconds =
-        Number(match[3] || 0);
+        Number(
+            match[3] || 0
+        );
 
 
     return (

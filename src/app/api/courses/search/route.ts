@@ -1,12 +1,19 @@
 import { NextResponse } from "next/server";
+
 import {
+    and,
     ilike,
     inArray,
     or,
 } from "drizzle-orm";
 
 import { db } from "@/db";
-import { courses, lessons } from "@/db/schema";
+
+import {
+    courses,
+    lessons,
+} from "@/db/schema";
+
 import {
     searchYouTubeCourses,
     getYouTubeVideoStatistics,
@@ -51,11 +58,76 @@ function normalizeText(
 
     return text
         .toLowerCase()
-        .replace(
-            /\s+/g,
-            " "
-        )
+        .replace(/\s+/g, " ")
         .trim();
+}
+
+
+/* =========================================================
+   NORMALIZE QUERY
+========================================================= */
+
+function normalizeCourseQuery(
+    query: string
+): string {
+
+    const normalized =
+        normalizeText(query);
+
+    /* C++ aliases */
+
+    if (
+        normalized === "cpp" ||
+        normalized === "c ++" ||
+        normalized === "c plus plus"
+    ) {
+        return "c++";
+    }
+
+    /* JavaScript aliases */
+
+    if (
+        normalized === "java script" ||
+        normalized === "js"
+    ) {
+        return "javascript";
+    }
+
+    /* TypeScript aliases */
+
+    if (
+        normalized === "type script" ||
+        normalized === "ts"
+    ) {
+        return "typescript";
+    }
+
+    /* React aliases */
+
+    if (
+        normalized === "reactjs"
+    ) {
+        return "react";
+    }
+
+    /* Node aliases */
+
+    if (
+        normalized === "nodejs" ||
+        normalized === "node.js"
+    ) {
+        return "node";
+    }
+
+    /* MongoDB aliases */
+
+    if (
+        normalized === "mongo db"
+    ) {
+        return "mongodb";
+    }
+
+    return normalized;
 }
 
 
@@ -71,13 +143,29 @@ function isRelevantDatabaseCourse(
     query: string
 ): boolean {
 
-    const text =
-        normalizeText(
-            `${title} ${description} ${category} ${channelName ?? ""}`
-        );
-
     const normalizedQuery =
-        normalizeText(query);
+        normalizeCourseQuery(query);
+
+    const normalizedTitle =
+        normalizeText(title);
+
+    const normalizedCategory =
+        normalizeText(category);
+
+
+    /*
+     * IMPORTANT:
+     *
+     * Description and channel name are deliberately
+     * NOT used for deciding the actual subject.
+     *
+     * Example:
+     *
+     * SQL Full Course
+     * Description: Learn SQL with Python...
+     *
+     * Searching Python should NOT return SQL.
+     */
 
 
     /* =====================================================
@@ -85,17 +173,14 @@ function isRelevantDatabaseCourse(
     ===================================================== */
 
     if (
-        normalizedQuery === "c++" ||
-        normalizedQuery === "cpp" ||
-        normalizedQuery === "c ++" ||
-        normalizedQuery === "c plus plus"
+        normalizedQuery === "c++"
     ) {
 
         return (
-            text.includes("c++") ||
-            text.includes("c ++") ||
-            text.includes("cpp") ||
-            text.includes("c plus plus")
+            normalizedTitle.includes("c++") ||
+            normalizedTitle.includes("cpp") ||
+            normalizedCategory.includes("c++") ||
+            normalizedCategory.includes("cpp")
         );
     }
 
@@ -105,16 +190,29 @@ function isRelevantDatabaseCourse(
     ===================================================== */
 
     if (
-        normalizedQuery === "javascript" ||
-        normalizedQuery === "java script" ||
-        normalizedQuery === "js"
+        normalizedQuery === "javascript"
     ) {
 
         return (
-            text.includes("javascript") ||
-            text.includes("java script") ||
-            text.includes("ecmascript") ||
-            /\bjs\b/i.test(text)
+            /\bjavascript\b/i.test(
+                normalizedTitle
+            ) ||
+
+            /\bjava script\b/i.test(
+                normalizedTitle
+            ) ||
+
+            /\becmascript\b/i.test(
+                normalizedTitle
+            ) ||
+
+            /\bjs\b/i.test(
+                normalizedTitle
+            ) ||
+
+            normalizedCategory.includes(
+                "javascript"
+            )
         );
     }
 
@@ -124,15 +222,25 @@ function isRelevantDatabaseCourse(
     ===================================================== */
 
     if (
-        normalizedQuery === "typescript" ||
-        normalizedQuery === "type script" ||
-        normalizedQuery === "ts"
+        normalizedQuery === "typescript"
     ) {
 
         return (
-            text.includes("typescript") ||
-            text.includes("type script") ||
-            /\bts\b/i.test(text)
+            /\btypescript\b/i.test(
+                normalizedTitle
+            ) ||
+
+            /\btype script\b/i.test(
+                normalizedTitle
+            ) ||
+
+            /\bts\b/i.test(
+                normalizedTitle
+            ) ||
+
+            normalizedCategory.includes(
+                "typescript"
+            )
         );
     }
 
@@ -146,8 +254,13 @@ function isRelevantDatabaseCourse(
     ) {
 
         return (
-            /\bjava\b/i.test(text) &&
-            !text.includes("javascript")
+            /\bjava\b/i.test(
+                normalizedTitle
+            ) &&
+
+            !/\bjavascript\b/i.test(
+                normalizedTitle
+            )
         );
     }
 
@@ -157,11 +270,21 @@ function isRelevantDatabaseCourse(
     ===================================================== */
 
     if (
-        normalizedQuery === "python" ||
-        normalizedQuery === "py"
+        normalizedQuery === "python"
     ) {
 
-        return text.includes("python");
+        return (
+            /\bpython\b/i.test(
+                normalizedTitle
+            ) ||
+
+            normalizedCategory ===
+                "python" ||
+
+            normalizedCategory.includes(
+                "python"
+            )
+        );
     }
 
 
@@ -170,13 +293,141 @@ function isRelevantDatabaseCourse(
     ===================================================== */
 
     if (
-        normalizedQuery === "react" ||
-        normalizedQuery === "reactjs"
+        normalizedQuery === "react"
     ) {
 
         return (
-            /\breact\b/i.test(text) ||
-            /\breactjs\b/i.test(text)
+            /\breact\b/i.test(
+                normalizedTitle
+            ) ||
+
+            /\breactjs\b/i.test(
+                normalizedTitle
+            ) ||
+
+            normalizedCategory.includes(
+                "react"
+            )
+        );
+    }
+
+
+    /* =====================================================
+       SQL
+    ===================================================== */
+
+    if (
+        normalizedQuery === "sql"
+    ) {
+
+        return (
+            /\bsql\b/i.test(
+                normalizedTitle
+            ) ||
+
+            /\bsql\b/i.test(
+                normalizedCategory
+            )
+        );
+    }
+
+
+    /* =====================================================
+       HTML
+    ===================================================== */
+
+    if (
+        normalizedQuery === "html"
+    ) {
+
+        return (
+            /\bhtml\b/i.test(
+                normalizedTitle
+            ) ||
+
+            /\bhtml5\b/i.test(
+                normalizedTitle
+            ) ||
+
+            /\bhtml\b/i.test(
+                normalizedCategory
+            )
+        );
+    }
+
+
+    /* =====================================================
+       CSS
+    ===================================================== */
+
+    if (
+        normalizedQuery === "css"
+    ) {
+
+        return (
+            /\bcss\b/i.test(
+                normalizedTitle
+            ) ||
+
+            /\bcss3\b/i.test(
+                normalizedTitle
+            ) ||
+
+            /\bcss\b/i.test(
+                normalizedCategory
+            )
+        );
+    }
+
+
+    /* =====================================================
+       NODE.JS
+    ===================================================== */
+
+    if (
+        normalizedQuery === "node"
+    ) {
+
+        return (
+            /\bnode\.?js\b/i.test(
+                normalizedTitle
+            ) ||
+
+            /\bnode js\b/i.test(
+                normalizedTitle
+            ) ||
+
+            normalizedCategory.includes(
+                "node"
+            )
+        );
+    }
+
+
+    /* =====================================================
+       MONGODB
+    ===================================================== */
+
+    if (
+        normalizedQuery === "mongodb"
+    ) {
+
+        return (
+            /\bmongodb\b/i.test(
+                normalizedTitle
+            ) ||
+
+            /\bmongo db\b/i.test(
+                normalizedTitle
+            ) ||
+
+            normalizedCategory.includes(
+                "mongodb"
+            ) ||
+
+            normalizedCategory.includes(
+                "mongo"
+            )
         );
     }
 
@@ -194,14 +445,22 @@ function isRelevantDatabaseCourse(
     if (
         queryWords.length === 0
     ) {
-
         return false;
     }
 
 
+    /*
+     * EVERY word must appear in:
+     *
+     * TITLE OR CATEGORY
+     *
+     * Never description/channel.
+     */
+
     return queryWords.every(
         (word) =>
-            text.includes(word)
+            normalizedTitle.includes(word) ||
+            normalizedCategory.includes(word)
     );
 }
 
@@ -232,7 +491,7 @@ function calculateRecommendationScore({
         );
 
     const searchQuery =
-        normalizeText(query);
+        normalizeCourseQuery(query);
 
     let score = 0;
 
@@ -246,19 +505,14 @@ function calculateRecommendationScore({
 
 
     if (
-        searchQuery === "c++" ||
-        searchQuery === "cpp" ||
-        searchQuery === "c ++" ||
-        searchQuery === "c plus plus"
+        searchQuery === "c++"
     ) {
 
         if (
             text.includes("c++") ||
-            text.includes("c ++") ||
             text.includes("cpp") ||
             text.includes("c plus plus")
         ) {
-
             score += 30;
         }
 
@@ -278,7 +532,6 @@ function calculateRecommendationScore({
             if (
                 text.includes(word)
             ) {
-
                 matchedWords++;
             }
         }
@@ -493,7 +746,6 @@ function getSearchQuery(
     const url =
         new URL(request.url);
 
-
     const rawQuery =
         url.searchParams.get("q");
 
@@ -508,24 +760,55 @@ function getSearchQuery(
 
 
     /*
-     * Compatibility with the current frontend.
-     *
-     * A manually written:
+     * URLSearchParams issue:
      *
      * ?q=C++
      *
-     * may arrive as "C".
+     * may arrive as:
+     *
+     * C
      */
 
     if (
         trimmed.toLowerCase() === "c"
     ) {
-
         return "C++";
     }
 
 
     return trimmed;
+}
+
+
+/* =========================================================
+   NORMALIZE LANGUAGE
+========================================================= */
+
+function normalizeLanguage(
+    language: string | null
+): string {
+
+    const value =
+        normalizeText(
+            language || "English"
+        );
+
+
+    if (
+        value === "hindi"
+    ) {
+        return "Hindi";
+    }
+
+
+    if (
+        value === "hinglish"
+    ) {
+        return "Hinglish";
+    }
+
+
+    return "English";
 }
 
 
@@ -545,9 +828,36 @@ export async function GET(
             );
 
 
+        const url =
+            new URL(
+                request.url
+            );
+
+
+        const preferredLanguage =
+            normalizeLanguage(
+                url.searchParams.get(
+                    "language"
+                )
+            );
+
+
+        console.log(
+            "================================"
+        );
+
         console.log(
             "Searching courses for:",
             query
+        );
+
+        console.log(
+            "Preferred language:",
+            preferredLanguage
+        );
+
+        console.log(
+            "================================"
         );
 
 
@@ -565,9 +875,19 @@ export async function GET(
         }
 
 
-        /* =================================================
-           1. DATABASE FIRST
-        ================================================= */
+        /* =====================================================
+           1. DATABASE SEARCH
+        ===================================================== */
+
+        /*
+         * Search title/category only.
+         *
+         * This prevents:
+         *
+         * SQL + description mentions Python
+         *
+         * from appearing in Python search.
+         */
 
         const existingCourses =
             await db
@@ -582,19 +902,9 @@ export async function GET(
                         ),
 
                         ilike(
-                            courses.description,
-                            `%${query}%`
-                        ),
-
-                        ilike(
                             courses.category,
                             `%${query}%`
-                        ),
-
-                        ilike(
-                            courses.channelName,
-                            `%${query}%`
-                        ),
+                        )
 
                     )
                 );
@@ -606,9 +916,9 @@ export async function GET(
         );
 
 
-        /* =================================================
-           FILTER DATABASE RESULTS
-        ================================================= */
+        /* =====================================================
+           2. STRICT SUBJECT FILTER
+        ===================================================== */
 
         const relevantDatabaseCourses =
             existingCourses.filter(
@@ -624,24 +934,75 @@ export async function GET(
 
 
         console.log(
-            "Relevant database courses:",
+            "Strictly relevant database courses:",
             relevantDatabaseCourses.length
         );
 
 
-        /* =================================================
-           RETURN CACHED DATABASE RESULTS
-        ================================================= */
+        console.log(
+            "Relevant database titles:",
+            relevantDatabaseCourses.map(
+                (course) =>
+                    course.title
+            )
+        );
+
+
+        /* =====================================================
+           3. LANGUAGE HARD FILTER
+        ===================================================== */
+
+        const preferred =
+            preferredLanguage
+                .toLowerCase()
+                .trim();
+
+
+        const languageFilteredCourses =
+            relevantDatabaseCourses.filter(
+                (course) => {
+
+                    const courseLanguage =
+                        normalizeLanguage(
+                            course.language
+                        )
+                            .toLowerCase()
+                            .trim();
+
+
+                    return (
+                        courseLanguage ===
+                        preferred
+                    );
+                }
+            );
+
+
+        console.log(
+            "Database courses after language filter:",
+            languageFilteredCourses.length
+        );
+
+
+        /* =====================================================
+           4. RETURN DATABASE RESULTS
+        ===================================================== */
 
         if (
-            relevantDatabaseCourses.length >
+            languageFilteredCourses.length >
             0
         ) {
 
-            relevantDatabaseCourses.sort(
+            languageFilteredCourses.sort(
                 (a, b) =>
-                    b.recommendationScore -
-                    a.recommendationScore
+                    (
+                        b.recommendationScore ??
+                        0
+                    ) -
+                    (
+                        a.recommendationScore ??
+                        0
+                    )
             );
 
 
@@ -651,24 +1012,30 @@ export async function GET(
                     "database",
 
                 courses:
-                    relevantDatabaseCourses,
+                    languageFilteredCourses,
 
             });
         }
 
 
         console.log(
-            "No relevant database courses. Searching YouTube..."
+            "No matching database courses in preferred language."
         );
 
 
-        /* =================================================
-           2. YOUTUBE SEARCH
-        ================================================= */
+        console.log(
+            "Searching YouTube..."
+        );
+
+
+        /* =====================================================
+           5. YOUTUBE SEARCH
+        ===================================================== */
 
         const youtubeResults =
             await searchYouTubeCourses(
-                query
+                query,
+                preferredLanguage
             );
 
 
@@ -679,8 +1046,7 @@ export async function GET(
 
 
         if (
-            youtubeResults.length ===
-            0
+            youtubeResults.length === 0
         ) {
 
             return NextResponse.json({
@@ -694,12 +1060,70 @@ export async function GET(
         }
 
 
-        /* =================================================
-           3. GET YOUTUBE STATISTICS
-        ================================================= */
+        /* =====================================================
+           6. YOUTUBE LANGUAGE HARD FILTER
+        ===================================================== */
+
+        const languageMatchedResults =
+            youtubeResults.filter(
+                (video) => {
+
+                    const videoLanguage =
+                        normalizeLanguage(
+                            video.language
+                        )
+                            .toLowerCase()
+                            .trim();
+
+
+                    const matches =
+                        videoLanguage ===
+                        preferred;
+
+
+                    if (!matches) {
+
+                        console.log(
+                            "[REMOVE - LANGUAGE]",
+                            video.title,
+                            "->",
+                            video.language
+                        );
+                    }
+
+
+                    return matches;
+                }
+            );
+
+
+        console.log(
+            "YouTube courses after language filter:",
+            languageMatchedResults.length
+        );
+
+
+        if (
+            languageMatchedResults.length === 0
+        ) {
+
+            return NextResponse.json({
+
+                source:
+                    "youtube",
+
+                courses: [],
+
+            });
+        }
+
+
+        /* =====================================================
+           7. GET YOUTUBE STATISTICS
+        ===================================================== */
 
         const videoIds =
-            youtubeResults.map(
+            languageMatchedResults.map(
                 (video) =>
                     video.videoId
             );
@@ -722,12 +1146,12 @@ export async function GET(
             );
 
 
-        /* =================================================
-           4. BUILD SCORED COURSES
-        ================================================= */
+        /* =====================================================
+           8. BUILD SCORED COURSES
+        ===================================================== */
 
         const scoredCourses =
-            youtubeResults.map(
+            languageMatchedResults.map(
                 (video) => {
 
                     const stats =
@@ -773,23 +1197,41 @@ export async function GET(
                         );
 
 
-                    const recommendationScore =
-                        calculateRecommendationScore(
-                            {
-                                title:
-                                    video.title,
+                    let recommendationScore =
+                        calculateRecommendationScore({
 
-                                description:
-                                    video.description,
+                            title:
+                                video.title,
 
-                                views,
+                            description:
+                                video.description,
 
-                                likes,
+                            views,
 
-                                durationSeconds,
+                            likes,
 
-                                query,
-                            }
+                            durationSeconds,
+
+                            query,
+
+                        });
+
+
+                    /*
+                     * Language is already a hard filter.
+                     *
+                     * Keep a small boost for consistency,
+                     * but all courses here already match.
+                     */
+
+                    recommendationScore +=
+                        15;
+
+
+                    recommendationScore =
+                        Math.min(
+                            100,
+                            recommendationScore
                         );
 
 
@@ -817,8 +1259,14 @@ export async function GET(
                         courseType:
                             "VIDEO" as const,
 
+                        /*
+                         * IMPORTANT:
+                         *
+                         * Save actual detected language.
+                         */
+
                         language:
-                            "English",
+                            video.language,
 
                         youtubeUrl:
                             `https://www.youtube.com/watch?v=${video.videoId}`,
@@ -863,9 +1311,9 @@ export async function GET(
             );
 
 
-        /* =================================================
-           5. SORT BY RECOMMENDATION SCORE
-        ================================================= */
+        /* =====================================================
+           9. SORT
+        ===================================================== */
 
         scoredCourses.sort(
             (a, b) =>
@@ -874,9 +1322,9 @@ export async function GET(
         );
 
 
-        /* =================================================
-           6. TOP 10
-        ================================================= */
+        /* =====================================================
+           10. TOP 10
+        ===================================================== */
 
         const topCourses =
             scoredCourses.slice(
@@ -885,28 +1333,36 @@ export async function GET(
             );
 
 
-        /* =================================================
-           7. CHECK WHICH VIDEOS
-              ALREADY EXIST
-        ================================================= */
+        /* =====================================================
+           11. CHECK EXISTING YOUTUBE COURSES
+        ===================================================== */
 
         const existingYouTubeCourses =
             await db
                 .select()
                 .from(courses)
                 .where(
-                    inArray(
-                        courses.youtubeId,
-                        topCourses.map(
-                            (course) =>
-                                course.youtubeId
+                    and(
+
+                        inArray(
+                            courses.youtubeId,
+                            topCourses.map(
+                                (course) =>
+                                    course.youtubeId
+                            )
+                        ),
+
+                        ilike(
+                            courses.language,
+                            preferredLanguage
                         )
+
                     )
                 );
 
 
         console.log(
-            "Existing YouTube courses:",
+            "Existing YouTube courses in preferred language:",
             existingYouTubeCourses.length
         );
 
@@ -942,38 +1398,40 @@ export async function GET(
         );
 
 
-        /* =========================================================
-   8. INSERT COURSES + CREATE LESSONS
-========================================================= */
+        /* =====================================================
+           12. INSERT COURSES + LESSONS
+        ===================================================== */
 
-        if (newCourses.length > 0) {
+        if (
+            newCourses.length > 0
+        ) {
 
-            for (const course of newCourses) {
+            for (
+                const course
+                of newCourses
+            ) {
 
                 try {
-
-                    /* =========================
-                       INSERT COURSE
-                    ========================= */
 
                     const [insertedCourse] =
                         await db
                             .insert(courses)
                             .values(course)
                             .onConflictDoNothing({
-                                target: courses.youtubeId,
+                                target:
+                                    courses.youtubeId,
                             })
                             .returning();
 
-                    /* =========================
-                       COURSE WAS INSERTED
-                    ========================= */
 
-                    if (insertedCourse) {
+                    if (
+                        insertedCourse
+                    ) {
 
                         await db
                             .insert(lessons)
                             .values({
+
                                 courseId:
                                     insertedCourse.id,
 
@@ -983,11 +1441,6 @@ export async function GET(
                                 description:
                                     insertedCourse.description,
 
-                                /* IMPORTANT:
-                                   LessonVideo passes this
-                                   value to YouTubePlayer
-                                */
-
                                 videoUrl:
                                     insertedCourse.youtubeId!,
 
@@ -996,73 +1449,100 @@ export async function GET(
 
                                 order:
                                     1,
+
                             });
+
 
                         console.log(
                             `[LESSON CREATED] ${insertedCourse.title}`
                         );
-
                     }
 
-                } catch (error) {
+
+                } catch (
+                    error
+                ) {
 
                     console.error(
                         `[COURSE INSERT ERROR] ${course.title}`,
                         error
                     );
-
                 }
             }
-
-            console.log(
-                "New courses processed:",
-                newCourses.length
-            );
         }
 
 
-        /* =================================================
-           9. FETCH FINAL RESULTS
-        ================================================= */
-
-        /*
-         * Fetch the top YouTube IDs again.
-         *
-         * This ensures we return both:
-         *
-         * - already cached courses
-         * - newly inserted courses
-         */
+        /* =====================================================
+           13. FINAL FETCH
+        ===================================================== */
 
         const finalCourses =
             await db
                 .select()
                 .from(courses)
                 .where(
-                    inArray(
-                        courses.youtubeId,
-                        topCourses.map(
-                            (course) =>
-                                course.youtubeId
+                    and(
+
+                        inArray(
+                            courses.youtubeId,
+                            topCourses.map(
+                                (course) =>
+                                    course.youtubeId
+                            )
+                        ),
+
+                        ilike(
+                            courses.language,
+                            preferredLanguage
                         )
+
                     )
                 );
 
 
-        /* =================================================
-           10. SORT FINAL RESULTS
-        ================================================= */
+        /* =====================================================
+           14. FINAL RELEVANCE FILTER
+        ===================================================== */
 
-        finalCourses.sort(
+        const finalRelevantCourses =
+            finalCourses.filter(
+                (course) =>
+                    isRelevantDatabaseCourse(
+                        course.title,
+                        course.description,
+                        course.category,
+                        course.channelName,
+                        query
+                    )
+            );
+
+
+        /* =====================================================
+           15. FINAL SORT
+        ===================================================== */
+
+        finalRelevantCourses.sort(
             (a, b) =>
-                b.recommendationScore -
-                a.recommendationScore
+                (
+                    b.recommendationScore ??
+                    0
+                ) -
+                (
+                    a.recommendationScore ??
+                    0
+                )
         );
 
 
-        /* =================================================
-           11. RETURN TOP 10
-        ================================================= */
+        console.log(
+            "Final courses:",
+            finalRelevantCourses.length
+        );
+
+
+        /* =====================================================
+           16. RETURN
+        ===================================================== */
 
         return NextResponse.json({
 
@@ -1070,14 +1550,16 @@ export async function GET(
                 "youtube",
 
             courses:
-                finalCourses.slice(
+                finalRelevantCourses.slice(
                     0,
                     10
                 ),
 
         });
 
-    } catch (error) {
+    } catch (
+        error
+    ) {
 
         console.error(
             "Course search error:",

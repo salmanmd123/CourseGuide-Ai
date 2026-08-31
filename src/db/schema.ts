@@ -57,7 +57,7 @@ export const courses = pgTable("courses", {
 
   /* =========================
      LANGUAGE
-     ENGLISH / HINDI / HINGLISH
+     ENGLISH / HINDI 
   ========================= */
 
   language: varchar("language", {
