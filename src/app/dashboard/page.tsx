@@ -14,7 +14,7 @@ import {
   Trophy,
 } from "lucide-react";
 
-import { eq, count, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 import { db } from "@/db";
 import {
@@ -38,13 +38,17 @@ export default async function DashboardPage() {
   }
 
   // =========================================================
-  // GET COURSES
+  // GET ALL COURSES
   // =========================================================
 
   const allCourses = await db
     .select()
-    .from(courses)
-    .orderBy(courses.createdAt);
+    .from(courses);
+
+  console.log(
+    "Database courses found:",
+    allCourses.length
+  );
 
   // =========================================================
   // GET USER PROGRESS
@@ -69,7 +73,8 @@ export default async function DashboardPage() {
       .map((item) => item.lessonId)
   );
 
-  const completedLessonsCount = completedLessonIds.size;
+  const completedLessonsCount =
+    completedLessonIds.size;
 
   // =========================================================
   // GET QUIZ ATTEMPTS
@@ -80,7 +85,8 @@ export default async function DashboardPage() {
     .from(quizAttempts)
     .where(eq(quizAttempts.userId, user.id));
 
-  const quizzesCompleted = userQuizAttempts.length;
+  const quizzesCompleted =
+    userQuizAttempts.length;
 
   // =========================================================
   // AVERAGE QUIZ SCORE
@@ -89,23 +95,31 @@ export default async function DashboardPage() {
   let averageQuizScore = 0;
 
   if (userQuizAttempts.length > 0) {
-    const totalPercentage = userQuizAttempts.reduce(
-      (total, attempt) => {
-        if (attempt.totalQuestions === 0) {
-          return total;
-        }
+    const validAttempts =
+      userQuizAttempts.filter(
+        (attempt) =>
+          attempt.totalQuestions > 0
+      );
 
-        return (
-          total +
-          (attempt.score / attempt.totalQuestions) * 100
+    if (validAttempts.length > 0) {
+      const totalPercentage =
+        validAttempts.reduce(
+          (total, attempt) => {
+            return (
+              total +
+              (attempt.score /
+                attempt.totalQuestions) *
+                100
+            );
+          },
+          0
         );
-      },
-      0
-    );
 
-    averageQuizScore = Math.round(
-      totalPercentage / userQuizAttempts.length
-    );
+      averageQuizScore = Math.round(
+        totalPercentage /
+          validAttempts.length
+      );
+    }
   }
 
   // =========================================================
@@ -120,50 +134,83 @@ export default async function DashboardPage() {
   // =========================================================
   // FIND CURRENT COURSE
   //
-  // The course with the most completed lessons becomes
-  // the user's current course.
+  // Course with the most completed lessons
+  // becomes the current course.
   // =========================================================
 
-  let currentCourse = null;
+  let currentCourse =
+    allCourses.length > 0
+      ? allCourses[0]
+      : null;
+
   let currentCourseCompleted = 0;
   let currentCourseTotal = 0;
   let currentLesson = null;
 
   if (allCourses.length > 0) {
-    const courseProgress = allCourses.map((course) => {
-      const courseLessonIds = allLessons
-        .filter((lesson) => lesson.courseId === course.id)
-        .map((lesson) => lesson.id);
+    const courseProgress =
+      allCourses.map((course) => {
+        const courseLessonIds =
+          allLessons
+            .filter(
+              (lesson) =>
+                lesson.courseId === course.id
+            )
+            .map((lesson) => lesson.id);
 
-      const completed = courseLessonIds.filter((id) =>
-        completedLessonIds.has(id)
-      ).length;
+        const completed =
+          courseLessonIds.filter((id) =>
+            completedLessonIds.has(id)
+          ).length;
 
-      return {
-        course,
-        completed,
-        total: courseLessonIds.length,
-      };
-    });
+        return {
+          course,
+          completed,
+          total: courseLessonIds.length,
+        };
+      });
 
-    // Prefer a course that the user has already started.
-    const startedCourses = courseProgress.filter(
-      (item) => item.completed > 0 && item.completed < item.total
-    );
+    // =======================================================
+    // COURSES THAT HAVE BEEN STARTED
+    // =======================================================
+
+    const startedCourses =
+      courseProgress.filter(
+        (item) =>
+          item.completed > 0 &&
+          item.completed < item.total
+      );
 
     if (startedCourses.length > 0) {
       startedCourses.sort(
-        (a, b) => b.completed - a.completed
+        (a, b) =>
+          b.completed - a.completed
       );
 
-      currentCourse = startedCourses[0].course;
-      currentCourseCompleted = startedCourses[0].completed;
-      currentCourseTotal = startedCourses[0].total;
+      currentCourse =
+        startedCourses[0].course;
+
+      currentCourseCompleted =
+        startedCourses[0].completed;
+
+      currentCourseTotal =
+        startedCourses[0].total;
     } else {
-      // Otherwise use the first course.
-      currentCourse = courseProgress[0].course;
-      currentCourseCompleted = courseProgress[0].completed;
-      currentCourseTotal = courseProgress[0].total;
+      // =====================================================
+      // OTHERWISE USE THE FIRST COURSE
+      // =====================================================
+
+      const firstCourse =
+        courseProgress[0];
+
+      currentCourse =
+        firstCourse.course;
+
+      currentCourseCompleted =
+        firstCourse.completed;
+
+      currentCourseTotal =
+        firstCourse.total;
     }
   }
 
@@ -173,13 +220,27 @@ export default async function DashboardPage() {
 
   if (currentCourse) {
     const courseLessons = allLessons
-      .filter((lesson) => lesson.courseId === currentCourse!.id)
-      .sort((a, b) => a.order - b.order);
+      .filter(
+        (lesson) =>
+          lesson.courseId ===
+          currentCourse!.id
+      )
+      .sort(
+        (a, b) =>
+          a.order - b.order
+      );
 
     currentLesson =
       courseLessons.find(
-        (lesson) => !completedLessonIds.has(lesson.id)
-      ) ?? courseLessons[courseLessons.length - 1] ?? null;
+        (lesson) =>
+          !completedLessonIds.has(
+            lesson.id
+          )
+      ) ??
+      courseLessons[
+        courseLessons.length - 1
+      ] ??
+      null;
   }
 
   // =========================================================
@@ -189,34 +250,45 @@ export default async function DashboardPage() {
   const currentCourseProgress =
     currentCourseTotal > 0
       ? Math.round(
-          (currentCourseCompleted / currentCourseTotal) * 100
+          (currentCourseCompleted /
+            currentCourseTotal) *
+            100
         )
       : 0;
 
   // =========================================================
   // RECOMMENDED COURSES
-  //
-  // Show courses other than current course.
   // =========================================================
 
-  const recommendedCourses = allCourses
-    .filter(
-      (course) =>
-        !currentCourse || course.id !== currentCourse.id
-    )
-    .slice(0, 3);
+  const recommendedCourses =
+    allCourses
+      .filter(
+        (course) =>
+          !currentCourse ||
+          course.id !==
+            currentCourse.id
+      )
+      .slice(0, 3);
 
   // =========================================================
   // FALLBACK
   // =========================================================
 
-  if (recommendedCourses.length === 0 && currentCourse) {
-    recommendedCourses.push(currentCourse);
+  if (
+    recommendedCourses.length === 0 &&
+    currentCourse
+  ) {
+    recommendedCourses.push(
+      currentCourse
+    );
   }
+
+  // =========================================================
+  // UI
+  // =========================================================
 
   return (
     <main className="min-h-screen bg-zinc-50 text-zinc-950 transition-colors dark:bg-zinc-950 dark:text-zinc-50">
-
       <Navbar />
 
       <div className="mx-auto max-w-7xl px-6 py-10">
@@ -226,9 +298,7 @@ export default async function DashboardPage() {
         {/* ================================================= */}
 
         <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
-
           <div>
-
             <p className="text-sm font-medium text-indigo-600 dark:text-indigo-400">
               LEARNING DASHBOARD
             </p>
@@ -240,7 +310,6 @@ export default async function DashboardPage() {
             <p className="mt-2 text-zinc-500 dark:text-zinc-400">
               Keep going. You're making progress.
             </p>
-
           </div>
 
           <Link
@@ -250,9 +319,7 @@ export default async function DashboardPage() {
             <Search size={17} />
             Find a course
           </Link>
-
         </div>
-
 
         {/* ================================================= */}
         {/* STATS */}
@@ -260,12 +327,10 @@ export default async function DashboardPage() {
 
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
 
-          {/* Streak */}
+          {/* STREAK */}
 
           <div className="rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
-
             <div className="flex items-center justify-between">
-
               <p className="text-sm text-zinc-500 dark:text-zinc-400">
                 Learning streak
               </p>
@@ -274,7 +339,6 @@ export default async function DashboardPage() {
                 size={19}
                 className="text-orange-500"
               />
-
             </div>
 
             <p className="mt-3 text-3xl font-bold text-zinc-950 dark:text-white">
@@ -284,16 +348,12 @@ export default async function DashboardPage() {
             <p className="mt-1 text-xs text-zinc-400">
               Streak tracking coming soon
             </p>
-
           </div>
 
-
-          {/* Enrolled */}
+          {/* COURSES */}
 
           <div className="rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
-
             <div className="flex items-center justify-between">
-
               <p className="text-sm text-zinc-500 dark:text-zinc-400">
                 Courses available
               </p>
@@ -302,7 +362,6 @@ export default async function DashboardPage() {
                 size={19}
                 className="text-indigo-600 dark:text-indigo-400"
               />
-
             </div>
 
             <p className="mt-3 text-3xl font-bold text-zinc-950 dark:text-white">
@@ -312,16 +371,12 @@ export default async function DashboardPage() {
             <p className="mt-1 text-xs text-zinc-400">
               Courses in CourseGuide
             </p>
-
           </div>
 
-
-          {/* Hours */}
+          {/* LESSONS */}
 
           <div className="rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
-
             <div className="flex items-center justify-between">
-
               <p className="text-sm text-zinc-500 dark:text-zinc-400">
                 Lessons completed
               </p>
@@ -330,7 +385,6 @@ export default async function DashboardPage() {
                 size={19}
                 className="text-emerald-600 dark:text-emerald-400"
               />
-
             </div>
 
             <p className="mt-3 text-3xl font-bold text-zinc-950 dark:text-white">
@@ -340,16 +394,12 @@ export default async function DashboardPage() {
             <p className="mt-1 text-xs text-zinc-400">
               Across all courses
             </p>
-
           </div>
 
-
-          {/* Quizzes */}
+          {/* QUIZZES */}
 
           <div className="rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
-
             <div className="flex items-center justify-between">
-
               <p className="text-sm text-zinc-500 dark:text-zinc-400">
                 Quizzes completed
               </p>
@@ -358,7 +408,6 @@ export default async function DashboardPage() {
                 size={19}
                 className="text-amber-500"
               />
-
             </div>
 
             <p className="mt-3 text-3xl font-bold text-zinc-950 dark:text-white">
@@ -370,11 +419,8 @@ export default async function DashboardPage() {
                 ? `${averageQuizScore}% average score`
                 : "No quizzes completed yet"}
             </p>
-
           </div>
-
         </div>
-
 
         {/* ================================================= */}
         {/* MAIN GRID */}
@@ -387,11 +433,8 @@ export default async function DashboardPage() {
           {/* ================================================= */}
 
           <section>
-
             <div className="flex items-center justify-between">
-
               <div>
-
                 <h2 className="text-xl font-bold text-zinc-950 dark:text-white">
                   Continue learning
                 </h2>
@@ -399,7 +442,6 @@ export default async function DashboardPage() {
                 <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
                   Pick up where you left off.
                 </p>
-
               </div>
 
               <Link
@@ -409,22 +451,18 @@ export default async function DashboardPage() {
                 View all
                 <ArrowRight size={15} />
               </Link>
-
             </div>
 
-
-            {/* Current course */}
+            {/* CURRENT COURSE */}
 
             {currentCourse ? (
-
               <div className="mt-5 overflow-hidden rounded-2xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
 
                 <div className="grid md:grid-cols-[190px_1fr]">
 
-                  {/* Course visual */}
+                  {/* COURSE VISUAL */}
 
                   <div className="flex min-h-[190px] items-center justify-center bg-zinc-950 dark:bg-black">
-
                     <div className="text-center text-white">
 
                       <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-600">
@@ -435,23 +473,19 @@ export default async function DashboardPage() {
                         CURRENT COURSE
                       </p>
 
-                      <p className="mt-1 text-sm font-semibold">
+                      <p className="mt-1 px-4 text-sm font-semibold">
                         {currentCourse.title}
                       </p>
-
                     </div>
-
                   </div>
 
-
-                  {/* Course information */}
+                  {/* COURSE INFORMATION */}
 
                   <div className="p-6">
 
                     <div className="flex items-start justify-between gap-4">
 
                       <div>
-
                         <span className="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-medium text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400">
                           {currentCourse.category}
                         </span>
@@ -461,37 +495,33 @@ export default async function DashboardPage() {
                         </h3>
 
                         <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-                          {currentLesson?.title ?? "Start this course"}
+                          {currentLesson?.title ??
+                            "Start this course"}
                         </p>
-
                       </div>
 
                       <span className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">
                         {currentCourseProgress}%
                       </span>
-
                     </div>
 
-
-                    {/* Progress */}
+                    {/* PROGRESS BAR */}
 
                     <div className="mt-6 h-2 overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
-
                       <div
                         className="h-full rounded-full bg-indigo-600 transition-all"
                         style={{
                           width: `${currentCourseProgress}%`,
                         }}
                       />
-
                     </div>
-
 
                     <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
 
                       <p className="text-xs text-zinc-400">
                         {currentCourseCompleted} of{" "}
-                        {currentCourseTotal} lessons completed
+                        {currentCourseTotal}{" "}
+                        lessons completed
                       </p>
 
                       <Link
@@ -504,17 +534,11 @@ export default async function DashboardPage() {
                         />
                         Continue
                       </Link>
-
                     </div>
-
                   </div>
-
                 </div>
-
               </div>
-
             ) : (
-
               <div className="mt-5 rounded-2xl border border-dashed border-zinc-300 bg-white p-10 text-center dark:border-zinc-700 dark:bg-zinc-900">
 
                 <BookOpen
@@ -527,15 +551,19 @@ export default async function DashboardPage() {
                 </h3>
 
                 <p className="mt-2 text-sm text-zinc-500">
-                  Add courses to your CourseGuide database.
+                  Search for a course to get started.
                 </p>
 
+                <Link
+                  href="/courses"
+                  className="mt-5 inline-flex items-center gap-2 rounded-xl bg-zinc-950 px-4 py-2.5 text-sm font-semibold text-white dark:bg-white dark:text-zinc-950"
+                >
+                  Find courses
+                  <ArrowRight size={15} />
+                </Link>
               </div>
-
             )}
-
           </section>
-
 
           {/* ================================================= */}
           {/* SIDEBAR */}
@@ -543,14 +571,13 @@ export default async function DashboardPage() {
 
           <aside>
 
-            {/* Daily goal */}
+            {/* DAILY GOAL */}
 
             <div className="rounded-2xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
 
               <div className="flex items-center justify-between">
 
                 <div>
-
                   <h2 className="font-bold text-zinc-950 dark:text-white">
                     Today's goal
                   </h2>
@@ -558,15 +585,12 @@ export default async function DashboardPage() {
                   <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
                     Keep learning consistently
                   </p>
-
                 </div>
 
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400">
                   <Target size={19} />
                 </div>
-
               </div>
-
 
               <div className="mt-7 flex items-center gap-5">
 
@@ -575,20 +599,18 @@ export default async function DashboardPage() {
                   <div className="text-center">
 
                     <p className="text-xl font-bold text-zinc-950 dark:text-white">
-                      {currentLesson ? "1" : "0"}
+                      {currentLesson
+                        ? "1"
+                        : "0"}
                     </p>
 
                     <p className="text-[10px] text-zinc-400">
                       LESSON
                     </p>
-
                   </div>
-
                 </div>
 
-
                 <div>
-
                   <p className="text-sm font-semibold text-zinc-900 dark:text-white">
                     {currentLesson
                       ? "Keep going!"
@@ -600,14 +622,10 @@ export default async function DashboardPage() {
                       ? `Next: ${currentLesson.title}`
                       : "Complete a course to keep your progress growing."}
                   </p>
-
                 </div>
-
               </div>
 
-
               {currentCourse && (
-
                 <Link
                   href={`/learn/${currentCourse.slug}`}
                   className="mt-7 flex w-full items-center justify-center gap-2 rounded-xl bg-zinc-100 py-3 text-sm font-semibold text-zinc-800 transition hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
@@ -615,13 +633,10 @@ export default async function DashboardPage() {
                   Start learning
                   <ArrowRight size={16} />
                 </Link>
-
               )}
-
             </div>
 
-
-            {/* AI suggestion */}
+            {/* AI SUGGESTION */}
 
             <div className="mt-4 rounded-2xl bg-indigo-600 p-6 text-white">
 
@@ -644,13 +659,9 @@ export default async function DashboardPage() {
                 Explore courses
                 <ArrowRight size={15} />
               </Link>
-
             </div>
-
           </aside>
-
         </div>
-
 
         {/* ================================================= */}
         {/* RECOMMENDED COURSES */}
@@ -661,7 +672,6 @@ export default async function DashboardPage() {
           <div className="flex items-end justify-between">
 
             <div>
-
               <h2 className="text-xl font-bold text-zinc-950 dark:text-white">
                 Recommended for you
               </h2>
@@ -669,7 +679,6 @@ export default async function DashboardPage() {
               <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
                 Explore more courses from CourseGuide.
               </p>
-
             </div>
 
             <Link
@@ -679,91 +688,81 @@ export default async function DashboardPage() {
               Browse all
               <ArrowRight size={15} />
             </Link>
-
           </div>
-
 
           <div className="mt-5 grid gap-5 md:grid-cols-3">
 
-            {recommendedCourses.map((course) => (
+            {recommendedCourses.map(
+              (course) => (
+                <div
+                  key={course.id}
+                  className="group overflow-hidden rounded-2xl border border-zinc-200 bg-white transition hover:-translate-y-1 hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700 dark:hover:shadow-2xl"
+                >
 
-              <div
-                key={course.id}
-                className="group overflow-hidden rounded-2xl border border-zinc-200 bg-white transition hover:-translate-y-1 hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700 dark:hover:shadow-2xl"
-              >
+                  {/* COURSE IMAGE */}
 
-                {/* Course image */}
+                  <div className="flex h-36 items-center justify-center bg-zinc-100 dark:bg-zinc-800">
 
-                <div className="flex h-36 items-center justify-center bg-zinc-100 dark:bg-zinc-800">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-indigo-600 shadow-sm dark:bg-zinc-900 dark:text-indigo-400">
 
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-indigo-600 shadow-sm dark:bg-zinc-900 dark:text-indigo-400">
-
-                    {course.category === "Programming" ? (
-                      <BookOpen size={23} />
-                    ) : course.category === "Computer Science" ? (
-                      <Target size={23} />
-                    ) : (
-                      <Sparkles size={23} />
-                    )}
-
+                      {course.category ===
+                      "Programming" ? (
+                        <BookOpen size={23} />
+                      ) : course.category ===
+                        "Computer Science" ? (
+                        <Target size={23} />
+                      ) : (
+                        <Sparkles size={23} />
+                      )}
+                    </div>
                   </div>
 
+                  {/* COURSE CONTENT */}
+
+                  <div className="p-5">
+
+                    <div className="flex items-center justify-between">
+
+                      <span className="text-xs font-medium text-indigo-600 dark:text-indigo-400">
+                        {course.category}
+                      </span>
+
+                      <span className="text-xs text-zinc-400">
+                        {course.level}
+                      </span>
+                    </div>
+
+                    <h3 className="mt-3 line-clamp-2 font-bold text-zinc-950 dark:text-white">
+                      {course.title}
+                    </h3>
+
+                    <div className="mt-4 flex items-center justify-between text-xs text-zinc-400">
+
+                      <span>
+                        {course.lessonsCount}{" "}
+                        lessons
+                      </span>
+
+                      <span>
+                        {course.duration}
+                      </span>
+                    </div>
+
+                    <Link
+                      href={`/courses/${course.slug}`}
+                      className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl border border-zinc-200 py-2.5 text-sm font-semibold text-zinc-700 transition group-hover:border-zinc-950 group-hover:bg-zinc-950 group-hover:text-white dark:border-zinc-700 dark:text-zinc-300 dark:group-hover:border-white dark:group-hover:bg-white dark:group-hover:text-zinc-950"
+                    >
+                      View course
+                      <ArrowRight size={15} />
+                    </Link>
+                  </div>
                 </div>
-
-
-                {/* Course content */}
-
-                <div className="p-5">
-
-                  <div className="flex items-center justify-between">
-
-                    <span className="text-xs font-medium text-indigo-600 dark:text-indigo-400">
-                      {course.category}
-                    </span>
-
-                    <span className="text-xs text-zinc-400">
-                      {course.level}
-                    </span>
-
-                  </div>
-
-
-                  <h3 className="mt-3 font-bold text-zinc-950 dark:text-white">
-                    {course.title}
-                  </h3>
-
-
-                  <div className="mt-4 flex items-center justify-between text-xs text-zinc-400">
-                    <span>
-                      {course.lessonsCount} lessons
-                    </span>
-
-                    <span>
-                      {course.duration}
-                    </span>
-                  </div>
-
-
-                  <Link
-                    href={`/courses/${course.slug}`}
-                    className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl border border-zinc-200 py-2.5 text-sm font-semibold text-zinc-700 transition group-hover:border-zinc-950 group-hover:bg-zinc-950 group-hover:text-white dark:border-zinc-700 dark:text-zinc-300 dark:group-hover:border-white dark:group-hover:bg-white dark:group-hover:text-zinc-950"
-                  >
-                    View course
-                    <ArrowRight size={15} />
-                  </Link>
-
-                </div>
-
-              </div>
-
-            ))}
+              )
+            )}
 
           </div>
-
         </section>
-
       </div>
-
     </main>
   );
 }

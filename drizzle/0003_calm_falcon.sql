@@ -1,0 +1,1 @@
+ALTER TABLE "courses" ADD CONSTRAINT "courses_youtube_id_unique" UNIQUE("youtube_id");
