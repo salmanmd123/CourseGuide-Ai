@@ -573,31 +573,33 @@ export default async function DashboardPage() {
 
           </div>
 
-          {/* COURSES */}
+          {/* COURSES STARTED */}
 
           <div className="rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
-
             <div className="flex items-center justify-between">
-
               <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                Courses available
+                Courses started
               </p>
 
               <BookOpen
                 size={19}
                 className="text-indigo-600 dark:text-indigo-400"
               />
-
             </div>
 
-            <p className="mt-3 text-3xl font-bold">
-              {allCourses.length}
+            <p className="mt-3 text-3xl font-bold text-zinc-950 dark:text-white">
+              {
+                courseProgress.filter(
+                  (item) =>
+                    item.totalWatchedSeconds > 0 ||
+                    item.completed > 0
+                ).length
+              }
             </p>
 
             <p className="mt-1 text-xs text-zinc-400">
-              Courses in CourseGuide
+              Courses you've started
             </p>
-
           </div>
 
           {/* LESSONS */}
@@ -685,7 +687,7 @@ export default async function DashboardPage() {
               </div>
 
               <Link
-                href="/courses"
+                href="/my-learning"
                 className="hidden items-center gap-1 text-sm font-medium text-indigo-600 dark:text-indigo-400 sm:flex"
               >
                 View all
@@ -949,7 +951,7 @@ export default async function DashboardPage() {
 
             <div>
 
-              <h2 className="text-xl font-bold">
+              <h2 className="text-xl font-bold text-zinc-950 dark:text-white">
                 Recommended for you
               </h2>
 
@@ -979,33 +981,53 @@ export default async function DashboardPage() {
                   className="group overflow-hidden rounded-2xl border border-zinc-200 bg-white transition hover:-translate-y-1 hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700 dark:hover:shadow-2xl"
                 >
 
-                  {/* COURSE IMAGE */}
+                  {/* =================================================
+              YOUTUBE THUMBNAIL
+          ================================================= */}
 
-                  <div className="flex h-36 items-center justify-center bg-zinc-100 dark:bg-zinc-800">
+                  <div className="relative h-55 overflow-hidden bg-zinc-100 dark:bg-zinc-800">
 
-                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-indigo-600 shadow-sm dark:bg-zinc-900 dark:text-indigo-400">
+                    {course.thumbnailUrl ? (
 
-                      {course.category ===
-                        "Programming" ? (
+                      <img
+                        src={course.thumbnailUrl}
+                        alt={course.title}
+                        className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                      />
 
-                        <BookOpen size={23} />
+                    ) : (
 
-                      ) : course.category ===
-                        "Computer Science" ? (
+                      <div className="flex h-full items-center justify-center">
 
-                        <Target size={23} />
+                        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-indigo-600 shadow-sm dark:bg-zinc-900 dark:text-indigo-400">
 
-                      ) : (
+                          {course.category ===
+                            "Programming" ? (
 
-                        <Sparkles size={23} />
+                            <BookOpen size={23} />
 
-                      )}
+                          ) : course.category ===
+                            "Computer Science" ? (
 
-                    </div>
+                            <Target size={23} />
+
+                          ) : (
+
+                            <Sparkles size={23} />
+
+                          )}
+
+                        </div>
+
+                      </div>
+
+                    )}
 
                   </div>
 
-                  {/* COURSE CONTENT */}
+                  {/* =================================================
+              COURSE CONTENT
+          ================================================= */}
 
                   <div className="p-5">
 
@@ -1021,15 +1043,14 @@ export default async function DashboardPage() {
 
                     </div>
 
-                    <h3 className="mt-3 line-clamp-2 font-bold">
+                    <h3 className="mt-3 line-clamp-2 font-bold text-zinc-950 dark:text-white">
                       {course.title}
                     </h3>
 
                     <div className="mt-4 flex items-center justify-between text-xs text-zinc-400">
 
                       <span>
-                        {course.lessonsCount}{" "}
-                        lessons
+                        {course.lessonsCount} lessons
                       </span>
 
                       <span>
