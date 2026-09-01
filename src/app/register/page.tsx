@@ -91,7 +91,7 @@ export default function RegisterPage() {
             <Link href="/" className="flex items-center gap-3">
 
               <img
-                src="/logo.png"
+                src="/logo1.png"
                 alt="CourseGuide"
                 className="h-10 w-10 rounded-xl object-contain"
               />

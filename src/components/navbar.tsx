@@ -210,7 +210,7 @@ export default function Navbar() {
                 >
 
                     <img
-                        src="/logo.png"
+                        src="/logo1.png"
                         alt="CourseGuide"
                         className="h-10 w-10 rounded-xl object-contain"
                     />

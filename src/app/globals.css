@@ -30,3 +30,137 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* =====================================================
+   COURSE LOGO LOADER
+===================================================== */
+
+.logo-loader {
+  overflow: visible;
+}
+
+/* Animated SVG outline */
+
+.logo-loader .dash path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+
+  animation: logo-draw var(--sped, 4s) ease-in-out infinite;
+}
+
+/* Solid logo */
+
+.logo-loader .fill {
+  fill: currentColor;
+
+  opacity: 0;
+
+  animation: logo-fill 4s ease-in-out infinite;
+}
+
+/* Drawing animation */
+
+@keyframes logo-draw {
+  0% {
+    stroke-dashoffset: 1000;
+    opacity: 0.2;
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  55% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+
+  75% {
+    stroke-dashoffset: 0;
+    opacity: 0.3;
+  }
+
+  100% {
+    stroke-dashoffset: -1000;
+    opacity: 0;
+  }
+}
+
+/* Fill animation */
+
+@keyframes logo-fill {
+  0% {
+    opacity: 0;
+  }
+
+  55% {
+    opacity: 0;
+  }
+
+  70% {
+    opacity: 0.12;
+  }
+
+  82% {
+    opacity: 0.2;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Loading dots */
+
+.loader-dot {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 9999px;
+
+  background-color: currentColor;
+
+  color: rgb(99 102 241);
+
+  animation: loader-bounce 1.2s ease-in-out infinite;
+}
+
+.animation-delay-200 {
+  animation-delay: 0.2s;
+}
+
+.animation-delay-400 {
+  animation-delay: 0.4s;
+}
+
+@keyframes loader-bounce {
+
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.35;
+  }
+
+  30% {
+    transform: translateY(-5px);
+    opacity: 1;
+  }
+}
+
+/* Respect reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .logo-loader .dash path,
+  .logo-loader .fill,
+  .loader-dot {
+    animation: none;
+  }
+}
