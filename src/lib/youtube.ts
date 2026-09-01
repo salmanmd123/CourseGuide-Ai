@@ -1,11 +1,44 @@
-type YouTubeCourseResult = {
+export type CourseType = "VIDEO" | "PLAYLIST";
+
+export type YouTubePlaylistLesson = {
     videoId: string;
     title: string;
     description: string;
     thumbnail: string;
     channelName: string;
     publishedAt: string;
+    duration: string;
+    durationSeconds: number;
+};
+
+export type YouTubeCourseResult = {
+    courseType: CourseType;
+
+    videoId: string;
+
+    playlistId?: string;
+
+    title: string;
+
+    description: string;
+
+    thumbnail: string;
+
+    channelName: string;
+
+    publishedAt: string;
+
     language: string;
+
+    duration?: string;
+
+    durationSeconds?: number;
+
+    views?: number;
+
+    likes?: number;
+
+    lessons?: YouTubePlaylistLesson[];
 };
 
 type YouTubeVideoStatistics = {
@@ -23,6 +56,40 @@ type YouTubeVideoStatistics = {
 
     contentDetails?: {
         duration?: string;
+    };
+};
+
+type YouTubePlaylistItem = {
+    snippet?: {
+        title?: string;
+
+        description?: string;
+
+        channelTitle?: string;
+
+        publishedAt?: string;
+
+        thumbnails?: {
+            high?: {
+                url?: string;
+            };
+
+            medium?: {
+                url?: string;
+            };
+
+            default?: {
+                url?: string;
+            };
+        };
+
+        resourceId?: {
+            videoId?: string;
+        };
+    };
+
+    contentDetails?: {
+        videoId?: string;
     };
 };
 
@@ -59,7 +126,6 @@ function normalizeQuery(query: string): string {
 export function normalizeLanguage(
     language: string | null | undefined
 ): string {
-
     const value =
         (language || "")
             .toLowerCase()
@@ -276,7 +342,6 @@ export function normalizeLanguage(
 export function displayLanguage(
     language: string | null | undefined
 ): string {
-
     const normalized =
         normalizeLanguage(language);
 
@@ -301,7 +366,10 @@ export function displayLanguage(
         portuguese: "Portuguese",
     };
 
-    return languageMap[normalized] || "Unknown";
+    return (
+        languageMap[normalized] ||
+        "Unknown"
+    );
 }
 
 
@@ -313,35 +381,239 @@ function isBadVideo(
     title: string,
     description: string
 ): boolean {
-
     const normalizedTitle =
         normalizeText(title);
 
     const normalizedDescription =
         normalizeText(description);
 
-    const text =
-        `${normalizedTitle} ${normalizedDescription}`;
+    const checks = [
+        {
+            pattern: "#shorts",
+            reason: "SHORTS",
+        },
 
+        {
+            pattern: "youtube shorts",
+            reason: "SHORTS",
+        },
 
-    /* =====================================================
-       SHORTS
-    ===================================================== */
+        {
+            pattern: "short video",
+            reason: "SHORTS",
+        },
 
-    const shortsPatterns = [
-        "#shorts",
-        "youtube shorts",
-        "short video",
+        {
+            pattern: "salary of",
+            reason: "CAREER",
+        },
+
+        {
+            pattern: "salary",
+            reason: "CAREER",
+        },
+
+        {
+            pattern: "earnings",
+            reason: "CAREER",
+        },
+
+        {
+            pattern: "earning potential",
+            reason: "CAREER",
+        },
+
+        {
+            pattern: "how much does",
+            reason: "CAREER",
+        },
+
+        {
+            pattern: "how much can you earn",
+            reason: "CAREER",
+        },
+
+        {
+            pattern: "career opportunities",
+            reason: "CAREER",
+        },
+
+        {
+            pattern: "career path",
+            reason: "CAREER",
+        },
+
+        {
+            pattern: "career roadmap",
+            reason: "CAREER",
+        },
+
+        {
+            pattern: "job opportunities",
+            reason: "CAREER",
+        },
+
+        {
+            pattern: "job market",
+            reason: "CAREER",
+        },
+
+        {
+            pattern: "future scope",
+            reason: "CAREER",
+        },
+
+        {
+            pattern: "future of",
+            reason: "CAREER",
+        },
+
+        {
+            pattern: "is it worth learning",
+            reason: "CAREER",
+        },
+
+        {
+            pattern: "is it worth it",
+            reason: "CAREER",
+        },
+
+        {
+            pattern: "worth learning",
+            reason: "CAREER",
+        },
+
+        {
+            pattern: "should you learn",
+            reason: "CAREER",
+        },
+
+        {
+            pattern: "roadmap",
+            reason: "ROADMAP",
+        },
+
+        {
+            pattern: "road map",
+            reason: "ROADMAP",
+        },
+
+        {
+            pattern: "learning path",
+            reason: "ROADMAP",
+        },
+
+        {
+            pattern: "study plan",
+            reason: "ROADMAP",
+        },
+
+        {
+            pattern: "interview questions",
+            reason: "INTERVIEW",
+        },
+
+        {
+            pattern: "interview preparation",
+            reason: "INTERVIEW",
+        },
+
+        {
+            pattern: "interview prep",
+            reason: "INTERVIEW",
+        },
+
+        {
+            pattern: "coding interview",
+            reason: "INTERVIEW",
+        },
+
+        {
+            pattern: "technical interview",
+            reason: "INTERVIEW",
+        },
+
+        {
+            pattern: "placement preparation",
+            reason: "INTERVIEW",
+        },
+
+        {
+            pattern: "placement prep",
+            reason: "INTERVIEW",
+        },
+
+        {
+            pattern: " vs ",
+            reason: "COMPARISON",
+        },
+
+        {
+            pattern: " versus ",
+            reason: "COMPARISON",
+        },
+
+        {
+            pattern: "comparison",
+            reason: "COMPARISON",
+        },
+
+        {
+            pattern: "compare ",
+            reason: "COMPARISON",
+        },
+
+        {
+            pattern: "which is better",
+            reason: "COMPARISON",
+        },
+
+        {
+            pattern: "which one is better",
+            reason: "COMPARISON",
+        },
+
+        {
+            pattern: "difference between",
+            reason: "COMPARISON",
+        },
+
+        {
+            pattern: "course review",
+            reason: "REVIEW",
+        },
+
+        {
+            pattern: "course reviews",
+            reason: "REVIEW",
+        },
+
+        {
+            pattern: "tutorial review",
+            reason: "REVIEW",
+        },
+
+        {
+            pattern: "course feedback",
+            reason: "REVIEW",
+        },
+
+        {
+            pattern: "review of",
+            reason: "REVIEW",
+        },
     ];
 
-    for (const pattern of shortsPatterns) {
-
+    for (
+        const item of checks
+    ) {
         if (
-            normalizedTitle.includes(pattern)
+            normalizedTitle.includes(
+                item.pattern
+            )
         ) {
-
             console.log(
-                `[REMOVE - SHORTS] ${title} -> ${pattern}`
+                `[REMOVE - ${item.reason}] ${title} -> ${item.pattern}`
             );
 
             return true;
@@ -350,158 +622,7 @@ function isBadVideo(
 
 
     /* =====================================================
-       CAREER / SALARY
-    ===================================================== */
-
-    const careerPatterns = [
-        "salary of",
-        "salary",
-        "earnings",
-        "earning potential",
-        "how much does",
-        "how much can you earn",
-        "career opportunities",
-        "career path",
-        "career roadmap",
-        "job opportunities",
-        "job market",
-        "future scope",
-        "future of",
-        "is it worth learning",
-        "is it worth it",
-        "worth learning",
-        "should you learn",
-        "part",
-    ];
-
-    for (const pattern of careerPatterns) {
-
-        if (
-            normalizedTitle.includes(pattern)
-        ) {
-
-            console.log(
-                `[REMOVE - CAREER] ${title} -> ${pattern}`
-            );
-
-            return true;
-        }
-    }
-
-
-    /* =====================================================
-       ROADMAP
-    ===================================================== */
-
-    const roadmapPatterns = [
-        "roadmap",
-        "road map",
-        "learning path",
-        "study plan",
-    ];
-
-    for (const pattern of roadmapPatterns) {
-
-        if (
-            normalizedTitle.includes(pattern)
-        ) {
-
-            console.log(
-                `[REMOVE - ROADMAP] ${title} -> ${pattern}`
-            );
-
-            return true;
-        }
-    }
-
-
-    /* =====================================================
-       INTERVIEW
-    ===================================================== */
-
-    const interviewPatterns = [
-        "interview questions",
-        "interview preparation",
-        "interview prep",
-        "coding interview",
-        "technical interview",
-        "placement preparation",
-        "placement prep",
-    ];
-
-    for (const pattern of interviewPatterns) {
-
-        if (
-            normalizedTitle.includes(pattern)
-        ) {
-
-            console.log(
-                `[REMOVE - INTERVIEW] ${title} -> ${pattern}`
-            );
-
-            return true;
-        }
-    }
-
-
-    /* =====================================================
-       COMPARISON
-    ===================================================== */
-
-    const comparisonPatterns = [
-        " vs ",
-        " versus ",
-        "comparison",
-        "compare ",
-        "which is better",
-        "which one is better",
-        "difference between",
-    ];
-
-    for (const pattern of comparisonPatterns) {
-
-        if (
-            normalizedTitle.includes(pattern)
-        ) {
-
-            console.log(
-                `[REMOVE - COMPARISON] ${title} -> ${pattern}`
-            );
-
-            return true;
-        }
-    }
-
-
-    /* =====================================================
-       REVIEW
-    ===================================================== */
-
-    const reviewPatterns = [
-        "course review",
-        "course reviews",
-        "tutorial review",
-        "course feedback",
-        "review of",
-    ];
-
-    for (const pattern of reviewPatterns) {
-
-        if (
-            normalizedTitle.includes(pattern)
-        ) {
-
-            console.log(
-                `[REMOVE - REVIEW] ${title} -> ${pattern}`
-            );
-
-            return true;
-        }
-    }
-
-
-    /* =====================================================
-       VERY SHORT CONTENT
+       TITLE BASED SHORT CONTENT
     ===================================================== */
 
     const shortDurationPatterns = [
@@ -520,13 +641,14 @@ function isBadVideo(
     ];
 
     for (
-        const pattern of shortDurationPatterns
+        const pattern of
+        shortDurationPatterns
     ) {
-
         if (
-            normalizedTitle.includes(pattern)
+            normalizedTitle.includes(
+                pattern
+            )
         ) {
-
             console.log(
                 `[REMOVE - SHORT CONTENT] ${title} -> ${pattern}`
             );
@@ -550,20 +672,29 @@ function isBadVideo(
     ];
 
     const hasFullCourseSignal =
-        normalizedTitle.includes("full course") ||
-        normalizedTitle.includes("complete course") ||
-        normalizedTitle.includes("full tutorial") ||
-        normalizedTitle.includes("complete tutorial");
+        normalizedTitle.includes(
+            "full course"
+        ) ||
+        normalizedTitle.includes(
+            "complete course"
+        ) ||
+        normalizedTitle.includes(
+            "full tutorial"
+        ) ||
+        normalizedTitle.includes(
+            "complete tutorial"
+        );
 
     for (
-        const pattern of introductionPatterns
+        const pattern of
+        introductionPatterns
     ) {
-
         if (
-            normalizedTitle.startsWith(pattern) &&
+            normalizedTitle.startsWith(
+                pattern
+            ) &&
             !hasFullCourseSignal
         ) {
-
             console.log(
                 `[REMOVE - INTRO ONLY] ${title} -> ${pattern}`
             );
@@ -573,79 +704,124 @@ function isBadVideo(
     }
 
 
-    return false;
-}
+    /* =====================================================
+       PURE SINGLE TOPIC
+    ===================================================== */
 
-
-/* =========================================================
-   CHECK COURSE SIGNAL
-========================================================= */
-
-function hasCourseSignal(
-    title: string,
-    description: string
-): boolean {
-
-    const titleText =
-        normalizeText(title);
-
-    const descriptionText =
-        normalizeText(description);
-
-    const text =
-        `${titleText} ${descriptionText}`;
-
-
-    const strongCoursePatterns = [
-
-        "full course",
-        "complete course",
-        "full tutorial",
-        "complete tutorial",
-
-        "full programming course",
-        "complete programming course",
-
-        "course for beginners",
-        "beginner course",
-
-        "full stack course",
-
-        "complete course for beginners",
-
-        "learn from scratch",
-        "from scratch",
-
-        "zero to hero",
-
-        "one video",
-        "all in one",
-
-        "fundamentals full course",
-
-        "fundamentals [full course]",
+    const singleTopicPatterns = [
+        "what is",
+        "variables",
+        "variable tutorial",
+        "data types",
+        "datatype",
+        "functions tutorial",
+        "loops tutorial",
+        "operators tutorial",
+        "syntax tutorial",
+        "input tags",
     ];
 
-
     for (
-        const pattern of strongCoursePatterns
+        const pattern of
+        singleTopicPatterns
     ) {
-
         if (
-            text.includes(pattern)
+            normalizedTitle ===
+            pattern
         ) {
+            console.log(
+                `[REMOVE - SINGLE TOPIC] ${title}`
+            );
 
             return true;
         }
     }
 
 
+    void normalizedDescription;
+
     return false;
 }
 
 
 /* =========================================================
-   CHECK COURSE RELEVANCE
+   COURSE SIGNAL
+========================================================= */
+
+function hasCourseSignal(
+    title: string,
+    description: string
+): boolean {
+    const text =
+        `${normalizeText(title)} ${normalizeText(description)}`;
+
+    const patterns = [
+        "full course",
+        "complete course",
+        "full tutorial",
+        "complete tutorial",
+        "full programming course",
+        "complete programming course",
+        "course for beginners",
+        "beginner course",
+        "full stack course",
+        "complete course for beginners",
+        "learn from scratch",
+        "from scratch",
+        "zero to hero",
+        "one video",
+        "all in one",
+        "fundamentals full course",
+        "fundamentals [full course]",
+        "masterclass",
+        "bootcamp",
+    ];
+
+    return patterns.some(
+        (pattern) =>
+            text.includes(pattern)
+    );
+}
+
+
+/* =========================================================
+   PLAYLIST COURSE SIGNAL
+========================================================= */
+
+function hasPlaylistCourseSignal(
+    title: string,
+    description: string
+): boolean {
+    const text =
+        `${normalizeText(title)} ${normalizeText(description)}`;
+
+    const playlistSignals = [
+        "course playlist",
+        "complete playlist",
+        "full playlist",
+        "tutorial playlist",
+        "course series",
+        "tutorial series",
+        "complete series",
+        "full series",
+        "playlist",
+        "masterclass",
+        "bootcamp",
+        "from scratch",
+        "zero to hero",
+        "full course",
+        "complete course",
+    ];
+
+    return playlistSignals.some(
+        (pattern) =>
+            text.includes(pattern)
+    );
+}
+
+
+/* =========================================================
+   COURSE RELEVANCE
 ========================================================= */
 
 function isRelevantCourse(
@@ -653,7 +829,6 @@ function isRelevantCourse(
     description: string,
     query: string
 ): boolean {
-
     const normalizedTitle =
         normalizeText(title);
 
@@ -667,9 +842,7 @@ function isRelevantCourse(
         `${normalizedTitle} ${normalizedDescription}`;
 
 
-    /* =====================================================
-       C++
-    ===================================================== */
+    /* C++ */
 
     if (
         normalizedQuery === "c++" ||
@@ -677,48 +850,60 @@ function isRelevantCourse(
         normalizedQuery === "c ++" ||
         normalizedQuery === "c plus plus"
     ) {
-
         return (
             normalizedTitle.includes("c++") ||
             normalizedTitle.includes("c ++") ||
             normalizedTitle.includes("c/c++") ||
-            /\bcpp\b/i.test(normalizedTitle) ||
-            normalizedTitle.includes("c plus plus") ||
-
-            normalizedDescription.includes("c++") ||
-            normalizedDescription.includes("c ++") ||
-            normalizedDescription.includes("c/c++") ||
-            /\bcpp\b/i.test(normalizedDescription) ||
-            normalizedDescription.includes("c plus plus")
+            /\bcpp\b/i.test(
+                normalizedTitle
+            ) ||
+            normalizedTitle.includes(
+                "c plus plus"
+            ) ||
+            normalizedDescription.includes(
+                "c++"
+            ) ||
+            normalizedDescription.includes(
+                "c ++"
+            ) ||
+            normalizedDescription.includes(
+                "c/c++"
+            ) ||
+            /\bcpp\b/i.test(
+                normalizedDescription
+            ) ||
+            normalizedDescription.includes(
+                "c plus plus"
+            )
         );
     }
 
 
-    /* =====================================================
-       C PROGRAMMING
-    ===================================================== */
+    /* C */
 
     if (
         normalizedQuery === "c" ||
         normalizedQuery === "c programming"
     ) {
-
         return (
-            /\bc programming\b/i.test(text) ||
-            /\bc language\b/i.test(text) ||
-            /\bc programming language\b/i.test(text)
+            /\bc programming\b/i.test(
+                text
+            ) ||
+            /\bc language\b/i.test(
+                text
+            ) ||
+            /\bc programming language\b/i.test(
+                text
+            )
         );
     }
 
 
-    /* =====================================================
-       JAVA
-    ===================================================== */
+    /* JAVA */
 
     if (
         normalizedQuery === "java"
     ) {
-
         return (
             /\bjava\b/i.test(text) &&
             !/\bjavascript\b/i.test(text)
@@ -726,16 +911,15 @@ function isRelevantCourse(
     }
 
 
-    /* =====================================================
-       JAVASCRIPT
-    ===================================================== */
+    /* JAVASCRIPT */
 
     if (
-        normalizedQuery === "javascript" ||
-        normalizedQuery === "java script" ||
+        normalizedQuery ===
+            "javascript" ||
+        normalizedQuery ===
+            "java script" ||
         normalizedQuery === "js"
     ) {
-
         return (
             /\bjavascript\b/i.test(text) ||
             /\bjava script\b/i.test(text) ||
@@ -744,16 +928,15 @@ function isRelevantCourse(
     }
 
 
-    /* =====================================================
-       TYPESCRIPT
-    ===================================================== */
+    /* TYPESCRIPT */
 
     if (
-        normalizedQuery === "typescript" ||
-        normalizedQuery === "type script" ||
+        normalizedQuery ===
+            "typescript" ||
+        normalizedQuery ===
+            "type script" ||
         normalizedQuery === "ts"
     ) {
-
         return (
             /\btypescript\b/i.test(text) ||
             /\btype script\b/i.test(text)
@@ -761,28 +944,27 @@ function isRelevantCourse(
     }
 
 
-    /* =====================================================
-       PYTHON
-    ===================================================== */
+    /* PYTHON */
 
     if (
-        normalizedQuery === "python" ||
+        normalizedQuery ===
+            "python" ||
         normalizedQuery === "py"
     ) {
-
-        return /\bpython\b/i.test(text);
+        return /\bpython\b/i.test(
+            text
+        );
     }
 
 
-    /* =====================================================
-       REACT
-    ===================================================== */
+    /* REACT */
 
     if (
-        normalizedQuery === "react" ||
-        normalizedQuery === "reactjs"
+        normalizedQuery ===
+            "react" ||
+        normalizedQuery ===
+            "reactjs"
     ) {
-
         return (
             /\breact\b/i.test(text) ||
             /\breactjs\b/i.test(text)
@@ -790,27 +972,25 @@ function isRelevantCourse(
     }
 
 
-    /* =====================================================
-       PHP
-    ===================================================== */
+    /* PHP */
 
     if (
         normalizedQuery === "php"
     ) {
-
-        return /\bphp\b/i.test(text);
+        return /\bphp\b/i.test(
+            text
+        );
     }
 
 
-    /* =====================================================
-       MERN
-    ===================================================== */
+    /* MERN */
 
     if (
-        normalizedQuery === "mern" ||
-        normalizedQuery === "mern stack"
+        normalizedQuery ===
+            "mern" ||
+        normalizedQuery ===
+            "mern stack"
     ) {
-
         return (
             /\bmern\b/i.test(text) ||
             /\bmern stack\b/i.test(text)
@@ -818,27 +998,23 @@ function isRelevantCourse(
     }
 
 
-    /* =====================================================
-       SQL
-    ===================================================== */
+    /* SQL */
 
     if (
         normalizedQuery === "sql"
     ) {
-
-        return /\bsql\b/i.test(text);
+        return /\bsql\b/i.test(
+            text
+        );
     }
 
 
-    /* =====================================================
-       HTML
-    ===================================================== */
+    /* HTML */
 
     if (
         normalizedQuery === "html" ||
         normalizedQuery === "html5"
     ) {
-
         return (
             /\bhtml\b/i.test(text) ||
             /\bhtml5\b/i.test(text)
@@ -846,15 +1022,12 @@ function isRelevantCourse(
     }
 
 
-    /* =====================================================
-       CSS
-    ===================================================== */
+    /* CSS */
 
     if (
         normalizedQuery === "css" ||
         normalizedQuery === "css3"
     ) {
-
         return (
             /\bcss\b/i.test(text) ||
             /\bcss3\b/i.test(text)
@@ -862,16 +1035,15 @@ function isRelevantCourse(
     }
 
 
-    /* =====================================================
-       NODE.JS
-    ===================================================== */
+    /* NODE */
 
     if (
         normalizedQuery === "node" ||
-        normalizedQuery === "nodejs" ||
-        normalizedQuery === "node.js"
+        normalizedQuery ===
+            "nodejs" ||
+        normalizedQuery ===
+            "node.js"
     ) {
-
         return (
             /\bnode\.?js\b/i.test(text) ||
             /\bnode js\b/i.test(text)
@@ -879,15 +1051,14 @@ function isRelevantCourse(
     }
 
 
-    /* =====================================================
-       MONGODB
-    ===================================================== */
+    /* MONGODB */
 
     if (
-        normalizedQuery === "mongodb" ||
-        normalizedQuery === "mongo db"
+        normalizedQuery ===
+            "mongodb" ||
+        normalizedQuery ===
+            "mongo db"
     ) {
-
         return (
             /\bmongodb\b/i.test(text) ||
             /\bmongo db\b/i.test(text)
@@ -895,15 +1066,14 @@ function isRelevantCourse(
     }
 
 
-    /* =====================================================
-       EXPRESS
-    ===================================================== */
+    /* EXPRESS */
 
     if (
-        normalizedQuery === "express" ||
-        normalizedQuery === "expressjs"
+        normalizedQuery ===
+            "express" ||
+        normalizedQuery ===
+            "expressjs"
     ) {
-
         return (
             /\bexpress\.?js\b/i.test(text) ||
             /\bexpress js\b/i.test(text)
@@ -911,9 +1081,7 @@ function isRelevantCourse(
     }
 
 
-    /* =====================================================
-       NORMAL SEARCH
-    ===================================================== */
+    /* NORMAL */
 
     const words =
         normalizedQuery
@@ -923,7 +1091,6 @@ function isRelevantCourse(
     if (
         words.length === 0
     ) {
-
         return false;
     }
 
@@ -935,18 +1102,14 @@ function isRelevantCourse(
 
 
 /* =========================================================
-   CREATE YOUTUBE SEARCH QUERY
+   CREATE SEARCH QUERY
 ========================================================= */
 
 function createYouTubeSearchQuery(
     query: string
 ): string {
-
     const normalizedQuery =
         normalizeQuery(query);
-
-
-    /* C++ */
 
     if (
         normalizedQuery === "c++" ||
@@ -954,156 +1117,107 @@ function createYouTubeSearchQuery(
         normalizedQuery === "c ++" ||
         normalizedQuery === "c plus plus"
     ) {
-
         return `"C++" programming full course`;
     }
-
-
-    /* C */
 
     if (
         normalizedQuery === "c" ||
         normalizedQuery === "c programming"
     ) {
-
         return `"C programming" full course`;
     }
-
-
-    /* JAVA */
 
     if (
         normalizedQuery === "java"
     ) {
-
         return `"Java programming" full course`;
     }
 
-
-    /* JAVASCRIPT */
-
     if (
-        normalizedQuery === "javascript" ||
-        normalizedQuery === "java script" ||
+        normalizedQuery ===
+            "javascript" ||
+        normalizedQuery ===
+            "java script" ||
         normalizedQuery === "js"
     ) {
-
         return `"JavaScript" full course`;
     }
 
-
-    /* TYPESCRIPT */
-
     if (
-        normalizedQuery === "typescript" ||
-        normalizedQuery === "type script" ||
+        normalizedQuery ===
+            "typescript" ||
+        normalizedQuery ===
+            "type script" ||
         normalizedQuery === "ts"
     ) {
-
         return `"TypeScript" full course`;
     }
-
-
-    /* PYTHON */
 
     if (
         normalizedQuery === "python" ||
         normalizedQuery === "py"
     ) {
-
         return `"Python" full course`;
     }
-
-
-    /* REACT */
 
     if (
         normalizedQuery === "react" ||
         normalizedQuery === "reactjs"
     ) {
-
         return `"React JS" full course`;
     }
-
-
-    /* PHP */
 
     if (
         normalizedQuery === "php"
     ) {
-
         return `"PHP" full course tutorial`;
     }
 
-
-    /* MERN */
-
     if (
         normalizedQuery === "mern" ||
-        normalizedQuery === "mern stack"
+        normalizedQuery ===
+            "mern stack"
     ) {
-
         return `"MERN Stack" full course tutorial`;
     }
-
-
-    /* SQL */
 
     if (
         normalizedQuery === "sql"
     ) {
-
         return `"SQL" full course tutorial`;
     }
 
-
-    /* NODE */
-
     if (
         normalizedQuery === "node" ||
-        normalizedQuery === "nodejs" ||
-        normalizedQuery === "node.js"
+        normalizedQuery ===
+            "nodejs" ||
+        normalizedQuery ===
+            "node.js"
     ) {
-
         return `"Node.js" full course`;
     }
 
-
-    /* MONGODB */
-
     if (
-        normalizedQuery === "mongodb" ||
-        normalizedQuery === "mongo db"
+        normalizedQuery ===
+            "mongodb" ||
+        normalizedQuery ===
+            "mongo db"
     ) {
-
         return `"MongoDB" full course`;
     }
-
-
-    /* DEFAULT */
 
     return `"${query}" full course tutorial`;
 }
 
 
 /* =========================================================
-   KNOWN VIDEO LANGUAGE OVERRIDES
+   KNOWN LANGUAGE OVERRIDES
 ========================================================= */
 
 const KNOWN_VIDEO_LANGUAGE_OVERRIDES:
     Record<string, string> = {
-
-    /*
-     * Add manually verified videos here.
-     *
-     * Example:
-     *
-     * "VIDEO_ID": "Hindi",
-     * "VIDEO_ID": "English",
-     */
-
-    hlGoQC332VM: "Hindi",
-};
+        hlGoQC332VM: "Hindi",
+    };
 
 
 /* =========================================================
@@ -1113,9 +1227,10 @@ const KNOWN_VIDEO_LANGUAGE_OVERRIDES:
 export function getKnownVideoLanguage(
     videoId: string
 ): string | null {
-
     return (
-        KNOWN_VIDEO_LANGUAGE_OVERRIDES[videoId] ||
+        KNOWN_VIDEO_LANGUAGE_OVERRIDES[
+            videoId
+        ] ||
         null
     );
 }
@@ -1126,25 +1241,19 @@ export function getKnownVideoLanguage(
 ========================================================= */
 
 function detectFromYouTubeLanguageCode(
-    languageCode: string | null | undefined
+    languageCode:
+        | string
+        | null
+        | undefined
 ): string | null {
-
     if (!languageCode) {
         return null;
     }
 
-    const normalized =
-        languageCode
-            .toLowerCase()
-            .trim();
-
     const language =
-        normalizeLanguage(normalized);
-
-    /*
-     * If it is a recognized language,
-     * return it.
-     */
+        normalizeLanguage(
+            languageCode
+        );
 
     const recognizedLanguages = [
         "english",
@@ -1168,10 +1277,13 @@ function detectFromYouTubeLanguageCode(
     ];
 
     if (
-        recognizedLanguages.includes(language)
+        recognizedLanguages.includes(
+            language
+        )
     ) {
-
-        return displayLanguage(language);
+        return displayLanguage(
+            language
+        );
     }
 
     return null;
@@ -1179,172 +1291,114 @@ function detectFromYouTubeLanguageCode(
 
 
 /* =========================================================
-   DETECT NON-ENGLISH SCRIPT
+   DETECT INDIAN SCRIPT
 ========================================================= */
 
 function detectIndianScriptLanguage(
     text: string
 ): string | null {
-
-    /*
-     * Devanagari
-     *
-     * Hindi / Marathi / Nepali
-     */
-
     if (
-        /[\u0900-\u097F]/.test(text)
+        /[\u0900-\u097F]/.test(
+            text
+        )
     ) {
-
-        /*
-         * Marathi-specific common words.
-         */
-
         if (
-            /\b(आहे|आणि|मध्ये|करण्यासाठी|मराठी)\b/.test(text)
+            /\b(आहे|आणि|मध्ये|करण्यासाठी|मराठी)\b/.test(
+                text
+            )
         ) {
-
             return "Marathi";
         }
 
-        /*
-         * Nepali-specific common words.
-         */
-
         if (
-            /\b(नेपाली|छ|छन्|लाई|बाट|को)\b/.test(text)
+            /\b(नेपाली|छ|छन्|लाई|बाट|को)\b/.test(
+                text
+            )
         ) {
-
             return "Nepali";
         }
 
         return "Hindi";
     }
 
-
-    /*
-     * Tamil
-     */
-
     if (
-        /[\u0B80-\u0BFF]/.test(text)
+        /[\u0B80-\u0BFF]/.test(
+            text
+        )
     ) {
-
         return "Tamil";
     }
 
-
-    /*
-     * Telugu
-     */
-
     if (
-        /[\u0C00-\u0C7F]/.test(text)
+        /[\u0C00-\u0C7F]/.test(
+            text
+        )
     ) {
-
         return "Telugu";
     }
 
-
-    /*
-     * Kannada
-     */
-
     if (
-        /[\u0C80-\u0CFF]/.test(text)
+        /[\u0C80-\u0CFF]/.test(
+            text
+        )
     ) {
-
         return "Kannada";
     }
 
-
-    /*
-     * Malayalam
-     */
-
     if (
-        /[\u0D00-\u0D7F]/.test(text)
+        /[\u0D00-\u0D7F]/.test(
+            text
+        )
     ) {
-
         return "Malayalam";
     }
 
-
-    /*
-     * Bengali / Assamese
-     */
-
     if (
-        /[\u0980-\u09FF]/.test(text)
+        /[\u0980-\u09FF]/.test(
+            text
+        )
     ) {
-
-        if (
-            /[\u0985-\u0994]/.test(text)
-        ) {
-
-            return "Bengali";
-        }
-
         return "Bengali";
     }
 
-
-    /*
-     * Gujarati
-     */
-
     if (
-        /[\u0A80-\u0AFF]/.test(text)
+        /[\u0A80-\u0AFF]/.test(
+            text
+        )
     ) {
-
         return "Gujarati";
     }
 
-
-    /*
-     * Punjabi / Gurmukhi
-     */
-
     if (
-        /[\u0A00-\u0A7F]/.test(text)
+        /[\u0A00-\u0A7F]/.test(
+            text
+        )
     ) {
-
         return "Punjabi";
     }
 
-
-    /*
-     * Odia
-     */
-
     if (
-        /[\u0B00-\u0B7F]/.test(text)
+        /[\u0B00-\u0B7F]/.test(
+            text
+        )
     ) {
-
         return "Odia";
     }
 
-
-    /*
-     * Urdu / Arabic script
-     *
-     * This is intentionally broad.
-     */
-
     if (
-        /[\u0600-\u06FF]/.test(text)
+        /[\u0600-\u06FF]/.test(
+            text
+        )
     ) {
-
         return "Urdu";
     }
-
 
     return null;
 }
 
 
 /* =========================================================
-   DETECT LANGUAGE FROM TEXT
+   DETECT COURSE LANGUAGE FROM TEXT
 ========================================================= */
 
 function detectCourseLanguageFromText(
@@ -1352,7 +1406,6 @@ function detectCourseLanguageFromText(
     description: string,
     channelName: string
 ): string | null {
-
     const titleText =
         normalizeText(title);
 
@@ -1365,11 +1418,6 @@ function detectCourseLanguageFromText(
     const combinedText =
         `${titleText} ${descriptionText} ${channelText}`;
 
-
-    /* =====================================================
-       FIRST: INDIAN SCRIPTS
-    ===================================================== */
-
     const scriptLanguage =
         detectIndianScriptLanguage(
             combinedText
@@ -1378,79 +1426,57 @@ function detectCourseLanguageFromText(
     if (
         scriptLanguage
     ) {
-
         return scriptLanguage;
     }
 
-
-    /* =====================================================
-       HINDI KEYWORDS
-    ===================================================== */
-
     const hindiSignals = [
-
         "hindi",
         "in hindi",
         "hindi tutorial",
         "hindi course",
         "hindi mein",
         "hindi me",
-
         "हिंदी",
         "हिन्दी",
         "हिंदी में",
         "हिन्दी में",
     ];
 
-    for (
-        const signal of hindiSignals
+    if (
+        hindiSignals.some(
+            (signal) =>
+                titleText.includes(
+                    signal
+                ) ||
+                descriptionText.includes(
+                    signal
+                )
+        )
     ) {
-
-        if (
-            titleText.includes(signal) ||
-            descriptionText.includes(signal)
-        ) {
-
-            return "Hindi";
-        }
+        return "Hindi";
     }
 
-
-    /* =====================================================
-       ENGLISH KEYWORDS
-    ===================================================== */
-
     const englishSignals = [
-
         "english",
         "in english",
         "english tutorial",
         "english course",
         "english language",
-
     ];
 
-    for (
-        const signal of englishSignals
+    if (
+        englishSignals.some(
+            (signal) =>
+                titleText.includes(
+                    signal
+                ) ||
+                descriptionText.includes(
+                    signal
+                )
+        )
     ) {
-
-        if (
-            titleText.includes(signal) ||
-            descriptionText.includes(signal)
-        ) {
-
-            return "English";
-        }
+        return "English";
     }
-
-
-    /*
-     * We intentionally DO NOT automatically return
-     * English here.
-     *
-     * This is important because a Tamil / Telugu /
-     * Malayalam video may have an English title.
-     */
 
     return null;
 }
@@ -1461,14 +1487,14 @@ function detectCourseLanguageFromText(
 ========================================================= */
 
 export function resolveVideoLanguage(
-    storedLanguage: string | null | undefined,
-    youtubeLanguageCode?: string | null
+    storedLanguage:
+        | string
+        | null
+        | undefined,
+    youtubeLanguageCode?:
+        | string
+        | null
 ): string {
-
-    /*
-     * 1. YouTube metadata first.
-     */
-
     const youtubeLanguage =
         detectFromYouTubeLanguageCode(
             youtubeLanguageCode
@@ -1477,14 +1503,8 @@ export function resolveVideoLanguage(
     if (
         youtubeLanguage
     ) {
-
         return youtubeLanguage;
     }
-
-
-    /*
-     * 2. Stored language.
-     */
 
     const normalizedStored =
         normalizeLanguage(
@@ -1517,14 +1537,542 @@ export function resolveVideoLanguage(
             normalizedStored
         )
     ) {
-
         return displayLanguage(
             normalizedStored
         );
     }
 
-
     return "Unknown";
+}
+
+
+/* =========================================================
+   FORMAT YOUTUBE DURATION
+========================================================= */
+
+export function formatYouTubeDuration(
+    isoDuration: string
+): string {
+    if (
+        !isoDuration
+    ) {
+        return "Unknown";
+    }
+
+    const match =
+        isoDuration.match(
+            /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/
+        );
+
+    if (!match) {
+        return "Unknown";
+    }
+
+    const hours =
+        Number(match[1] || 0);
+
+    const minutes =
+        Number(match[2] || 0);
+
+    const seconds =
+        Number(match[3] || 0);
+
+    const parts: string[] = [];
+
+    if (
+        hours > 0
+    ) {
+        parts.push(
+            `${hours}h`
+        );
+    }
+
+    if (
+        minutes > 0
+    ) {
+        parts.push(
+            `${minutes}m`
+        );
+    }
+
+    if (
+        seconds > 0 &&
+        hours === 0
+    ) {
+        parts.push(
+            `${seconds}s`
+        );
+    }
+
+    if (
+        parts.length === 0
+    ) {
+        return "0m";
+    }
+
+    return parts.join(" ");
+}
+
+
+/* =========================================================
+   GET DURATION SECONDS
+========================================================= */
+
+export function getDurationSeconds(
+    isoDuration: string
+): number {
+    if (
+        !isoDuration
+    ) {
+        return 0;
+    }
+
+    const match =
+        isoDuration.match(
+            /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/
+        );
+
+    if (!match) {
+        return 0;
+    }
+
+    return (
+        Number(match[1] || 0) * 60 * 60 +
+        Number(match[2] || 0) * 60 +
+        Number(match[3] || 0)
+    );
+}
+
+
+/* =========================================================
+   FAKE FULL COURSE CHECK
+========================================================= */
+
+function isFakeFullCourse(
+    title: string,
+    isoDuration: string
+): boolean {
+    const normalizedTitle =
+        normalizeText(title);
+
+    const durationSeconds =
+        getDurationSeconds(
+            isoDuration
+        );
+
+    const claimsFullCourse =
+        normalizedTitle.includes(
+            "full course"
+        ) ||
+        normalizedTitle.includes(
+            "complete course"
+        ) ||
+        normalizedTitle.includes(
+            "full tutorial"
+        ) ||
+        normalizedTitle.includes(
+            "complete tutorial"
+        ) ||
+        normalizedTitle.includes(
+            "full programming course"
+        ) ||
+        normalizedTitle.includes(
+            "complete programming course"
+        ) ||
+        normalizedTitle.includes(
+            "all in one"
+        ) ||
+        normalizedTitle.includes(
+            "zero to hero"
+        ) ||
+        normalizedTitle.includes(
+            "learn from scratch"
+        ) ||
+        normalizedTitle.includes(
+            "from scratch"
+        );
+
+    if (
+        claimsFullCourse &&
+        durationSeconds > 0 &&
+        durationSeconds <
+            30 * 60
+    ) {
+        console.log(
+            `[REMOVE - FAKE FULL COURSE] ${title} -> ${formatYouTubeDuration(
+                isoDuration
+            )}`
+        );
+
+        return true;
+    }
+
+    return false;
+}
+
+
+/* =========================================================
+   GET VIDEO STATISTICS
+========================================================= */
+
+export async function getYouTubeVideoStatistics(
+    videoIds: string[]
+): Promise<
+    YouTubeVideoStatistics[]
+> {
+    const apiKey =
+        process.env.YOUTUBE_API_KEY;
+
+    if (!apiKey) {
+        throw new Error(
+            "YOUTUBE_API_KEY is not configured"
+        );
+    }
+
+    if (
+        videoIds.length === 0
+    ) {
+        return [];
+    }
+
+    const allStatistics:
+        YouTubeVideoStatistics[] = [];
+
+    for (
+        let i = 0;
+        i < videoIds.length;
+        i += 50
+    ) {
+        const chunk =
+            videoIds.slice(
+                i,
+                i + 50
+            );
+
+        const url =
+            new URL(
+                "https://www.googleapis.com/youtube/v3/videos"
+            );
+
+        url.searchParams.set(
+            "part",
+            "snippet,statistics,contentDetails"
+        );
+
+        url.searchParams.set(
+            "id",
+            chunk.join(",")
+        );
+
+        url.searchParams.set(
+            "key",
+            apiKey
+        );
+
+        const response =
+            await fetch(
+                url.toString(),
+                {
+                    cache: "no-store",
+                }
+            );
+
+        if (
+            !response.ok
+        ) {
+            const error =
+                await response.text();
+
+            console.error(
+                "YouTube statistics error:",
+                error
+            );
+
+            throw new Error(
+                "Failed to fetch YouTube statistics"
+            );
+        }
+
+        const data =
+            await response.json();
+
+        allStatistics.push(
+            ...(data.items || [])
+        );
+    }
+
+    return allStatistics;
+}
+
+
+/* =========================================================
+   GET PLAYLIST ITEMS
+========================================================= */
+
+async function getYouTubePlaylistItems(
+    playlistId: string
+): Promise<
+    YouTubePlaylistItem[]
+> {
+    const apiKey =
+        process.env.YOUTUBE_API_KEY;
+
+    if (!apiKey) {
+        throw new Error(
+            "YOUTUBE_API_KEY is not configured"
+        );
+    }
+
+    const items:
+        YouTubePlaylistItem[] = [];
+
+    let pageToken = "";
+
+    /*
+     * Safety limit.
+     *
+     * Most educational playlists are well
+     * below this. It also prevents an accidental
+     * giant playlist from creating hundreds of
+     * lessons/API requests.
+     */
+
+    const maxLessons = 200;
+
+    while (
+        items.length <
+        maxLessons
+    ) {
+        const url =
+            new URL(
+                "https://www.googleapis.com/youtube/v3/playlistItems"
+            );
+
+        url.searchParams.set(
+            "part",
+            "snippet,contentDetails"
+        );
+
+        url.searchParams.set(
+            "playlistId",
+            playlistId
+        );
+
+        url.searchParams.set(
+            "maxResults",
+            "50"
+        );
+
+        url.searchParams.set(
+            "key",
+            apiKey
+        );
+
+        if (
+            pageToken
+        ) {
+            url.searchParams.set(
+                "pageToken",
+                pageToken
+            );
+        }
+
+        const response =
+            await fetch(
+                url.toString(),
+                {
+                    cache: "no-store",
+                }
+            );
+
+        if (
+            !response.ok
+        ) {
+            const error =
+                await response.text();
+
+            console.error(
+                "YouTube playlist items error:",
+                error
+            );
+
+            break;
+        }
+
+        const data =
+            await response.json();
+
+        items.push(
+            ...(data.items || [])
+        );
+
+        pageToken =
+            data.nextPageToken ||
+            "";
+
+        if (
+            !pageToken
+        ) {
+            break;
+        }
+    }
+
+    return items.slice(
+        0,
+        maxLessons
+    );
+}
+
+
+/* =========================================================
+   THUMBNAIL
+========================================================= */
+
+function getThumbnail(
+    snippet: any
+): string {
+    return (
+        snippet?.thumbnails?.high?.url ||
+        snippet?.thumbnails?.medium?.url ||
+        snippet?.thumbnails?.default?.url ||
+        ""
+    );
+}
+
+
+/* =========================================================
+   PLAYLIST LANGUAGE
+========================================================= */
+
+function determinePlaylistLanguage(
+    playlistTitle: string,
+    playlistDescription: string,
+    channelName: string,
+    playlistLessons:
+        YouTubePlaylistLesson[],
+    statisticsMap:
+        Map<
+            string,
+            YouTubeVideoStatistics
+        >
+): string {
+    const textLanguage =
+        detectCourseLanguageFromText(
+            playlistTitle,
+            playlistDescription,
+            channelName
+        );
+
+    if (
+        textLanguage
+    ) {
+        return textLanguage;
+    }
+
+    const detectedLanguages:
+        string[] = [];
+
+    for (
+        const lesson of
+        playlistLessons.slice(
+            0,
+            10
+        )
+    ) {
+        const stats =
+            statisticsMap.get(
+                lesson.videoId
+            );
+
+        const language =
+            detectFromYouTubeLanguageCode(
+                stats
+                    ?.snippet
+                    ?.defaultAudioLanguage
+            ) ||
+            detectFromYouTubeLanguageCode(
+                stats
+                    ?.snippet
+                    ?.defaultLanguage
+            ) ||
+            detectCourseLanguageFromText(
+                lesson.title,
+                lesson.description,
+                lesson.channelName
+            );
+
+        if (
+            language
+        ) {
+            detectedLanguages.push(
+                language
+            );
+        }
+    }
+
+    if (
+        detectedLanguages.length === 0
+    ) {
+        return "Unknown";
+    }
+
+    const counts =
+        new Map<
+            string,
+            number
+        >();
+
+    for (
+        const language of
+        detectedLanguages
+    ) {
+        counts.set(
+            language,
+            (counts.get(
+                language
+            ) || 0) + 1
+        );
+    }
+
+    return [
+        ...counts.entries(),
+    ].sort(
+        (a, b) =>
+            b[1] - a[1]
+    )[0][0];
+}
+
+
+/* =========================================================
+   BUILD TOTAL DURATION ISO
+========================================================= */
+
+function secondsToIsoDuration(
+    totalSeconds: number
+): string {
+    const safeSeconds =
+        Math.max(
+            0,
+            Math.floor(
+                totalSeconds
+            )
+        );
+
+    const hours =
+        Math.floor(
+            safeSeconds / 3600
+        );
+
+    const minutes =
+        Math.floor(
+            (safeSeconds % 3600) /
+                60
+        );
+
+    const seconds =
+        safeSeconds % 60;
+
+    return `PT${hours}H${minutes}M${seconds}S`;
 }
 
 
@@ -1534,40 +2082,29 @@ export function resolveVideoLanguage(
 
 export async function searchYouTubeCourses(
     query: string,
-    preferredLanguage: string = "English"
-): Promise<YouTubeCourseResult[]> {
-
+    preferredLanguage:
+        string = "English"
+): Promise<
+    YouTubeCourseResult[]
+> {
     const apiKey =
         process.env.YOUTUBE_API_KEY;
 
     if (!apiKey) {
-
         throw new Error(
             "YOUTUBE_API_KEY is not configured"
         );
     }
-
-
-    const youtubeQuery =
-        createYouTubeSearchQuery(query);
-
 
     const language =
         normalizeLanguage(
             preferredLanguage
         );
 
-
-    /*
-     * Only English and Hindi are supported
-     * as requested.
-     */
-
     if (
         language !== "english" &&
         language !== "hindi"
     ) {
-
         console.log(
             "Unsupported language:",
             preferredLanguage
@@ -1576,31 +2113,24 @@ export async function searchYouTubeCourses(
         return [];
     }
 
-
-    /*
-     * Language-specific search query.
-     */
-
     let languageQuery =
-        youtubeQuery;
+        createYouTubeSearchQuery(
+            query
+        );
 
     if (
         language === "hindi"
     ) {
-
-        languageQuery =
-            `${youtubeQuery} Hindi`;
+        languageQuery +=
+            " Hindi";
     }
-
 
     if (
         language === "english"
     ) {
-
-        languageQuery =
-            `${youtubeQuery} English`;
+        languageQuery +=
+            " English";
     }
-
 
     console.log(
         "YouTube search query:",
@@ -1614,7 +2144,19 @@ export async function searchYouTubeCourses(
 
 
     /* =====================================================
-       YOUTUBE SEARCH API
+       IMPORTANT
+
+       type is intentionally NOT set.
+
+       This lets one search.list call return:
+       - videos
+       - playlists
+       - channels
+
+       We then ignore channels.
+
+       This is much better for quota than
+       performing separate video + playlist searches.
     ===================================================== */
 
     const url =
@@ -1633,39 +2175,13 @@ export async function searchYouTubeCourses(
     );
 
     url.searchParams.set(
-        "type",
-        "video"
-    );
-
-    url.searchParams.set(
-        "videoEmbeddable",
-        "true"
-    );
-
-    url.searchParams.set(
-        "videoSyndicated",
-        "true"
-    );
-
-    /*
-     * Get many results because language filtering
-     * happens after the API response.
-     */
-
-    url.searchParams.set(
         "maxResults",
         "50"
     );
 
-
-    /*
-     * relevanceLanguage is ONLY a hint.
-     */
-
     if (
         language === "english"
     ) {
-
         url.searchParams.set(
             "relevanceLanguage",
             "en"
@@ -1675,19 +2191,16 @@ export async function searchYouTubeCourses(
     if (
         language === "hindi"
     ) {
-
         url.searchParams.set(
             "relevanceLanguage",
             "hi"
         );
     }
 
-
     url.searchParams.set(
         "key",
         apiKey
     );
-
 
     const response =
         await fetch(
@@ -1697,9 +2210,9 @@ export async function searchYouTubeCourses(
             }
         );
 
-
-    if (!response.ok) {
-
+    if (
+        !response.ok
+    ) {
         const error =
             await response.text();
 
@@ -1713,110 +2226,59 @@ export async function searchYouTubeCourses(
         );
     }
 
-
     const data =
         await response.json();
 
+    const rawItems =
+        Array.isArray(
+            data.items
+        )
+            ? data.items
+            : [];
 
-    /* =====================================================
-       INITIAL RESULTS
-    ===================================================== */
+    const rawVideoItems =
+        rawItems.filter(
+            (item: any) =>
+                item.id?.videoId &&
+                item.snippet
+        );
 
-    const initialResults:
-        YouTubeCourseResult[] =
-
-        (data.items || [])
-            .filter(
-                (item: any) =>
-                    item.id?.videoId &&
-                    item.snippet
-            )
-            .map(
-                (item: any) => {
-
-                    const title =
-                        item.snippet.title || "";
-
-                    const description =
-                        item.snippet.description || "";
-
-                    const channelName =
-                        item.snippet.channelTitle || "";
-
-
-                    const textLanguage =
-                        detectCourseLanguageFromText(
-                            title,
-                            description,
-                            channelName
-                        );
-
-
-                    return {
-
-                        videoId:
-                            item.id.videoId,
-
-                        title,
-
-                        description,
-
-                        thumbnail:
-                            item.snippet
-                                .thumbnails
-                                ?.high?.url ||
-                            item.snippet
-                                .thumbnails
-                                ?.medium?.url ||
-                            item.snippet
-                                .thumbnails
-                                ?.default?.url ||
-                            "",
-
-                        channelName,
-
-                        publishedAt:
-                            item.snippet
-                                .publishedAt ||
-                            "",
-
-                        language:
-                            getKnownVideoLanguage(
-                                item.id.videoId
-                            ) ||
-                            textLanguage ||
-                            "Unknown",
-                    };
-                }
-            );
-
+    const rawPlaylistItems =
+        rawItems.filter(
+            (item: any) =>
+                item.id?.playlistId &&
+                item.snippet
+        );
 
     console.log(
-        "YouTube raw results:",
-        initialResults.length
+        "YouTube raw videos:",
+        rawVideoItems.length
+    );
+
+    console.log(
+        "YouTube raw playlists:",
+        rawPlaylistItems.length
     );
 
 
     /* =====================================================
-       GET ACTUAL VIDEO METADATA
+       VIDEO METADATA
     ===================================================== */
 
     const videoIds =
-        initialResults.map(
-            (video) =>
-                video.videoId
+        rawVideoItems.map(
+            (item: any) =>
+                item.id.videoId
         );
 
-
-    const statistics =
+    const videoStatistics =
         await getYouTubeVideoStatistics(
             videoIds
         );
 
-
-    const statisticsMap =
+    const videoStatisticsMap =
         new Map(
-            statistics.map(
+            videoStatistics.map(
                 (item) => [
                     item.id,
                     item,
@@ -1825,270 +2287,585 @@ export async function searchYouTubeCourses(
         );
 
 
+    const results:
+        YouTubeCourseResult[] = [];
+
+
     /* =====================================================
-       RESOLVE ACTUAL LANGUAGE
+       PROCESS VIDEO COURSES
     ===================================================== */
 
-    const results =
-        initialResults.map(
-            (video) => {
+    for (
+        const item of
+        rawVideoItems
+    ) {
+        const videoId =
+            item.id.videoId;
 
-                const stats =
-                    statisticsMap.get(
-                        video.videoId
-                    );
+        const title =
+            item.snippet.title ||
+            "";
 
+        const description =
+            item.snippet.description ||
+            "";
 
-                const knownLanguage =
-                    getKnownVideoLanguage(
-                        video.videoId
-                    );
+        const channelName =
+            item.snippet.channelTitle ||
+            "";
 
+        const stats =
+            videoStatisticsMap.get(
+                videoId
+            );
 
-                /*
-                 * YouTube's actual metadata.
-                 */
+        const durationISO =
+            stats
+                ?.contentDetails
+                ?.duration || "";
 
-                const youtubeLanguage =
-                    detectFromYouTubeLanguageCode(
-                        stats
-                            ?.snippet
-                            ?.defaultAudioLanguage
-                    ) ||
-                    detectFromYouTubeLanguageCode(
-                        stats
-                            ?.snippet
-                            ?.defaultLanguage
-                    );
+        const knownLanguage =
+            getKnownVideoLanguage(
+                videoId
+            );
 
+        const youtubeLanguage =
+            detectFromYouTubeLanguageCode(
+                stats
+                    ?.snippet
+                    ?.defaultAudioLanguage
+            ) ||
+            detectFromYouTubeLanguageCode(
+                stats
+                    ?.snippet
+                    ?.defaultLanguage
+            );
 
-                /*
-                 * Detect from title,
-                 * description and channel.
-                 */
+        const textLanguage =
+            detectCourseLanguageFromText(
+                title,
+                description,
+                channelName
+            );
 
-                const textLanguage =
-                    detectCourseLanguageFromText(
-                        video.title,
-                        video.description,
-                        video.channelName
-                    );
-
-
-                /*
-                 * Priority:
-                 *
-                 * 1. Manual override
-                 * 2. YouTube language metadata
-                 * 3. Script/text detection
-                 * 4. Unknown
-                 */
-
-                const actualLanguage =
-                    knownLanguage ||
-                    youtubeLanguage ||
-                    textLanguage ||
-                    "Unknown";
+        const actualLanguage =
+            knownLanguage ||
+            youtubeLanguage ||
+            textLanguage ||
+            "Unknown";
 
 
-                return {
+        if (
+            isFakeFullCourse(
+                title,
+                durationISO
+            )
+        ) {
+            continue;
+        }
 
-                    ...video,
+        if (
+            isBadVideo(
+                title,
+                description
+            )
+        ) {
+            continue;
+        }
 
-                    language:
-                        actualLanguage,
-                };
-            }
-        );
+        if (
+            !isRelevantCourse(
+                title,
+                description,
+                query
+            )
+        ) {
+            console.log(
+                `[REMOVE - IRRELEVANT] ${title}`
+            );
+
+            continue;
+        }
+
+        if (
+            !hasCourseSignal(
+                title,
+                description
+            )
+        ) {
+            console.log(
+                `[REMOVE - NOT A COURSE] ${title}`
+            );
+
+            continue;
+        }
+
+        if (
+            normalizeLanguage(
+                actualLanguage
+            ) !== language
+        ) {
+            console.log(
+                `[REMOVE - NON-PREFERRED LANGUAGE] ${title} -> ${actualLanguage}`
+            );
+
+            continue;
+        }
 
 
-    console.log(
-        "YouTube detected languages:",
-        results.map(
-            (video) => ({
-                title:
-                    video.title,
+        results.push({
+            courseType:
+                "VIDEO",
 
-                language:
-                    video.language,
-            })
+            videoId,
+
+            title,
+
+            description,
+
+            thumbnail:
+                getThumbnail(
+                    item.snippet
+                ),
+
+            channelName,
+
+            publishedAt:
+                item.snippet
+                    .publishedAt ||
+                "",
+
+            language:
+                actualLanguage,
+
+            duration:
+                formatYouTubeDuration(
+                    durationISO
+                ),
+
+            durationSeconds:
+                getDurationSeconds(
+                    durationISO
+                ),
+
+            views:
+                Number(
+                    stats
+                        ?.statistics
+                        ?.viewCount ||
+                    0
+                ),
+
+            likes:
+                Number(
+                    stats
+                        ?.statistics
+                        ?.likeCount ||
+                    0
+                ),
+        });
+    }
+
+
+    /* =====================================================
+       PROCESS PLAYLIST COURSES
+    ===================================================== */
+
+    for (
+        const item of
+        rawPlaylistItems.slice(
+            0,
+            10
         )
-    );
+    ) {
+        const playlistId =
+            item.id.playlistId;
+
+        const title =
+            item.snippet.title ||
+            "";
+
+        const description =
+            item.snippet.description ||
+            "";
+
+        const channelName =
+            item.snippet.channelTitle ||
+            "";
 
 
-    /* =====================================================
-       FILTER RESULTS
-    ===================================================== */
+        if (
+            isBadVideo(
+                title,
+                description
+            )
+        ) {
+            continue;
+        }
 
-    const relevantResults =
-        results.filter(
-            (video) => {
+        if (
+            !isRelevantCourse(
+                title,
+                description,
+                query
+            )
+        ) {
+            console.log(
+                `[REMOVE - PLAYLIST IRRELEVANT] ${title}`
+            );
 
-                /* =========================================
-              FAKE / TOO SHORT FULL COURSE
-           ========================================= */
+            continue;
+        }
 
-                const stats =
-                    statisticsMap.get(
-                        video.videoId
-                    );
+        if (
+            !hasPlaylistCourseSignal(
+                title,
+                description
+            )
+        ) {
+            console.log(
+                `[REMOVE - PLAYLIST NOT COURSE] ${title}`
+            );
 
-                if (
-                    isFakeFullCourse(
-                        video.title,
-                        stats?.contentDetails?.duration || ""
-                    )
-                ) {
-
-                    return false;
-                }
-
-
-                /* =========================================
-                   BAD CONTENT
-                ========================================= */
-
-                if (
-                    isBadVideo(
-                        video.title,
-                        video.description
-                    )
-                ) {
-
-                    return false;
-                }
+            continue;
+        }
 
 
-                /* =========================================
-                   RELEVANCE
-                ========================================= */
+        /* =================================================
+           GET PLAYLIST LESSONS
+        ================================================= */
 
-                if (
-                    !isRelevantCourse(
-                        video.title,
-                        video.description,
-                        query
-                    )
-                ) {
+        const playlistItems =
+            await getYouTubePlaylistItems(
+                playlistId
+            );
 
-                    console.log(
-                        `[REMOVE - IRRELEVANT] ${video.title}`
-                    );
-
-                    return false;
-                }
-
-
-                /* =========================================
-                   COURSE SIGNAL
-                ========================================= */
-
-                if (
-                    !hasCourseSignal(
-                        video.title,
-                        video.description
-                    )
-                ) {
-
-                    console.log(
-                        `[REMOVE - NOT A COURSE] ${video.title}`
-                    );
-
-                    return false;
-                }
-
-
-                /* =========================================
-                   LANGUAGE HARD FILTER
-                ========================================= */
-
-                const actualLanguage =
-                    normalizeLanguage(
-                        video.language
-                    );
-
-
-                /*
-                 * NEVER allow unknown.
-                 */
-
-                if (
-                    actualLanguage === "" ||
-                    actualLanguage === "unknown"
-                ) {
-
-                    console.log(
-                        `[REMOVE - UNKNOWN LANGUAGE] ${video.title}`
-                    );
-
-                    return false;
-                }
-
-
-                /*
-                 * ENGLISH SEARCH
-                 *
-                 * Only English.
-                 *
-                 * This is the important part that prevents
-                 * Tamil, Telugu, Kannada, Malayalam, etc.
-                 * from appearing in English search.
-                 */
-
-                if (
-                    language === "english"
-                ) {
-
-                    if (
-                        actualLanguage !== "english"
-                    ) {
-
-                        console.log(
-                            `[REMOVE - NON-ENGLISH] ${video.title} -> ${video.language}`
-                        );
-
-                        return false;
-                    }
-                }
-
-
-                /*
-                 * HINDI SEARCH
-                 *
-                 * Only Hindi.
-                 */
-
-                if (
-                    language === "hindi"
-                ) {
-
-                    if (
-                        actualLanguage !== "hindi"
-                    ) {
-
-                        console.log(
-                            `[REMOVE - NON-HINDI] ${video.title} -> ${video.language}`
-                        );
-
-                        return false;
-                    }
-                }
-
-
-                console.log(
-                    `[KEEP - ${preferredLanguage}] ${video.title}`
+        const playlistVideoIds =
+            playlistItems
+                .map(
+                    (playlistItem) =>
+                        playlistItem
+                            .snippet
+                            ?.resourceId
+                            ?.videoId ||
+                        playlistItem
+                            .contentDetails
+                            ?.videoId
+                )
+                .filter(
+                    (
+                        id
+                    ): id is string =>
+                        Boolean(id)
                 );
 
 
-                return true;
+        if (
+            playlistVideoIds.length === 0
+        ) {
+            console.log(
+                `[REMOVE - EMPTY PLAYLIST] ${title}`
+            );
+
+            continue;
+        }
+
+
+        const playlistStatistics =
+            await getYouTubeVideoStatistics(
+                playlistVideoIds
+            );
+
+        const playlistStatisticsMap =
+            new Map(
+                playlistStatistics.map(
+                    (item) => [
+                        item.id,
+                        item,
+                    ]
+                )
+            );
+
+
+        const playlistLessons:
+            YouTubePlaylistLesson[] = [];
+
+        const seenLessonIds =
+            new Set<string>();
+
+
+        for (
+            const playlistItem of
+            playlistItems
+        ) {
+            const lessonVideoId =
+                playlistItem
+                    .snippet
+                    ?.resourceId
+                    ?.videoId ||
+                playlistItem
+                    .contentDetails
+                    ?.videoId;
+
+            if (
+                !lessonVideoId
+            ) {
+                continue;
             }
-        );
+
+            if (
+                seenLessonIds.has(
+                    lessonVideoId
+                )
+            ) {
+                continue;
+            }
+
+            seenLessonIds.add(
+                lessonVideoId
+            );
 
 
-    console.log(
-        "YouTube relevant results:",
-        relevantResults.length
-    );
+            const lessonTitle =
+                playlistItem
+                    .snippet
+                    ?.title ||
+                "Untitled lesson";
+
+            const lessonDescription =
+                playlistItem
+                    .snippet
+                    ?.description ||
+                "";
+
+            const lessonChannel =
+                playlistItem
+                    .snippet
+                    ?.channelTitle ||
+                channelName;
+
+            const stats =
+                playlistStatisticsMap.get(
+                    lessonVideoId
+                );
+
+            const durationISO =
+                stats
+                    ?.contentDetails
+                    ?.duration ||
+                "";
+
+
+            /*
+             * Do not apply isBadVideo()
+             * to individual playlist lessons.
+             *
+             * A valid course can naturally contain
+             * lessons named "Part 1", "Introduction",
+             * "Getting Started", etc.
+             */
+
+            playlistLessons.push({
+                videoId:
+                    lessonVideoId,
+
+                title:
+                    lessonTitle,
+
+                description:
+                    lessonDescription,
+
+                thumbnail:
+                    playlistItem
+                        .snippet
+                        ?.thumbnails
+                        ?.high
+                        ?.url ||
+                    playlistItem
+                        .snippet
+                        ?.thumbnails
+                        ?.medium
+                        ?.url ||
+                    playlistItem
+                        .snippet
+                        ?.thumbnails
+                        ?.default
+                        ?.url ||
+                    "",
+
+                channelName:
+                    lessonChannel,
+
+                publishedAt:
+                    playlistItem
+                        .snippet
+                        ?.publishedAt ||
+                    "",
+
+                duration:
+                    formatYouTubeDuration(
+                        durationISO
+                    ),
+
+                durationSeconds:
+                    getDurationSeconds(
+                        durationISO
+                    ),
+            });
+        }
+
+
+        if (
+            playlistLessons.length === 0
+        ) {
+            continue;
+        }
+
+
+        /* =================================================
+           PLAYLIST LANGUAGE
+        ================================================= */
+
+        const playlistLanguage =
+            determinePlaylistLanguage(
+                title,
+                description,
+                channelName,
+                playlistLessons,
+                playlistStatisticsMap
+            );
+
+
+        if (
+            normalizeLanguage(
+                playlistLanguage
+            ) !== language
+        ) {
+            console.log(
+                `[REMOVE - PLAYLIST LANGUAGE] ${title} -> ${playlistLanguage}`
+            );
+
+            continue;
+        }
+
+
+        /* =================================================
+           TOTAL PLAYLIST DURATION
+        ================================================= */
+
+        const totalDurationSeconds =
+            playlistLessons.reduce(
+                (
+                    total,
+                    lesson
+                ) =>
+                    total +
+                    lesson.durationSeconds,
+                0
+            );
+
+
+        if (
+            totalDurationSeconds <= 0
+        ) {
+            console.log(
+                `[REMOVE - PLAYLIST NO DURATION] ${title}`
+            );
+
+            continue;
+        }
+
+
+        const totalDurationISO =
+            secondsToIsoDuration(
+                totalDurationSeconds
+            );
+
+
+        const totalViews =
+            playlistLessons.reduce(
+                (
+                    total,
+                    lesson
+                ) =>
+                    total +
+                    Number(
+                        playlistStatisticsMap.get(
+                            lesson.videoId
+                        )
+                            ?.statistics
+                            ?.viewCount ||
+                        0
+                    ),
+                0
+            );
+
+
+        const totalLikes =
+            playlistLessons.reduce(
+                (
+                    total,
+                    lesson
+                ) =>
+                    total +
+                    Number(
+                        playlistStatisticsMap.get(
+                            lesson.videoId
+                        )
+                            ?.statistics
+                            ?.likeCount ||
+                        0
+                    ),
+                0
+            );
+
+
+        results.push({
+            courseType:
+                "PLAYLIST",
+
+            videoId:
+                "",
+
+            playlistId,
+
+            title,
+
+            description,
+
+            thumbnail:
+                getThumbnail(
+                    item.snippet
+                ),
+
+            channelName,
+
+            publishedAt:
+                item.snippet
+                    .publishedAt ||
+                "",
+
+            language:
+                playlistLanguage,
+
+            duration:
+                formatYouTubeDuration(
+                    totalDurationISO
+                ),
+
+            durationSeconds:
+                totalDurationSeconds,
+
+            views:
+                totalViews,
+
+            likes:
+                totalLikes,
+
+            lessons:
+                playlistLessons,
+        });
+    }
 
 
     /* =====================================================
@@ -2098,339 +2875,47 @@ export async function searchYouTubeCourses(
     const uniqueResults =
         Array.from(
             new Map(
-                relevantResults.map(
-                    (video) => [
-                        video.videoId,
-                        video,
-                    ]
+                results.map(
+                    (course) => {
+                        const key =
+                            course.courseType ===
+                                "PLAYLIST"
+                                ? `playlist:${course.playlistId}`
+                                : `video:${course.videoId}`;
+
+                        return [
+                            key,
+                            course,
+                        ];
+                    }
                 )
             ).values()
         );
 
 
     console.log(
-        "YouTube unique results:",
+        "YouTube final results:",
         uniqueResults.length
+    );
+
+    console.log(
+        "Videos:",
+        uniqueResults.filter(
+            (item) =>
+                item.courseType ===
+                "VIDEO"
+        ).length
+    );
+
+    console.log(
+        "Playlists:",
+        uniqueResults.filter(
+            (item) =>
+                item.courseType ===
+                "PLAYLIST"
+        ).length
     );
 
 
     return uniqueResults;
-}
-
-
-/* =========================================================
-   GET VIDEO STATISTICS
-========================================================= */
-
-export async function getYouTubeVideoStatistics(
-    videoIds: string[]
-): Promise<YouTubeVideoStatistics[]> {
-
-    const apiKey =
-        process.env.YOUTUBE_API_KEY;
-
-
-    if (!apiKey) {
-
-        throw new Error(
-            "YOUTUBE_API_KEY is not configured"
-        );
-    }
-
-
-    if (
-        videoIds.length === 0
-    ) {
-
-        return [];
-    }
-
-
-    /* =====================================================
-       CHUNK IDS
-       MAX 50 PER REQUEST
-    ===================================================== */
-
-    const chunks: string[][] = [];
-
-
-    for (
-        let i = 0;
-        i < videoIds.length;
-        i += 50
-    ) {
-
-        chunks.push(
-            videoIds.slice(
-                i,
-                i + 50
-            )
-        );
-    }
-
-
-    const allStatistics:
-        YouTubeVideoStatistics[] = [];
-
-
-    for (
-        const chunk of chunks
-    ) {
-
-        const url =
-            new URL(
-                "https://www.googleapis.com/youtube/v3/videos"
-            );
-
-
-        url.searchParams.set(
-            "part",
-            "snippet,statistics,contentDetails"
-        );
-
-
-        url.searchParams.set(
-            "id",
-            chunk.join(",")
-        );
-
-
-        url.searchParams.set(
-            "key",
-            apiKey
-        );
-
-
-        const response =
-            await fetch(
-                url.toString(),
-                {
-                    cache: "no-store",
-                }
-            );
-
-
-        if (!response.ok) {
-
-            const error =
-                await response.text();
-
-            console.error(
-                "YouTube statistics error:",
-                error
-            );
-
-            throw new Error(
-                "Failed to fetch YouTube statistics"
-            );
-        }
-
-
-        const data =
-            await response.json();
-
-
-        allStatistics.push(
-            ...(data.items || [])
-        );
-    }
-
-
-    return allStatistics;
-}
-
-
-/* =========================================================
-   FORMAT YOUTUBE DURATION
-========================================================= */
-
-export function formatYouTubeDuration(
-    isoDuration: string
-): string {
-
-    if (
-        !isoDuration
-    ) {
-
-        return "Unknown";
-    }
-
-
-    const match =
-        isoDuration.match(
-            /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/
-        );
-
-
-    if (
-        !match
-    ) {
-
-        return "Unknown";
-    }
-
-
-    const hours =
-        Number(
-            match[1] || 0
-        );
-
-    const minutes =
-        Number(
-            match[2] || 0
-        );
-
-    const seconds =
-        Number(
-            match[3] || 0
-        );
-
-
-    const parts: string[] = [];
-
-
-    if (
-        hours > 0
-    ) {
-
-        parts.push(
-            `${hours}h`
-        );
-    }
-
-
-    if (
-        minutes > 0
-    ) {
-
-        parts.push(
-            `${minutes}m`
-        );
-    }
-
-
-    if (
-        seconds > 0 &&
-        hours === 0
-    ) {
-
-        parts.push(
-            `${seconds}s`
-        );
-    }
-
-
-    if (
-        parts.length === 0
-    ) {
-
-        return "0m";
-    }
-
-
-    return parts.join(" ");
-}
-
-
-/* =========================================================
-   GET DURATION SECONDS
-========================================================= */
-
-export function getDurationSeconds(
-    isoDuration: string
-): number {
-
-    if (
-        !isoDuration
-    ) {
-
-        return 0;
-    }
-
-
-    const match =
-        isoDuration.match(
-            /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/
-        );
-
-
-    if (
-        !match
-    ) {
-
-        return 0;
-    }
-
-
-    const hours =
-        Number(
-            match[1] || 0
-        );
-
-    const minutes =
-        Number(
-            match[2] || 0
-        );
-
-    const seconds =
-        Number(
-            match[3] || 0
-        );
-
-
-    return (
-        hours * 60 * 60 +
-        minutes * 60 +
-        seconds
-    );
-}
-
-/* =========================================================
-   CHECK FAKE / TOO SHORT FULL COURSES
-========================================================= */
-
-function isFakeFullCourse(
-    title: string,
-    isoDuration: string
-): boolean {
-
-    const normalizedTitle =
-        normalizeText(title);
-
-    const durationSeconds =
-        getDurationSeconds(isoDuration);
-
-    /*
-     * Videos claiming to be a full/complete course
-     * must have a reasonable duration.
-     *
-     * Anything below 30 minutes is rejected.
-     */
-
-    const claimsFullCourse =
-        normalizedTitle.includes("full course") ||
-        normalizedTitle.includes("complete course") ||
-        normalizedTitle.includes("full tutorial") ||
-        normalizedTitle.includes("complete tutorial") ||
-        normalizedTitle.includes("full programming course") ||
-        normalizedTitle.includes("complete programming course") ||
-        normalizedTitle.includes("all in one") ||
-        normalizedTitle.includes("zero to hero") ||
-        normalizedTitle.includes("learn from scratch") ||
-        normalizedTitle.includes("from scratch");
-
-    if (
-        claimsFullCourse &&
-        durationSeconds > 0 &&
-        durationSeconds < 30 * 60
-    ) {
-
-        console.log(
-            `[REMOVE - FAKE FULL COURSE] ${title} -> ${formatYouTubeDuration(isoDuration)}`
-        );
-
-        return true;
-    }
-
-    return false;
 }

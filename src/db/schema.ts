@@ -76,6 +76,10 @@ export const courses = pgTable("courses", {
     length: 100,
   }).unique(),
 
+  youtubePlaylistId: varchar("youtube_playlist_id", {
+    length: 100,
+  }).unique(),
+
   channelName: varchar("channel_name", {
     length: 200,
   }),

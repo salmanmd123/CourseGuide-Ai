@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 
 import {
-    and,
     ilike,
     inArray,
     or,
@@ -16,9 +15,8 @@ import {
 
 import {
     searchYouTubeCourses,
-    getYouTubeVideoStatistics,
     formatYouTubeDuration,
-    getDurationSeconds,
+    normalizeLanguage as normalizeYouTubeLanguage,
 } from "@/lib/youtube";
 
 
@@ -28,7 +26,7 @@ import {
 
 function createSlug(
     title: string,
-    videoId: string
+    id: string
 ): string {
 
     const slug =
@@ -42,9 +40,12 @@ function createSlug(
                 /^-|-$/g,
                 ""
             )
-            .slice(0, 150);
+            .slice(
+                0,
+                150
+            );
 
-    return `${slug}-${videoId}`;
+    return `${slug}-${id}`;
 }
 
 
@@ -55,10 +56,12 @@ function createSlug(
 function normalizeText(
     text: string
 ): string {
-
     return text
         .toLowerCase()
-        .replace(/\s+/g, " ")
+        .replace(
+            /\s+/g,
+            " "
+        )
         .trim();
 }
 
@@ -74,8 +77,6 @@ function normalizeCourseQuery(
     const normalized =
         normalizeText(query);
 
-    /* C++ aliases */
-
     if (
         normalized === "cpp" ||
         normalized === "c ++" ||
@@ -84,45 +85,41 @@ function normalizeCourseQuery(
         return "c++";
     }
 
-    /* JavaScript aliases */
-
     if (
-        normalized === "java script" ||
+        normalized ===
+            "java script" ||
         normalized === "js"
     ) {
         return "javascript";
     }
 
-    /* TypeScript aliases */
-
     if (
-        normalized === "type script" ||
+        normalized ===
+            "type script" ||
         normalized === "ts"
     ) {
         return "typescript";
     }
 
-    /* React aliases */
-
     if (
-        normalized === "reactjs"
+        normalized ===
+            "reactjs"
     ) {
         return "react";
     }
 
-    /* Node aliases */
-
     if (
-        normalized === "nodejs" ||
-        normalized === "node.js"
+        normalized ===
+            "nodejs" ||
+        normalized ===
+            "node.js"
     ) {
         return "node";
     }
 
-    /* MongoDB aliases */
-
     if (
-        normalized === "mongo db"
+        normalized ===
+            "mongo db"
     ) {
         return "mongodb";
     }
@@ -132,7 +129,7 @@ function normalizeCourseQuery(
 
 
 /* =========================================================
-   CHECK DATABASE COURSE RELEVANCE
+   DATABASE COURSE RELEVANCE
 ========================================================= */
 
 function isRelevantDatabaseCourse(
@@ -143,73 +140,76 @@ function isRelevantDatabaseCourse(
     query: string
 ): boolean {
 
-    const normalizedQuery =
-        normalizeCourseQuery(query);
-
-    const normalizedTitle =
-        normalizeText(title);
-
-    const normalizedCategory =
-        normalizeText(category);
-
-
     /*
-     * IMPORTANT:
+     * Keep the same intentional behavior:
      *
-     * Description and channel name are deliberately
-     * NOT used for deciding the actual subject.
-     *
-     * Example:
-     *
-     * SQL Full Course
-     * Description: Learn SQL with Python...
-     *
-     * Searching Python should NOT return SQL.
+     * Subject relevance is based mainly on
+     * title/category rather than arbitrary
+     * description mentions.
      */
 
+    void description;
 
-    /* =====================================================
-       C++
-    ===================================================== */
+    void channelName;
+
+    const normalizedQuery =
+        normalizeCourseQuery(
+            query
+        );
+
+    const normalizedTitle =
+        normalizeText(
+            title
+        );
+
+    const normalizedCategory =
+        normalizeText(
+            category
+        );
+
+
+    /* C++ */
 
     if (
-        normalizedQuery === "c++"
+        normalizedQuery ===
+        "c++"
     ) {
-
         return (
-            normalizedTitle.includes("c++") ||
-            normalizedTitle.includes("cpp") ||
-            normalizedCategory.includes("c++") ||
-            normalizedCategory.includes("cpp")
+            normalizedTitle.includes(
+                "c++"
+            ) ||
+            normalizedTitle.includes(
+                "cpp"
+            ) ||
+            normalizedCategory.includes(
+                "c++"
+            ) ||
+            normalizedCategory.includes(
+                "cpp"
+            )
         );
     }
 
 
-    /* =====================================================
-       JAVASCRIPT
-    ===================================================== */
+    /* JAVASCRIPT */
 
     if (
-        normalizedQuery === "javascript"
+        normalizedQuery ===
+        "javascript"
     ) {
-
         return (
             /\bjavascript\b/i.test(
                 normalizedTitle
             ) ||
-
             /\bjava script\b/i.test(
                 normalizedTitle
             ) ||
-
             /\becmascript\b/i.test(
                 normalizedTitle
             ) ||
-
             /\bjs\b/i.test(
                 normalizedTitle
             ) ||
-
             normalizedCategory.includes(
                 "javascript"
             )
@@ -217,27 +217,22 @@ function isRelevantDatabaseCourse(
     }
 
 
-    /* =====================================================
-       TYPESCRIPT
-    ===================================================== */
+    /* TYPESCRIPT */
 
     if (
-        normalizedQuery === "typescript"
+        normalizedQuery ===
+        "typescript"
     ) {
-
         return (
             /\btypescript\b/i.test(
                 normalizedTitle
             ) ||
-
             /\btype script\b/i.test(
                 normalizedTitle
             ) ||
-
             /\bts\b/i.test(
                 normalizedTitle
             ) ||
-
             normalizedCategory.includes(
                 "typescript"
             )
@@ -245,19 +240,16 @@ function isRelevantDatabaseCourse(
     }
 
 
-    /* =====================================================
-       JAVA
-    ===================================================== */
+    /* JAVA */
 
     if (
-        normalizedQuery === "java"
+        normalizedQuery ===
+        "java"
     ) {
-
         return (
             /\bjava\b/i.test(
                 normalizedTitle
             ) &&
-
             !/\bjavascript\b/i.test(
                 normalizedTitle
             )
@@ -265,22 +257,16 @@ function isRelevantDatabaseCourse(
     }
 
 
-    /* =====================================================
-       PYTHON
-    ===================================================== */
+    /* PYTHON */
 
     if (
-        normalizedQuery === "python"
+        normalizedQuery ===
+        "python"
     ) {
-
         return (
             /\bpython\b/i.test(
                 normalizedTitle
             ) ||
-
-            normalizedCategory ===
-                "python" ||
-
             normalizedCategory.includes(
                 "python"
             )
@@ -288,23 +274,19 @@ function isRelevantDatabaseCourse(
     }
 
 
-    /* =====================================================
-       REACT
-    ===================================================== */
+    /* REACT */
 
     if (
-        normalizedQuery === "react"
+        normalizedQuery ===
+        "react"
     ) {
-
         return (
             /\breact\b/i.test(
                 normalizedTitle
             ) ||
-
             /\breactjs\b/i.test(
                 normalizedTitle
             ) ||
-
             normalizedCategory.includes(
                 "react"
             )
@@ -312,19 +294,16 @@ function isRelevantDatabaseCourse(
     }
 
 
-    /* =====================================================
-       SQL
-    ===================================================== */
+    /* SQL */
 
     if (
-        normalizedQuery === "sql"
+        normalizedQuery ===
+        "sql"
     ) {
-
         return (
             /\bsql\b/i.test(
                 normalizedTitle
             ) ||
-
             /\bsql\b/i.test(
                 normalizedCategory
             )
@@ -332,23 +311,19 @@ function isRelevantDatabaseCourse(
     }
 
 
-    /* =====================================================
-       HTML
-    ===================================================== */
+    /* HTML */
 
     if (
-        normalizedQuery === "html"
+        normalizedQuery ===
+        "html"
     ) {
-
         return (
             /\bhtml\b/i.test(
                 normalizedTitle
             ) ||
-
             /\bhtml5\b/i.test(
                 normalizedTitle
             ) ||
-
             /\bhtml\b/i.test(
                 normalizedCategory
             )
@@ -356,23 +331,19 @@ function isRelevantDatabaseCourse(
     }
 
 
-    /* =====================================================
-       CSS
-    ===================================================== */
+    /* CSS */
 
     if (
-        normalizedQuery === "css"
+        normalizedQuery ===
+        "css"
     ) {
-
         return (
             /\bcss\b/i.test(
                 normalizedTitle
             ) ||
-
             /\bcss3\b/i.test(
                 normalizedTitle
             ) ||
-
             /\bcss\b/i.test(
                 normalizedCategory
             )
@@ -380,23 +351,19 @@ function isRelevantDatabaseCourse(
     }
 
 
-    /* =====================================================
-       NODE.JS
-    ===================================================== */
+    /* NODE */
 
     if (
-        normalizedQuery === "node"
+        normalizedQuery ===
+        "node"
     ) {
-
         return (
             /\bnode\.?js\b/i.test(
                 normalizedTitle
             ) ||
-
             /\bnode js\b/i.test(
                 normalizedTitle
             ) ||
-
             normalizedCategory.includes(
                 "node"
             )
@@ -404,27 +371,22 @@ function isRelevantDatabaseCourse(
     }
 
 
-    /* =====================================================
-       MONGODB
-    ===================================================== */
+    /* MONGODB */
 
     if (
-        normalizedQuery === "mongodb"
+        normalizedQuery ===
+        "mongodb"
     ) {
-
         return (
             /\bmongodb\b/i.test(
                 normalizedTitle
             ) ||
-
             /\bmongo db\b/i.test(
                 normalizedTitle
             ) ||
-
             normalizedCategory.includes(
                 "mongodb"
             ) ||
-
             normalizedCategory.includes(
                 "mongo"
             )
@@ -432,15 +394,14 @@ function isRelevantDatabaseCourse(
     }
 
 
-    /* =====================================================
-       NORMAL SEARCH
-    ===================================================== */
+    /* NORMAL */
 
     const queryWords =
         normalizedQuery
-            .split(/\s+/)
+            .split(
+                /\s+/
+            )
             .filter(Boolean);
-
 
     if (
         queryWords.length === 0
@@ -448,19 +409,14 @@ function isRelevantDatabaseCourse(
         return false;
     }
 
-
-    /*
-     * EVERY word must appear in:
-     *
-     * TITLE OR CATEGORY
-     *
-     * Never description/channel.
-     */
-
     return queryWords.every(
         (word) =>
-            normalizedTitle.includes(word) ||
-            normalizedCategory.includes(word)
+            normalizedTitle.includes(
+                word
+            ) ||
+            normalizedCategory.includes(
+                word
+            )
     );
 }
 
@@ -476,6 +432,8 @@ function calculateRecommendationScore({
     likes,
     durationSeconds,
     query,
+    lessonCount,
+    courseType,
 }: {
     title: string;
     description: string;
@@ -483,6 +441,10 @@ function calculateRecommendationScore({
     likes: number;
     durationSeconds: number;
     query: string;
+    lessonCount: number;
+    courseType:
+        | "VIDEO"
+        | "PLAYLIST";
 }): number {
 
     const text =
@@ -491,18 +453,17 @@ function calculateRecommendationScore({
         );
 
     const searchQuery =
-        normalizeCourseQuery(query);
+        normalizeCourseQuery(
+            query
+        );
 
     let score = 0;
 
 
     /* =====================================================
-       1. SEARCH RELEVANCE
+       SEARCH RELEVANCE
        MAX 30
     ===================================================== */
-
-    let matchedWords = 0;
-
 
     if (
         searchQuery === "c++"
@@ -511,7 +472,9 @@ function calculateRecommendationScore({
         if (
             text.includes("c++") ||
             text.includes("cpp") ||
-            text.includes("c plus plus")
+            text.includes(
+                "c plus plus"
+            )
         ) {
             score += 30;
         }
@@ -523,82 +486,83 @@ function calculateRecommendationScore({
                 .split(/\s+/)
                 .filter(Boolean);
 
+        let matchedWords = 0;
 
         for (
-            const word
-            of queryWords
+            const word of
+            queryWords
         ) {
-
             if (
-                text.includes(word)
+                text.includes(
+                    word
+                )
             ) {
                 matchedWords++;
             }
         }
 
-
         if (
-            queryWords.length > 0
+            queryWords.length >
+            0
         ) {
-
             score +=
                 (
                     matchedWords /
                     queryWords.length
-                ) * 30;
+                ) *
+                30;
         }
     }
 
 
     /* =====================================================
-       2. VIEWS
+       VIEWS
        MAX 20
     ===================================================== */
 
     if (
-        views >= 10_000_000
+        views >=
+        10_000_000
     ) {
-
         score += 20;
 
     } else if (
-        views >= 5_000_000
+        views >=
+        5_000_000
     ) {
-
         score += 18;
 
     } else if (
-        views >= 1_000_000
+        views >=
+        1_000_000
     ) {
-
         score += 16;
 
     } else if (
-        views >= 500_000
+        views >=
+        500_000
     ) {
-
         score += 13;
 
     } else if (
-        views >= 100_000
+        views >=
+        100_000
     ) {
-
         score += 10;
 
     } else if (
-        views >= 10_000
+        views >=
+        10_000
     ) {
-
         score += 6;
 
     } else {
-
         score += 2;
     }
 
 
     /* =====================================================
-       3. LIKE ENGAGEMENT
+       LIKE ENGAGEMENT
        MAX 15
     ===================================================== */
 
@@ -607,44 +571,37 @@ function calculateRecommendationScore({
             ? likes / views
             : 0;
 
-
     if (
         likeRatio >= 0.08
     ) {
-
         score += 15;
 
     } else if (
         likeRatio >= 0.05
     ) {
-
         score += 13;
 
     } else if (
         likeRatio >= 0.03
     ) {
-
         score += 10;
 
     } else if (
         likeRatio >= 0.01
     ) {
-
         score += 7;
 
     } else {
-
         score += 3;
     }
 
 
     /* =====================================================
-       4. COURSE SIGNAL
+       COURSE SIGNAL
        MAX 25
     ===================================================== */
 
     const courseKeywords = [
-
         "full course",
         "complete course",
         "full tutorial",
@@ -657,31 +614,25 @@ function calculateRecommendationScore({
         "tutorial",
         "masterclass",
         "bootcamp",
-
     ];
 
-
-    const matchedCourseKeyword =
+    if (
         courseKeywords.some(
             (keyword) =>
-                text.includes(keyword)
-        );
-
-
-    if (
-        matchedCourseKeyword
+                text.includes(
+                    keyword
+                )
+        )
     ) {
-
         score += 25;
 
     } else {
-
         score += 5;
     }
 
 
     /* =====================================================
-       5. DURATION
+       DURATION
        MAX 10
     ===================================================== */
 
@@ -689,40 +640,70 @@ function calculateRecommendationScore({
         durationSeconds >=
         8 * 60 * 60
     ) {
-
         score += 10;
 
     } else if (
         durationSeconds >=
         4 * 60 * 60
     ) {
-
         score += 9;
 
     } else if (
         durationSeconds >=
         2 * 60 * 60
     ) {
-
         score += 8;
 
     } else if (
         durationSeconds >=
         60 * 60
     ) {
-
         score += 6;
 
     } else if (
         durationSeconds >=
         30 * 60
     ) {
-
         score += 4;
 
     } else {
-
         score += 1;
+    }
+
+
+    /* =====================================================
+       PLAYLIST BONUS
+    ===================================================== */
+
+    if (
+        courseType ===
+        "PLAYLIST"
+    ) {
+
+        if (
+            lessonCount >=
+            30
+        ) {
+            score += 10;
+
+        } else if (
+            lessonCount >=
+            15
+        ) {
+            score += 8;
+
+        } else if (
+            lessonCount >=
+            8
+        ) {
+            score += 6;
+
+        } else if (
+            lessonCount >=
+            4
+        ) {
+            score += 3;
+        }
     }
 
 
@@ -744,37 +725,34 @@ function getSearchQuery(
 ): string {
 
     const url =
-        new URL(request.url);
+        new URL(
+            request.url
+        );
 
     const rawQuery =
-        url.searchParams.get("q");
+        url.searchParams.get(
+            "q"
+        );
 
-
-    if (!rawQuery) {
+    if (
+        !rawQuery
+    ) {
         return "";
     }
-
 
     const trimmed =
         rawQuery.trim();
 
-
     /*
-     * URLSearchParams issue:
-     *
-     * ?q=C++
-     *
-     * may arrive as:
-     *
-     * C
+     * C++ compatibility.
      */
 
     if (
-        trimmed.toLowerCase() === "c"
+        trimmed.toLowerCase() ===
+        "c"
     ) {
         return "C++";
     }
-
 
     return trimmed;
 }
@@ -785,35 +763,47 @@ function getSearchQuery(
 ========================================================= */
 
 function normalizeLanguage(
-    language: string | null
+    language:
+        | string
+        | null
 ): string {
 
-    const value =
-        normalizeText(
-            language || "English"
+    const normalized =
+        normalizeYouTubeLanguage(
+            language ||
+                "English"
         );
 
-
     if (
-        value === "hindi"
+        normalized ===
+        "hindi"
     ) {
         return "Hindi";
     }
 
+    if (
+        normalized ===
+        "english"
+    ) {
+        return "English";
+    }
 
     if (
-        value === "hinglish"
+        normalized ===
+        "hinglish"
     ) {
         return "Hinglish";
     }
 
-
-    return "English";
+    return (
+        language ||
+        "English"
+    );
 }
 
 
 /* =========================================================
-   SEARCH API
+   GET SEARCH API
 ========================================================= */
 
 export async function GET(
@@ -827,18 +817,21 @@ export async function GET(
                 request
             );
 
-
         const url =
             new URL(
                 request.url
             );
-
 
         const preferredLanguage =
             normalizeLanguage(
                 url.searchParams.get(
                     "language"
                 )
+            );
+
+        const normalizedPreferredLanguage =
+            normalizeText(
+                preferredLanguage
             );
 
 
@@ -861,7 +854,9 @@ export async function GET(
         );
 
 
-        if (!query) {
+        if (
+            !query
+        ) {
 
             return NextResponse.json(
                 {
@@ -875,19 +870,9 @@ export async function GET(
         }
 
 
-        /* =====================================================
-           1. DATABASE SEARCH
-        ===================================================== */
-
-        /*
-         * Search title/category only.
-         *
-         * This prevents:
-         *
-         * SQL + description mentions Python
-         *
-         * from appearing in Python search.
-         */
+        /* =================================================
+           1. DATABASE FIRST
+        ================================================= */
 
         const existingCourses =
             await db
@@ -895,7 +880,6 @@ export async function GET(
                 .from(courses)
                 .where(
                     or(
-
                         ilike(
                             courses.title,
                             `%${query}%`
@@ -905,7 +889,6 @@ export async function GET(
                             courses.category,
                             `%${query}%`
                         )
-
                     )
                 );
 
@@ -916,9 +899,9 @@ export async function GET(
         );
 
 
-        /* =====================================================
+        /* =================================================
            2. STRICT SUBJECT FILTER
-        ===================================================== */
+        ================================================= */
 
         const relevantDatabaseCourses =
             existingCourses.filter(
@@ -933,46 +916,23 @@ export async function GET(
             );
 
 
-        console.log(
-            "Strictly relevant database courses:",
-            relevantDatabaseCourses.length
-        );
-
-
-        console.log(
-            "Relevant database titles:",
-            relevantDatabaseCourses.map(
-                (course) =>
-                    course.title
-            )
-        );
-
-
-        /* =====================================================
+        /* =================================================
            3. LANGUAGE HARD FILTER
-        ===================================================== */
-
-        const preferred =
-            preferredLanguage
-                .toLowerCase()
-                .trim();
-
+        ================================================= */
 
         const languageFilteredCourses =
             relevantDatabaseCourses.filter(
                 (course) => {
 
                     const courseLanguage =
-                        normalizeLanguage(
-                            course.language
-                        )
-                            .toLowerCase()
-                            .trim();
-
+                        normalizeText(
+                            course.language ||
+                                "English"
+                        );
 
                     return (
                         courseLanguage ===
-                        preferred
+                        normalizedPreferredLanguage
                     );
                 }
             );
@@ -984,9 +944,9 @@ export async function GET(
         );
 
 
-        /* =====================================================
-           4. RETURN DATABASE RESULTS
-        ===================================================== */
+        /* =================================================
+           RETURN DATABASE COURSES
+        ================================================= */
 
         if (
             languageFilteredCourses.length >
@@ -1007,13 +967,11 @@ export async function GET(
 
 
             return NextResponse.json({
-
                 source:
                     "database",
 
                 courses:
                     languageFilteredCourses,
-
             });
         }
 
@@ -1022,15 +980,14 @@ export async function GET(
             "No matching database courses in preferred language."
         );
 
-
         console.log(
             "Searching YouTube..."
         );
 
 
-        /* =====================================================
-           5. YOUTUBE SEARCH
-        ===================================================== */
+        /* =================================================
+           4. YOUTUBE SEARCH
+        ================================================= */
 
         const youtubeResults =
             await searchYouTubeCourses(
@@ -1040,49 +997,46 @@ export async function GET(
 
 
         console.log(
-            "YouTube relevant results:",
+            "YouTube results:",
             youtubeResults.length
         );
 
 
         if (
-            youtubeResults.length === 0
+            youtubeResults.length ===
+            0
         ) {
 
             return NextResponse.json({
-
                 source:
                     "youtube",
 
                 courses: [],
-
             });
         }
 
 
-        /* =====================================================
-           6. YOUTUBE LANGUAGE HARD FILTER
-        ===================================================== */
+        /* =================================================
+           5. LANGUAGE HARD FILTER
+        ================================================= */
 
         const languageMatchedResults =
             youtubeResults.filter(
                 (video) => {
 
                     const videoLanguage =
-                        normalizeLanguage(
+                        normalizeYouTubeLanguage(
                             video.language
-                        )
-                            .toLowerCase()
-                            .trim();
-
+                        );
 
                     const matches =
                         videoLanguage ===
-                        preferred;
+                        normalizedPreferredLanguage;
 
 
-                    if (!matches) {
-
+                    if (
+                        !matches
+                    ) {
                         console.log(
                             "[REMOVE - LANGUAGE]",
                             video.title,
@@ -1097,136 +1051,83 @@ export async function GET(
             );
 
 
-        console.log(
-            "YouTube courses after language filter:",
-            languageMatchedResults.length
-        );
-
-
         if (
-            languageMatchedResults.length === 0
+            languageMatchedResults.length ===
+            0
         ) {
 
             return NextResponse.json({
-
                 source:
                     "youtube",
 
                 courses: [],
-
             });
         }
 
 
-        /* =====================================================
-           7. GET YOUTUBE STATISTICS
-        ===================================================== */
-
-        const videoIds =
-            languageMatchedResults.map(
-                (video) =>
-                    video.videoId
-            );
-
-
-        const statistics =
-            await getYouTubeVideoStatistics(
-                videoIds
-            );
-
-
-        const statisticsMap =
-            new Map(
-                statistics.map(
-                    (item) => [
-                        item.id,
-                        item,
-                    ]
-                )
-            );
-
-
-        /* =====================================================
-           8. BUILD SCORED COURSES
-        ===================================================== */
+        /* =================================================
+           6. SCORE VIDEO + PLAYLIST RESULTS
+        ================================================= */
 
         const scoredCourses =
             languageMatchedResults.map(
                 (video) => {
 
-                    const stats =
-                        statisticsMap.get(
-                            video.videoId
-                        );
-
-
                     const views =
-                        Number(
-                            stats
-                                ?.statistics
-                                ?.viewCount ||
-                            0
-                        );
-
+                        video.views ||
+                        0;
 
                     const likes =
-                        Number(
-                            stats
-                                ?.statistics
-                                ?.likeCount ||
-                            0
-                        );
-
-
-                    const durationISO =
-                        stats
-                            ?.contentDetails
-                            ?.duration ||
-                        "";
-
+                        video.likes ||
+                        0;
 
                     const durationSeconds =
-                        getDurationSeconds(
-                            durationISO
-                        );
+                        video.durationSeconds ||
+                        0;
 
-
-                    const duration =
-                        formatYouTubeDuration(
-                            durationISO
-                        );
+                    const lessonCount =
+                        video.courseType ===
+                        "PLAYLIST"
+                            ? (
+                                video.lessons
+                                    ?.length ||
+                                0
+                            )
+                            : 1;
 
 
                     let recommendationScore =
-                        calculateRecommendationScore({
+                        calculateRecommendationScore(
+                            {
+                                title:
+                                    video.title,
 
-                            title:
-                                video.title,
+                                description:
+                                    video.description,
 
-                            description:
-                                video.description,
+                                views,
 
-                            views,
+                                likes,
 
-                            likes,
+                                durationSeconds,
 
-                            durationSeconds,
+                                query,
 
-                            query,
+                                lessonCount,
 
-                        });
+                                courseType:
+                                    video.courseType,
+                            }
+                        );
 
 
                     /*
-                     * Language is already a hard filter.
-                     *
-                     * Keep a small boost for consistency,
-                     * but all courses here already match.
+                     * Every result already passed
+                     * the language hard filter.
                      */
 
                     recommendationScore +=
                         15;
-
 
                     recommendationScore =
                         Math.min(
@@ -1236,84 +1137,17 @@ export async function GET(
 
 
                     return {
-
-                        title:
-                            video.title,
-
-                        slug:
-                            createSlug(
-                                video.title,
-                                video.videoId
-                            ),
-
-                        description:
-                            video.description ||
-                            "YouTube course",
-
-                        category:
-                            query,
-
-                        level:
-                            "Beginner",
-
-                        courseType:
-                            "VIDEO" as const,
-
-                        /*
-                         * IMPORTANT:
-                         *
-                         * Save actual detected language.
-                         */
-
-                        language:
-                            video.language,
-
-                        youtubeUrl:
-                            `https://www.youtube.com/watch?v=${video.videoId}`,
-
-                        youtubeId:
-                            video.videoId,
-
-                        channelName:
-                            video.channelName,
-
-                        thumbnailUrl:
-                            video.thumbnail,
-
-                        views,
-
-                        likes,
-
-                        duration,
-
-                        lessonsCount:
-                            1,
-
-                        rating:
-                            "0",
-
-                        students:
-                            "0",
-
-                        source:
-                            "YouTube",
+                        video,
 
                         recommendationScore,
-
-                        adminRecommended:
-                            false,
-
-                        featured:
-                            false,
-
                     };
                 }
             );
 
 
-        /* =====================================================
-           9. SORT
-        ===================================================== */
+        /* =================================================
+           7. SORT
+        ================================================= */
 
         scoredCourses.sort(
             (a, b) =>
@@ -1322,9 +1156,9 @@ export async function GET(
         );
 
 
-        /* =====================================================
-           10. TOP 10
-        ===================================================== */
+        /* =================================================
+           8. TOP 10
+        ================================================= */
 
         const topCourses =
             scoredCourses.slice(
@@ -1333,43 +1167,82 @@ export async function GET(
             );
 
 
-        /* =====================================================
-           11. CHECK EXISTING YOUTUBE COURSES
-        ===================================================== */
+        /* =================================================
+           9. EXISTING VIDEO COURSES
+        ================================================= */
 
-        const existingYouTubeCourses =
-            await db
-                .select()
-                .from(courses)
-                .where(
-                    and(
+        const videoIds =
+            topCourses
+                .filter(
+                    (item) =>
+                        item.video
+                            .courseType ===
+                        "VIDEO"
+                )
+                .map(
+                    (item) =>
+                        item.video
+                            .videoId
+                )
+                .filter(Boolean);
 
-                        inArray(
-                            courses.youtubeId,
-                            topCourses.map(
-                                (course) =>
-                                    course.youtubeId
-                            )
-                        ),
 
-                        ilike(
-                            courses.language,
-                            preferredLanguage
-                        )
+        /* =================================================
+           10. EXISTING PLAYLIST COURSES
+        ================================================= */
 
-                    )
+        const playlistIds =
+            topCourses
+                .filter(
+                    (item) =>
+                        item.video
+                            .courseType ===
+                        "PLAYLIST"
+                )
+                .map(
+                    (item) =>
+                        item.video
+                            .playlistId
+                )
+                .filter(
+                    (
+                        id
+                    ): id is string =>
+                        Boolean(id)
                 );
 
 
-        console.log(
-            "Existing YouTube courses in preferred language:",
-            existingYouTubeCourses.length
-        );
+        const existingVideoCourses =
+            videoIds.length > 0
+                ? await db
+                    .select()
+                    .from(courses)
+                    .where(
+                        inArray(
+                            courses.youtubeId,
+                            videoIds
+                        )
+                    )
+                : [];
 
 
-        const existingYouTubeIds =
+        const existingPlaylistCourses =
+            playlistIds.length > 0
+                ? await db
+                    .select()
+                    .from(courses)
+                    .where(
+                        inArray(
+                            courses.youtubePlaylistId,
+                            playlistIds
+                        )
+                    )
+                : [];
+
+
+        const existingVideoIds =
             new Set(
-                existingYouTubeCourses
+                existingVideoCourses
                     .map(
                         (course) =>
                             course.youtubeId
@@ -1383,44 +1256,187 @@ export async function GET(
             );
 
 
-        const newCourses =
-            topCourses.filter(
-                (course) =>
-                    !existingYouTubeIds.has(
-                        course.youtubeId
+        const existingPlaylistIds =
+            new Set(
+                existingPlaylistCourses
+                    .map(
+                        (course) =>
+                            course.youtubePlaylistId
+                    )
+                    .filter(
+                        (
+                            id
+                        ): id is string =>
+                            Boolean(id)
                     )
             );
 
 
-        console.log(
-            "New YouTube courses:",
-            newCourses.length
-        );
+        /* =================================================
+           11. INSERT NEW COURSES
+        ================================================= */
 
-
-        /* =====================================================
-           12. INSERT COURSES + LESSONS
-        ===================================================== */
-
-        if (
-            newCourses.length > 0
+        for (
+            const item of
+            topCourses
         ) {
 
-            for (
-                const course
-                of newCourses
+            const video =
+                item.video;
+
+
+            /* =================================================
+               PLAYLIST
+            ================================================= */
+
+            if (
+                video.courseType ===
+                "PLAYLIST"
             ) {
+
+                const playlistId =
+                    video.playlistId;
+
+
+                if (
+                    !playlistId ||
+                    !video.lessons ||
+                    video.lessons.length ===
+                        0
+                ) {
+                    continue;
+                }
+
+
+                if (
+                    existingPlaylistIds.has(
+                        playlistId
+                    )
+                ) {
+                    continue;
+                }
+
 
                 try {
 
+                    const totalDurationSeconds =
+                        video.lessons.reduce(
+                            (
+                                total,
+                                lesson
+                            ) =>
+                                total +
+                                lesson.durationSeconds,
+                            0
+                        );
+
+
+                    const totalDurationISO =
+                        `PT${Math.floor(
+                            totalDurationSeconds /
+                                3600
+                        )}H${Math.floor(
+                            (
+                                totalDurationSeconds %
+                                3600
+                            ) /
+                                60
+                        )}M${totalDurationSeconds % 60
+                        }S`;
+
+
+                    const duration =
+                        video.duration ||
+                        formatYouTubeDuration(
+                            totalDurationISO
+                        );
+
+
                     const [insertedCourse] =
                         await db
-                            .insert(courses)
-                            .values(course)
-                            .onConflictDoNothing({
-                                target:
-                                    courses.youtubeId,
+                            .insert(
+                                courses
+                            )
+                            .values({
+
+                                title:
+                                    video.title,
+
+                                slug:
+                                    createSlug(
+                                        video.title,
+                                        playlistId
+                                    ),
+
+                                description:
+                                    video.description ||
+                                    "YouTube course playlist",
+
+                                category:
+                                    query,
+
+                                level:
+                                    "Beginner",
+
+                                courseType:
+                                    "PLAYLIST",
+
+                                language:
+                                    video.language,
+
+                                youtubeUrl:
+                                    `https://www.youtube.com/playlist?list=${playlistId}`,
+
+                                youtubeId:
+                                    null,
+
+                                youtubePlaylistId:
+                                    playlistId,
+
+                                channelName:
+                                    video.channelName,
+
+                                thumbnailUrl:
+                                    video.thumbnail,
+
+                                views:
+                                    video.views ||
+                                    0,
+
+                                likes:
+                                    video.likes ||
+                                    0,
+
+                                duration,
+
+                                lessonsCount:
+                                    video.lessons
+                                        .length,
+
+                                rating:
+                                    "0",
+
+                                students:
+                                    "0",
+
+                                source:
+                                    "YouTube",
+
+                                recommendationScore:
+                                    item.recommendationScore,
+
+                                adminRecommended:
+                                    false,
+
+                                featured:
+                                    false,
                             })
+                            .onConflictDoNothing(
+                                {
+                                    target:
+                                        courses.youtubePlaylistId,
+                                }
+                            )
                             .returning();
 
 
@@ -1428,98 +1444,294 @@ export async function GET(
                         insertedCourse
                     ) {
 
-                        await db
-                            .insert(lessons)
-                            .values({
+                        for (
+                            let index = 0;
+                            index <
+                            video.lessons.length;
+                            index++
+                        ) {
 
-                                courseId:
-                                    insertedCourse.id,
+                            const lesson =
+                                video.lessons[
+                                    index
+                                ];
 
-                                title:
-                                    insertedCourse.title,
 
-                                description:
-                                    insertedCourse.description,
+                            await db
+                                .insert(
+                                    lessons
+                                )
+                                .values({
 
-                                videoUrl:
-                                    insertedCourse.youtubeId!,
+                                    courseId:
+                                        insertedCourse.id,
 
-                                duration:
-                                    insertedCourse.duration,
+                                    title:
+                                        lesson.title,
 
-                                order:
-                                    1,
+                                    description:
+                                        lesson.description,
 
-                            });
+                                    videoUrl:
+                                        lesson.videoId,
+
+                                    duration:
+                                        lesson.duration,
+
+                                    order:
+                                        index + 1,
+                                });
+                        }
 
 
                         console.log(
-                            `[LESSON CREATED] ${insertedCourse.title}`
+                            `[PLAYLIST CREATED] ${insertedCourse.title} -> ${video.lessons.length} lessons`
                         );
                     }
-
 
                 } catch (
                     error
                 ) {
 
                     console.error(
-                        `[COURSE INSERT ERROR] ${course.title}`,
+                        `[PLAYLIST INSERT ERROR] ${video.title}`,
                         error
                     );
                 }
+
+
+                continue;
+            }
+
+
+            /* =================================================
+               NORMAL VIDEO
+            ================================================= */
+
+            if (
+                existingVideoIds.has(
+                    video.videoId
+                )
+            ) {
+                continue;
+            }
+
+
+            try {
+
+                const [insertedCourse] =
+                    await db
+                        .insert(
+                            courses
+                        )
+                        .values({
+
+                            title:
+                                video.title,
+
+                            slug:
+                                createSlug(
+                                    video.title,
+                                    video.videoId
+                                ),
+
+                            description:
+                                video.description ||
+                                "YouTube course",
+
+                            category:
+                                query,
+
+                            level:
+                                "Beginner",
+
+                            courseType:
+                                "VIDEO",
+
+                            language:
+                                video.language,
+
+                            youtubeUrl:
+                                `https://www.youtube.com/watch?v=${video.videoId}`,
+
+                            youtubeId:
+                                video.videoId,
+
+                            youtubePlaylistId:
+                                null,
+
+                            channelName:
+                                video.channelName,
+
+                            thumbnailUrl:
+                                video.thumbnail,
+
+                            views:
+                                video.views ||
+                                0,
+
+                            likes:
+                                video.likes ||
+                                0,
+
+                            duration:
+                                video.duration ||
+                                "Unknown",
+
+                            lessonsCount:
+                                1,
+
+                            rating:
+                                "0",
+
+                            students:
+                                "0",
+
+                            source:
+                                "YouTube",
+
+                            recommendationScore:
+                                item.recommendationScore,
+
+                            adminRecommended:
+                                false,
+
+                            featured:
+                                false,
+                        })
+                        .onConflictDoNothing(
+                            {
+                                target:
+                                    courses.youtubeId,
+                            }
+                        )
+                        .returning();
+
+
+                if (
+                    insertedCourse
+                ) {
+
+                    await db
+                        .insert(
+                            lessons
+                        )
+                        .values({
+
+                            courseId:
+                                insertedCourse.id,
+
+                            title:
+                                insertedCourse.title,
+
+                            description:
+                                insertedCourse.description,
+
+                            videoUrl:
+                                insertedCourse.youtubeId!,
+
+                            duration:
+                                insertedCourse.duration,
+
+                            order:
+                                1,
+                        });
+
+
+                    console.log(
+                        `[LESSON CREATED] ${insertedCourse.title}`
+                    );
+                }
+
+            } catch (
+                error
+            ) {
+
+                console.error(
+                    `[COURSE INSERT ERROR] ${video.title}`,
+                    error
+                );
             }
         }
 
 
-        /* =====================================================
-           13. FINAL FETCH
-        ===================================================== */
+        /* =================================================
+           12. FINAL FETCH
+        ================================================= */
 
-        const finalCourses =
-            await db
-                .select()
-                .from(courses)
-                .where(
-                    and(
-
+        const finalVideoCourses =
+            videoIds.length > 0
+                ? await db
+                    .select()
+                    .from(courses)
+                    .where(
                         inArray(
                             courses.youtubeId,
-                            topCourses.map(
-                                (course) =>
-                                    course.youtubeId
-                            )
-                        ),
-
-                        ilike(
-                            courses.language,
-                            preferredLanguage
+                            videoIds
                         )
-
                     )
-                );
+                : [];
 
 
-        /* =====================================================
-           14. FINAL RELEVANCE FILTER
-        ===================================================== */
+        const finalPlaylistCourses =
+            playlistIds.length > 0
+                ? await db
+                    .select()
+                    .from(courses)
+                    .where(
+                        inArray(
+                            courses.youtubePlaylistId,
+                            playlistIds
+                        )
+                    )
+                : [];
+
+
+        const finalCourses =
+            [
+                ...finalVideoCourses,
+                ...finalPlaylistCourses,
+            ];
+
+
+        /* =================================================
+           13. FINAL SUBJECT + LANGUAGE FILTER
+        ================================================= */
 
         const finalRelevantCourses =
             finalCourses.filter(
-                (course) =>
-                    isRelevantDatabaseCourse(
-                        course.title,
-                        course.description,
-                        course.category,
-                        course.channelName,
-                        query
-                    )
+                (course) => {
+
+                    const language =
+                        normalizeText(
+                            course.language ||
+                                "English"
+                        );
+
+                    const languageMatch =
+                        language ===
+                        normalizedPreferredLanguage;
+
+                    const subjectMatch =
+                        isRelevantDatabaseCourse(
+                            course.title,
+                            course.description,
+                            course.category,
+                            course.channelName,
+                            query
+                        );
+
+                    return (
+                        languageMatch &&
+                        subjectMatch
+                    );
+                }
             );
 
 
-        /* =====================================================
-           15. FINAL SORT
-        ===================================================== */
+        /* =================================================
+           14. SORT FINAL RESULTS
+        ================================================= */
 
         finalRelevantCourses.sort(
             (a, b) =>
@@ -1540,9 +1752,29 @@ export async function GET(
         );
 
 
-        /* =====================================================
-           16. RETURN
-        ===================================================== */
+        console.log(
+            "Final videos:",
+            finalRelevantCourses.filter(
+                (course) =>
+                    course.courseType ===
+                    "VIDEO"
+            ).length
+        );
+
+
+        console.log(
+            "Final playlists:",
+            finalRelevantCourses.filter(
+                (course) =>
+                    course.courseType ===
+                    "PLAYLIST"
+            ).length
+        );
+
+
+        /* =================================================
+           15. RETURN
+        ================================================= */
 
         return NextResponse.json({
 
@@ -1554,8 +1786,8 @@ export async function GET(
                     0,
                     10
                 ),
-
         });
+
 
     } catch (
         error
