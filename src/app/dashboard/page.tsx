@@ -503,7 +503,7 @@ export default async function DashboardPage() {
     <main className="min-h-screen bg-zinc-50 text-zinc-950 transition-colors dark:bg-zinc-950 dark:text-zinc-50">
 
       <ProgressAutoRefresh />
-      
+
       <Navbar />
 
       <div className="mx-auto max-w-7xl px-6 py-10">
@@ -521,7 +521,7 @@ export default async function DashboardPage() {
             </p>
 
             <h1 className="mt-2 text-3xl font-bold tracking-tight text-zinc-950 dark:text-white sm:text-4xl">
-              Good morning, {user.name} 👋
+              Hello, {user.name} 👋
             </h1>
 
             <p className="mt-2 text-zinc-500 dark:text-zinc-400">
