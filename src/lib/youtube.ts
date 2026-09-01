@@ -1925,6 +1925,26 @@ export async function searchYouTubeCourses(
             (video) => {
 
                 /* =========================================
+              FAKE / TOO SHORT FULL COURSE
+           ========================================= */
+
+                const stats =
+                    statisticsMap.get(
+                        video.videoId
+                    );
+
+                if (
+                    isFakeFullCourse(
+                        video.title,
+                        stats?.contentDetails?.duration || ""
+                    )
+                ) {
+
+                    return false;
+                }
+
+
+                /* =========================================
                    BAD CONTENT
                 ========================================= */
 
@@ -2363,4 +2383,54 @@ export function getDurationSeconds(
         minutes * 60 +
         seconds
     );
+}
+
+/* =========================================================
+   CHECK FAKE / TOO SHORT FULL COURSES
+========================================================= */
+
+function isFakeFullCourse(
+    title: string,
+    isoDuration: string
+): boolean {
+
+    const normalizedTitle =
+        normalizeText(title);
+
+    const durationSeconds =
+        getDurationSeconds(isoDuration);
+
+    /*
+     * Videos claiming to be a full/complete course
+     * must have a reasonable duration.
+     *
+     * Anything below 30 minutes is rejected.
+     */
+
+    const claimsFullCourse =
+        normalizedTitle.includes("full course") ||
+        normalizedTitle.includes("complete course") ||
+        normalizedTitle.includes("full tutorial") ||
+        normalizedTitle.includes("complete tutorial") ||
+        normalizedTitle.includes("full programming course") ||
+        normalizedTitle.includes("complete programming course") ||
+        normalizedTitle.includes("all in one") ||
+        normalizedTitle.includes("zero to hero") ||
+        normalizedTitle.includes("learn from scratch") ||
+        normalizedTitle.includes("from scratch");
+
+    if (
+        claimsFullCourse &&
+        durationSeconds > 0 &&
+        durationSeconds < 30 * 60
+    ) {
+
+        console.log(
+            `[REMOVE - FAKE FULL COURSE] ${title} -> ${formatYouTubeDuration(isoDuration)}`
+        );
+
+        return true;
+    }
+
+    return false;
 }
