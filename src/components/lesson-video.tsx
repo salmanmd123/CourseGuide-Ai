@@ -6,35 +6,63 @@ type LessonVideoProps = {
   lessonId: number;
   videoUrl: string;
   startSeconds?: number;
+
+  onWatchProgress?: (
+    watchedSeconds: number,
+    durationSeconds: number
+  ) => void;
 };
 
 export default function LessonVideo({
   lessonId,
   videoUrl,
   startSeconds = 0,
+  onWatchProgress,
 }: LessonVideoProps) {
   async function handleProgress(
     currentTime: number,
     duration: number
   ) {
     try {
-      if (!duration || duration <= 0) {
+      if (
+        !duration ||
+        duration <= 0
+      ) {
         return;
       }
 
-      const watchPercentage = Math.min(
-        100,
-        Math.floor((currentTime / duration) * 100)
+      const watchedSeconds =
+        Math.floor(currentTime);
+
+      const watchPercentage =
+        Math.min(
+          100,
+          Math.floor(
+            (currentTime / duration) *
+              100
+          )
+        );
+
+      /*
+       * Update the UI immediately.
+       */
+      onWatchProgress?.(
+        watchedSeconds,
+        duration
       );
 
+      /*
+       * Save progress to database.
+       */
       await fetch("/api/progress", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type":
+            "application/json",
         },
         body: JSON.stringify({
           lessonId,
-          watchedSeconds: Math.floor(currentTime),
+          watchedSeconds,
           watchPercentage,
         }),
       });
@@ -51,7 +79,8 @@ export default function LessonVideo({
       await fetch("/api/progress", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type":
+            "application/json",
         },
         body: JSON.stringify({
           lessonId,

@@ -13,10 +13,12 @@ type YouTubePlayerProps = {
   videoId: string;
   startSeconds?: number;
   lessonId: number;
+
   onProgress?: (
     currentTime: number,
     duration: number
   ) => void;
+
   onComplete?: () => void;
 };
 
@@ -27,25 +29,27 @@ export default function YouTubePlayer({
   onProgress,
   onComplete,
 }: YouTubePlayerProps) {
-  // =========================
+  // =========================================================
   // REFS
-  // =========================
+  // =========================================================
 
   const playerRef = useRef<any>(null);
 
   const intervalRef =
     useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const completedRef = useRef(false);
+  const completedRef =
+    useRef(false);
 
-  // Keep latest callbacks without recreating
-  // the YouTube player
-  const onProgressRef = useRef(onProgress);
-  const onCompleteRef = useRef(onComplete);
+  const onProgressRef =
+    useRef(onProgress);
 
-  // =========================
+  const onCompleteRef =
+    useRef(onComplete);
+
+  // =========================================================
   // KEEP CALLBACKS UPDATED
-  // =========================
+  // =========================================================
 
   useEffect(() => {
     onProgressRef.current = onProgress;
@@ -55,18 +59,17 @@ export default function YouTubePlayer({
     onCompleteRef.current = onComplete;
   }, [onComplete]);
 
-  // =========================
-  // RESET COMPLETION
-  // WHEN LESSON CHANGES
-  // =========================
+  // =========================================================
+  // RESET WHEN LESSON CHANGES
+  // =========================================================
 
   useEffect(() => {
     completedRef.current = false;
   }, [videoId, lessonId]);
 
-  // =========================
+  // =========================================================
   // STOP PROGRESS TIMER
-  // =========================
+  // =========================================================
 
   function stopProgressTimer() {
     if (intervalRef.current) {
@@ -75,9 +78,9 @@ export default function YouTubePlayer({
     }
   }
 
-  // =========================
-  // CHECK & SAVE PROGRESS
-  // =========================
+  // =========================================================
+  // CHECK + SEND PROGRESS
+  // =========================================================
 
   function checkProgress() {
     const player = playerRef.current;
@@ -103,29 +106,34 @@ export default function YouTubePlayer({
         return;
       }
 
+      const safeCurrentTime = Math.max(
+        0,
+        Math.min(currentTime, duration)
+      );
+
       const percentage = Math.min(
         100,
         Math.max(
           0,
           Math.floor(
-            (currentTime / duration) * 100
+            (safeCurrentTime / duration) *
+              100
           )
         )
       );
 
-      // =========================
-      // SAVE LATEST POSITION
-      // =========================
+      // =====================================================
+      // SEND LIVE PROGRESS TO PARENT
+      // =====================================================
 
       onProgressRef.current?.(
-        currentTime,
+        safeCurrentTime,
         duration
       );
 
-      // =========================
-      // AUTOMATIC COMPLETION
-      // AT 90%
-      // =========================
+      // =====================================================
+      // COMPLETE AT 90%
+      // =====================================================
 
       if (
         percentage >= 90 &&
@@ -143,23 +151,27 @@ export default function YouTubePlayer({
     }
   }
 
-  // =========================
-  // START PROGRESS TIMER
-  // =========================
+  // =========================================================
+  // START TIMER
+  // =========================================================
 
   function startProgressTimer() {
     stopProgressTimer();
 
-    // Save every 5 seconds
+    /*
+     * Update every 1 second instead of every 5 seconds.
+     *
+     * This makes the UI feel live.
+     */
     intervalRef.current =
       setInterval(() => {
         checkProgress();
-      }, 5000);
+      }, 1000);
   }
 
-  // =========================
+  // =========================================================
   // CREATE YOUTUBE PLAYER
-  // =========================
+  // =========================================================
 
   useEffect(() => {
     let mounted = true;
@@ -174,6 +186,15 @@ export default function YouTubePlayer({
 
       // Prevent duplicate player
       if (playerRef.current) {
+        return;
+      }
+
+      const playerElement =
+        document.getElementById(
+          "youtube-player"
+        );
+
+      if (!playerElement) {
         return;
       }
 
@@ -196,24 +217,34 @@ export default function YouTubePlayer({
             },
 
             events: {
-              // =========================
-              // PLAYER READY
-              // =========================
+              // =================================================
+              // READY
+              // =================================================
 
               onReady: (event: any) => {
                 if (
                   startSeconds > 0
                 ) {
                   event.target.seekTo(
-                    Math.floor(startSeconds),
+                    Math.floor(
+                      startSeconds
+                    ),
                     true
                   );
                 }
+
+                /*
+                 * Immediately report the initial
+                 * position to the parent.
+                 */
+                setTimeout(() => {
+                  checkProgress();
+                }, 500);
               },
 
-              // =========================
-              // PLAYER STATE CHANGE
-              // =========================
+              // =================================================
+              // STATE CHANGE
+              // =================================================
 
               onStateChange: (
                 event: any
@@ -254,13 +285,11 @@ export default function YouTubePlayer({
                   event.data ===
                   YTState.BUFFERING
                 ) {
-                  // Keep timer stopped while
-                  // video is buffering.
                   stopProgressTimer();
                 }
 
                 // =========================
-                // VIDEO ENDED
+                // ENDED
                 // =========================
 
                 if (
@@ -272,7 +301,6 @@ export default function YouTubePlayer({
                   // Save final position
                   checkProgress();
 
-                  // Ensure lesson is completed
                   if (
                     !completedRef.current
                   ) {
@@ -288,17 +316,17 @@ export default function YouTubePlayer({
         );
     }
 
-    // =========================
-    // YOUTUBE API ALREADY LOADED
-    // =========================
+    // =======================================================
+    // API ALREADY LOADED
+    // =======================================================
 
     if (window.YT?.Player) {
       createPlayer();
     }
 
-    // =========================
+    // =======================================================
     // LOAD YOUTUBE API
-    // =========================
+    // =======================================================
 
     else {
       const existingScript =
@@ -335,9 +363,9 @@ export default function YouTubePlayer({
         };
     }
 
-    // =========================
+    // =======================================================
     // CLEANUP
-    // =========================
+    // =======================================================
 
     return () => {
       mounted = false;
@@ -365,9 +393,9 @@ export default function YouTubePlayer({
     lessonId,
   ]);
 
-  // =========================
+  // =========================================================
   // UI
-  // =========================
+  // =========================================================
 
   return (
     <div className="aspect-video w-full bg-black">
