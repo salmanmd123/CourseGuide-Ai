@@ -6,7 +6,7 @@ import {
   CheckCircle2,
   Clock3,
   Play,
-  Star,
+  ThumbsUp,
   Users,
 } from "lucide-react";
 
@@ -147,17 +147,16 @@ export default async function CourseDetailsPage({
 
                 <span className="flex items-center gap-2">
 
-                  <Star
+                  <ThumbsUp
                     size={16}
-                    fill="currentColor"
-                    className="text-amber-500"
+                    className="text-blue-500"
                   />
 
                   <strong className="text-zinc-900 dark:text-white">
-                    {course.rating}
+                    {course.likes.toLocaleString()}
                   </strong>
 
-                  rating
+                  likes
 
                 </span>
 
@@ -166,7 +165,9 @@ export default async function CourseDetailsPage({
 
                   <Users size={16} />
 
-                  {course.students} learners
+                  <strong className="text-zinc-900 dark:text-white">
+                    {course.views.toLocaleString()}
+                  </strong> learners
 
                 </span>
 

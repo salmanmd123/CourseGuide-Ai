@@ -8,7 +8,7 @@ import {
     CheckCircle2,
     Clock3,
     Search,
-    Star,
+    ThumbsUp,
     X,
 } from "lucide-react";
 
@@ -26,6 +26,8 @@ type Course = {
     lessonsCount: number;
     rating: string | null;
     students: string | null;
+    views?: number | null;
+    likes?: number | null;
     source: string | null;
     featured: boolean | null;
 
@@ -1003,15 +1005,15 @@ export default function CoursesPage() {
 
                     if (
                         sortBy ===
-                        "Highest rated"
+                        "Most liked"
                     ) {
                         return (
                             Number(
-                                b.rating ??
+                                b.likes ??
                                     0
                             ) -
                             Number(
-                                a.rating ??
+                                a.likes ??
                                     0
                             )
                         );
@@ -1022,11 +1024,13 @@ export default function CoursesPage() {
                         "Most popular"
                     ) {
                         return (
-                            parseStudentCount(
-                                b.students
+                            Number(
+                                b.views ??
+                                    0
                             ) -
-                            parseStudentCount(
-                                a.students
+                            Number(
+                                a.views ??
+                                    0
                             )
                         );
                     }
@@ -1605,7 +1609,7 @@ export default function CoursesPage() {
                                 </option>
 
                                 <option>
-                                    Highest rated
+                                    Most liked
                                 </option>
 
                                 <option>
@@ -1766,26 +1770,37 @@ export default function CoursesPage() {
                                                         {/* RATING */}
 
                                                         <div className="mt-4 flex items-center justify-between border-t border-zinc-100 pt-4 dark:border-zinc-800">
-                                                            <div className="flex items-center gap-1 text-xs">
-                                                                <Star
-                                                                    size={
-                                                                        14
-                                                                    }
-                                                                    fill="currentColor"
-                                                                    className="text-amber-500"
-                                                                />
+                                                            <div className="flex items-center gap-4 text-xs">
+                                                                <div className="flex items-center gap-1">
+                                                                    <ThumbsUp
+                                                                        size={14}
+                                                                        className="text-indigo-500"
+                                                                    />
 
-                                                                <span className="font-semibold text-zinc-800 dark:text-zinc-200">
-                                                                    {course.rating ??
-                                                                        "0"}
-                                                                </span>
+                                                                    <span className="font-semibold text-zinc-800 dark:text-zinc-200">
+                                                                        {Number(
+                                                                            course.likes ??
+                                                                                0
+                                                                        ).toLocaleString()}
+                                                                    </span>
 
-                                                                <span className="text-zinc-400">
-                                                                    (
-                                                                    {course.students ??
-                                                                        "0"}
-                                                                    )
-                                                                </span>
+                                                                    <span className="text-zinc-400">
+                                                                        likes
+                                                                    </span>
+                                                                </div>
+
+                                                                <div className="flex items-center gap-1">
+                                                                    <span className="font-semibold text-zinc-800 dark:text-zinc-200">
+                                                                        {Number(
+                                                                            course.views ??
+                                                                                0
+                                                                        ).toLocaleString()}
+                                                                    </span>
+
+                                                                    <span className="text-zinc-400">
+                                                                        views
+                                                                    </span>
+                                                                </div>
                                                             </div>
 
                                                             <span className="text-[10px] font-medium uppercase tracking-wider text-zinc-400">
