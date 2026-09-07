@@ -129,6 +129,141 @@ function normalizeCourseQuery(
 
 
 /* =========================================================
+   GET CANONICAL COURSE CATEGORY
+========================================================= */
+
+function getCourseCategory(
+    query: string
+): string {
+
+    const normalized =
+        normalizeCourseQuery(query);
+
+    /* =========================
+       PROGRAMMING
+    ========================= */
+
+    if (
+        normalized === "python" ||
+        normalized === "java" ||
+        normalized === "c" ||
+        normalized === "c++" ||
+        normalized === "javascript" ||
+        normalized === "typescript" ||
+        normalized === "go" ||
+        normalized === "golang" ||
+        normalized === "rust" ||
+        normalized === "kotlin" ||
+        normalized === "swift" ||
+        normalized === "ruby" ||
+        normalized === "programming" ||
+        normalized === "coding"
+    ) {
+        return "Programming";
+    }
+
+    /* =========================
+       WEB DEVELOPMENT
+    ========================= */
+
+    if (
+        normalized === "react" ||
+        normalized === "php" ||
+        normalized === "html" ||
+        normalized === "css" ||
+        normalized === "mern" ||
+        normalized === "mean" ||
+        normalized === "node" ||
+        normalized === "express" ||
+        normalized === "nextjs" ||
+        normalized === "next.js" ||
+        normalized === "frontend" ||
+        normalized === "backend" ||
+        normalized === "full stack" ||
+        normalized === "fullstack" ||
+        normalized === "web development"
+    ) {
+        return "Web Development";
+    }
+
+    /* =========================
+       DATABASES
+    ========================= */
+
+    if (
+        normalized === "sql" ||
+        normalized === "mysql" ||
+        normalized === "postgresql" ||
+        normalized === "postgres" ||
+        normalized === "mongodb" ||
+        normalized === "mongo" ||
+        normalized === "dbms" ||
+        normalized === "database" ||
+        normalized === "databases" ||
+        normalized === "redis" ||
+        normalized === "sqlite" ||
+        normalized === "firebase"
+    ) {
+        return "Databases";
+    }
+
+    /* =========================
+       AI & ML
+    ========================= */
+
+    if (
+        normalized === "ai" ||
+        normalized === "artificial intelligence" ||
+        normalized === "ml" ||
+        normalized === "machine learning" ||
+        normalized === "deep learning" ||
+        normalized === "nlp" ||
+        normalized === "natural language processing" ||
+        normalized === "computer vision" ||
+        normalized === "cv" ||
+        normalized === "generative ai" ||
+        normalized === "genai" ||
+        normalized === "tensorflow" ||
+        normalized === "pytorch" ||
+        normalized === "neural networks"
+    ) {
+        return "AI & ML";
+    }
+
+    /* =========================
+       COMPUTER SCIENCE
+    ========================= */
+
+    if (
+        normalized === "dsa" ||
+        normalized === "data structures" ||
+        normalized === "data structures and algorithms" ||
+        normalized === "algorithms" ||
+        normalized === "operating systems" ||
+        normalized === "os" ||
+        normalized === "computer networks" ||
+        normalized === "networks" ||
+        normalized === "computer science" ||
+        normalized === "software engineering" ||
+        normalized === "discrete mathematics" ||
+        normalized === "discrete math" ||
+        normalized === "theory of computation" ||
+        normalized === "compiler design" ||
+        normalized === "computer architecture"
+    ) {
+        return "Computer Science";
+    }
+
+    /*
+     * Safe fallback: preserve the search query when it is not one
+     * of the supported canonical categories. This avoids silently
+     * assigning an unrelated category to a newly discovered course.
+     */
+    return query.trim();
+}
+
+
+/* =========================================================
    DATABASE COURSE RELEVANCE
 ========================================================= */
 
@@ -187,6 +322,46 @@ function isRelevantDatabaseCourse(
             normalizedCategory.includes(
                 "cpp"
             )
+        );
+    }
+
+
+    /* C */
+
+    if (
+        normalizedQuery ===
+        "c"
+    ) {
+        const titleIsC =
+            /\bc\b/i.test(
+                normalizedTitle
+            );
+
+        const categoryIsC =
+            /\bc\b/i.test(
+                normalizedCategory
+            );
+
+        const isCpp =
+            /\bc\s*\+\+/i.test(
+                normalizedTitle
+            ) ||
+            /\bc\s*\+\+/i.test(
+                normalizedCategory
+            );
+
+        const isCSharp =
+            /\bc\s*#/i.test(
+                normalizedTitle
+            ) ||
+            /\bc\s*#/i.test(
+                normalizedCategory
+            );
+
+        return (
+            (titleIsC || categoryIsC) &&
+            !isCpp &&
+            !isCSharp
         );
     }
 
@@ -740,21 +915,7 @@ function getSearchQuery(
         return "";
     }
 
-    const trimmed =
-        rawQuery.trim();
-
-    /*
-     * C++ compatibility.
-     */
-
-    if (
-        trimmed.toLowerCase() ===
-        "c"
-    ) {
-        return "C++";
-    }
-
-    return trimmed;
+    return rawQuery.trim();
 }
 
 
@@ -1090,11 +1251,97 @@ export async function GET(
 
 
         /* =================================================
-           5. LANGUAGE HARD FILTER
+           5. STRICT SUBJECT FILTER FOR YOUTUBE
+        ================================================= */
+
+        const subjectMatchedResults =
+            youtubeResults.filter(
+                (video) => {
+                    const normalizedVideoQuery =
+                        normalizeCourseQuery(
+                            query
+                        );
+
+                    const title =
+                        normalizeText(
+                            video.title
+                        );
+
+                    if (
+                        normalizedVideoQuery ===
+                        "c"
+                    ) {
+                        const isC =
+                            /\bc\b/i.test(
+                                title
+                            );
+
+                        const isCpp =
+                            /\bc\s*\+\+/i.test(
+                                title
+                            ) ||
+                            /\bcpp\b/i.test(
+                                title
+                            ) ||
+                            /\bc\s+plus\s+plus\b/i.test(
+                                title
+                            );
+
+                        const isCSharp =
+                            /\bc\s*#/i.test(
+                                title
+                            );
+
+                        if (
+                            !isC ||
+                            isCpp ||
+                            isCSharp
+                        ) {
+                            console.log(
+                                "[REMOVE - SUBJECT]",
+                                video.title,
+                                "-> C search"
+                            );
+                            return false;
+                        }
+                    }
+
+                    if (
+                        normalizedVideoQuery ===
+                        "c++"
+                    ) {
+                        const isCpp =
+                            /\bc\s*\+\+/i.test(
+                                title
+                            ) ||
+                            /\bcpp\b/i.test(
+                                title
+                            ) ||
+                            /\bc\s+plus\s+plus\b/i.test(
+                                title
+                            );
+
+                        if (!isCpp) {
+                            console.log(
+                                "[REMOVE - SUBJECT]",
+                                video.title,
+                                "-> C++ search"
+                            );
+                            return false;
+                        }
+                    }
+
+                    return true;
+                }
+            );
+
+
+        /* =================================================
+           6. LANGUAGE HARD FILTER
         ================================================= */
 
         const languageMatchedResults =
-            youtubeResults.filter(
+            subjectMatchedResults.filter(
                 (video) => {
 
                     const videoLanguage =
@@ -1139,7 +1386,7 @@ export async function GET(
 
 
         /* =================================================
-           6. SCORE VIDEO + PLAYLIST RESULTS
+           7. SCORE VIDEO + PLAYLIST RESULTS
         ================================================= */
 
         const scoredCourses =
@@ -1219,7 +1466,7 @@ export async function GET(
 
 
         /* =================================================
-           7. SORT
+           8. SORT
         ================================================= */
 
         scoredCourses.sort(
@@ -1230,7 +1477,7 @@ export async function GET(
 
 
         /* =================================================
-           8. TOP 10
+           9. TOP 10
         ================================================= */
 
         const topCourses =
@@ -1241,7 +1488,7 @@ export async function GET(
 
 
         /* =================================================
-           9. EXISTING VIDEO COURSES
+           10. EXISTING VIDEO COURSES
         ================================================= */
 
         const videoIds =
@@ -1261,7 +1508,7 @@ export async function GET(
 
 
         /* =================================================
-           10. EXISTING PLAYLIST COURSES
+           11. EXISTING PLAYLIST COURSES
         ================================================= */
 
         const playlistIds =
@@ -1346,7 +1593,7 @@ export async function GET(
 
 
         /* =================================================
-           11. INSERT NEW COURSES
+           12. INSERT NEW COURSES
         ================================================= */
 
         for (
@@ -1446,7 +1693,9 @@ export async function GET(
                                     "YouTube course playlist",
 
                                 category:
-                                    query,
+                                    getCourseCategory(
+                                        query
+                                    ),
 
                                 level:
                                     "Beginner",
@@ -1613,7 +1862,9 @@ export async function GET(
                                 "YouTube course",
 
                             category:
-                                query,
+                                getCourseCategory(
+                                    query
+                                ),
 
                             level:
                                 "Beginner",
@@ -1729,7 +1980,7 @@ export async function GET(
 
 
         /* =================================================
-           12. FINAL FETCH
+           13. FINAL FETCH
         ================================================= */
 
         const finalVideoCourses =
@@ -1768,7 +2019,7 @@ export async function GET(
 
 
         /* =================================================
-           13. FINAL SUBJECT + LANGUAGE FILTER
+           14. FINAL SUBJECT + LANGUAGE FILTER
         ================================================= */
 
         const finalRelevantCourses =
@@ -1801,7 +2052,7 @@ export async function GET(
 
 
         /* =================================================
-           14. SORT FINAL RESULTS
+           15. SORT FINAL RESULTS
         ================================================= */
 
         finalRelevantCourses.sort(
@@ -1844,7 +2095,7 @@ export async function GET(
 
 
         /* =================================================
-           15. RETURN
+           16. RETURN
         ================================================= */
 
         return NextResponse.json({
