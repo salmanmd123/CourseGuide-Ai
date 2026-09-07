@@ -1297,101 +1297,87 @@ function detectFromYouTubeLanguageCode(
 function detectIndianScriptLanguage(
     text: string
 ): string | null {
-    if (
-        /[\u0900-\u097F]/.test(
-            text
-        )
-    ) {
-        if (
-            /\b(आहे|आणि|मध्ये|करण्यासाठी|मराठी)\b/.test(
-                text
-            )
-        ) {
+    if (/[\u0900-\u097F]/.test(text)) {
+        if (/(?:आहे|आणि|मध्ये|करण्यासाठी|मराठी|महाराष्ट्र)/.test(text)) {
             return "Marathi";
         }
 
-        if (
-            /\b(नेपाली|छ|छन्|लाई|बाट|को)\b/.test(
-                text
-            )
-        ) {
+        if (/(?:नेपाली|छ|छन्|लाई|बाट|को)/.test(text)) {
             return "Nepali";
         }
 
         return "Hindi";
     }
 
-    if (
-        /[\u0B80-\u0BFF]/.test(
-            text
-        )
-    ) {
-        return "Tamil";
+    if (/[\u0B80-\u0BFF]/.test(text)) return "Tamil";
+    if (/[\u0C00-\u0C7F]/.test(text)) return "Telugu";
+    if (/[\u0C80-\u0CFF]/.test(text)) return "Kannada";
+    if (/[\u0D00-\u0D7F]/.test(text)) return "Malayalam";
+    if (/[\u0980-\u09FF]/.test(text)) return "Bengali";
+    if (/[\u0A80-\u0AFF]/.test(text)) return "Gujarati";
+    if (/[\u0A00-\u0A7F]/.test(text)) return "Punjabi";
+    if (/[\u0B00-\u0B7F]/.test(text)) return "Odia";
+    if (/[\u0600-\u06FF]/.test(text)) return "Urdu";
+
+    return null;
+}
+
+
+/* =========================================================
+   EXPLICIT LANGUAGE SIGNALS
+========================================================= */
+
+type LanguageSignal = {
+    language: string;
+    patterns: RegExp[];
+};
+
+const EXPLICIT_LANGUAGE_SIGNALS: LanguageSignal[] = [
+    { language: "Hindi", patterns: [/\bhindi\b/i, /\bin\s+hindi\b/i, /\bhindi\s+(?:tutorial|course|classes?|lecture|lessons?)\b/i, /\bhindi\s+mein\b/i, /\bhindi\s+me\b/i, /हिंदी/, /हिन्दी/, /हिंदी\s*में/, /हिन्दी\s*में/] },
+    { language: "Telugu", patterns: [/\btelugu\b/i, /\bin\s+telugu\b/i, /\btelugu\s+(?:tutorial|course|classes?|lecture|lessons?)\b/i, /\btelugu\s+language\b/i, /తెలుగు/, /తెలుగులో/] },
+    { language: "Tamil", patterns: [/\btamil\b/i, /\bin\s+tamil\b/i, /\btamil\s+(?:tutorial|course|classes?|lecture|lessons?)\b/i, /\btamil\s+language\b/i, /தமிழ்/, /தமிழில்/] },
+    { language: "Kannada", patterns: [/\bkannada\b/i, /\bin\s+kannada\b/i, /\bkannada\s+(?:tutorial|course|classes?|lecture|lessons?)\b/i, /\bkannada\s+language\b/i, /ಕನ್ನಡ/, /ಕನ್ನಡದಲ್ಲಿ/] },
+    { language: "Malayalam", patterns: [/\bmalayalam\b/i, /\bin\s+malayalam\b/i, /\bmalayalam\s+(?:tutorial|course|classes?|lecture|lessons?)\b/i, /\bmalayalam\s+language\b/i, /മലയാളം/, /മലയാളത്തിൽ/] },
+    { language: "Bengali", patterns: [/\bbengali\b/i, /\bin\s+bengali\b/i, /\bbengali\s+(?:tutorial|course|classes?|lecture|lessons?)\b/i, /\bbengali\s+language\b/i, /বাংলা/, /বাংলায়/] },
+    { language: "Marathi", patterns: [/\bmarathi\b/i, /\bin\s+marathi\b/i, /\bmarathi\s+(?:tutorial|course|classes?|lecture|lessons?)\b/i, /\bmarathi\s+language\b/i, /मराठी/, /मराठीत/] },
+    { language: "Gujarati", patterns: [/\bgujarati\b/i, /\bin\s+gujarati\b/i, /\bgujarati\s+(?:tutorial|course|classes?|lecture|lessons?)\b/i, /\bgujarati\s+language\b/i, /ગુજરાતી/, /ગુજરાતીમાં/] },
+    { language: "Punjabi", patterns: [/\bpunjabi\b/i, /\bin\s+punjabi\b/i, /\bpunjabi\s+(?:tutorial|course|classes?|lecture|lessons?)\b/i, /\bpunjabi\s+language\b/i, /ਪੰਜਾਬੀ/, /ਪੰਜਾਬੀ ਵਿੱਚ/] },
+    { language: "Urdu", patterns: [/\burdu\b/i, /\bin\s+urdu\b/i, /\burdu\s+(?:tutorial|course|classes?|lecture|lessons?)\b/i, /\burdu\s+language\b/i, /اردو/, /اردو میں/] },
+    { language: "Odia", patterns: [/\bodia\b/i, /\boriya\b/i, /\bin\s+(?:odia|oriya)\b/i, /\b(?:odia|oriya)\s+(?:tutorial|course|classes?|lecture|lessons?)\b/i, /ଓଡ଼ିଆ/, /ଓଡ଼ିଆରେ/] },
+    { language: "Assamese", patterns: [/\bassamese\b/i, /\bin\s+assamese\b/i, /\bassamese\s+(?:tutorial|course|classes?|lecture|lessons?)\b/i, /অসমীয়া/, /অসমীয়াত/] },
+    { language: "Nepali", patterns: [/\bnepali\b/i, /\bin\s+nepali\b/i, /\bnepali\s+(?:tutorial|course|classes?|lecture|lessons?)\b/i, /\bnepali\s+language\b/i, /नेपाली/, /नेपालीमा/] },
+    { language: "French", patterns: [/\bfrench\b/i, /\bin\s+french\b/i, /\bfrench\s+(?:tutorial|course|classes?|lecture|lessons?)\b/i, /\bfrench\s+language\b/i] },
+    { language: "Spanish", patterns: [/\bspanish\b/i, /\bin\s+spanish\b/i, /\bspanish\s+(?:tutorial|course|classes?|lecture|lessons?)\b/i, /\bspanish\s+language\b/i] },
+    { language: "German", patterns: [/\bgerman\b/i, /\bin\s+german\b/i, /\bgerman\s+(?:tutorial|course|classes?|lecture|lessons?)\b/i, /\bgerman\s+language\b/i] },
+    { language: "Portuguese", patterns: [/\bportuguese\b/i, /\bin\s+portuguese\b/i, /\bportuguese\s+(?:tutorial|course|classes?|lecture|lessons?)\b/i, /\bportuguese\s+language\b/i] },
+    { language: "English", patterns: [/\benglish\b/i, /\bin\s+english\b/i, /\benglish\s+(?:tutorial|course|classes?|lecture|lessons?)\b/i, /\benglish\s+language\b/i] },
+];
+
+function detectExplicitLanguageFromText(
+    title: string,
+    description: string
+): string | null {
+    const titleText = normalizeText(title);
+    const descriptionText = normalizeText(description);
+
+    const titleMatches: string[] = [];
+    const descriptionMatches: string[] = [];
+
+    for (const signal of EXPLICIT_LANGUAGE_SIGNALS) {
+        if (signal.patterns.some((pattern) => pattern.test(titleText))) {
+            titleMatches.push(signal.language);
+        }
+
+        if (signal.patterns.some((pattern) => pattern.test(descriptionText))) {
+            descriptionMatches.push(signal.language);
+        }
     }
 
-    if (
-        /[\u0C00-\u0C7F]/.test(
-            text
-        )
-    ) {
-        return "Telugu";
-    }
+    const uniqueTitleMatches = Array.from(new Set(titleMatches));
+    if (uniqueTitleMatches.length === 1) return uniqueTitleMatches[0];
 
-    if (
-        /[\u0C80-\u0CFF]/.test(
-            text
-        )
-    ) {
-        return "Kannada";
-    }
-
-    if (
-        /[\u0D00-\u0D7F]/.test(
-            text
-        )
-    ) {
-        return "Malayalam";
-    }
-
-    if (
-        /[\u0980-\u09FF]/.test(
-            text
-        )
-    ) {
-        return "Bengali";
-    }
-
-    if (
-        /[\u0A80-\u0AFF]/.test(
-            text
-        )
-    ) {
-        return "Gujarati";
-    }
-
-    if (
-        /[\u0A00-\u0A7F]/.test(
-            text
-        )
-    ) {
-        return "Punjabi";
-    }
-
-    if (
-        /[\u0B00-\u0B7F]/.test(
-            text
-        )
-    ) {
-        return "Odia";
-    }
-
-    if (
-        /[\u0600-\u06FF]/.test(
-            text
-        )
-    ) {
-        return "Urdu";
-    }
+    const uniqueDescriptionMatches = Array.from(new Set(descriptionMatches));
+    if (uniqueDescriptionMatches.length === 1) return uniqueDescriptionMatches[0];
 
     return null;
 }
@@ -1406,79 +1392,14 @@ function detectCourseLanguageFromText(
     description: string,
     channelName: string
 ): string | null {
-    const titleText =
-        normalizeText(title);
+    const explicitLanguage = detectExplicitLanguageFromText(title, description);
 
-    const descriptionText =
-        normalizeText(description);
-
-    const channelText =
-        normalizeText(channelName);
-
-    const combinedText =
-        `${titleText} ${descriptionText} ${channelText}`;
-
-    const scriptLanguage =
-        detectIndianScriptLanguage(
-            combinedText
-        );
-
-    if (
-        scriptLanguage
-    ) {
-        return scriptLanguage;
+    if (explicitLanguage) {
+        return explicitLanguage;
     }
 
-    const hindiSignals = [
-        "hindi",
-        "in hindi",
-        "hindi tutorial",
-        "hindi course",
-        "hindi mein",
-        "hindi me",
-        "हिंदी",
-        "हिन्दी",
-        "हिंदी में",
-        "हिन्दी में",
-    ];
-
-    if (
-        hindiSignals.some(
-            (signal) =>
-                titleText.includes(
-                    signal
-                ) ||
-                descriptionText.includes(
-                    signal
-                )
-        )
-    ) {
-        return "Hindi";
-    }
-
-    const englishSignals = [
-        "english",
-        "in english",
-        "english tutorial",
-        "english course",
-        "english language",
-    ];
-
-    if (
-        englishSignals.some(
-            (signal) =>
-                titleText.includes(
-                    signal
-                ) ||
-                descriptionText.includes(
-                    signal
-                )
-        )
-    ) {
-        return "English";
-    }
-
-    return null;
+    const combinedText = `${normalizeText(title)} ${normalizeText(description)}`;
+    return detectIndianScriptLanguage(combinedText);
 }
 
 
@@ -2350,8 +2271,8 @@ export async function searchYouTubeCourses(
 
         const actualLanguage =
             knownLanguage ||
-            youtubeLanguage ||
             textLanguage ||
+            youtubeLanguage ||
             "Unknown";
 
 

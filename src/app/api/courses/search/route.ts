@@ -771,7 +771,7 @@ function normalizeLanguage(
     const normalized =
         normalizeYouTubeLanguage(
             language ||
-                "English"
+                ""
         );
 
     if (
@@ -795,10 +795,87 @@ function normalizeLanguage(
         return "Hinglish";
     }
 
-    return (
-        language ||
-        "English"
-    );
+    return normalized || "Unknown";
+}
+
+
+/* =========================================================
+   EXPLICIT LANGUAGE DETECTION FOR DATABASE COURSES
+========================================================= */
+
+const DATABASE_LANGUAGE_PATTERNS: Array<{
+    language: string;
+    patterns: RegExp[];
+}> = [
+    { language: "hindi", patterns: [/\bhindi\b/i, /\bin\s+hindi\b/i, /\bhindi\s+(?:mein|me)\b/i, /हिंदी/, /हिन्दी/, /हिंदी\s*में/, /हिन्दी\s*में/] },
+    { language: "telugu", patterns: [/\btelugu\b/i, /\bin\s+telugu\b/i, /తెలుగు/, /తెలుగులో/] },
+    { language: "tamil", patterns: [/\btamil\b/i, /\bin\s+tamil\b/i, /தமிழ்/, /தமிழில்/] },
+    { language: "kannada", patterns: [/\bkannada\b/i, /\bin\s+kannada\b/i, /ಕನ್ನಡ/, /ಕನ್ನಡದಲ್ಲಿ/] },
+    { language: "malayalam", patterns: [/\bmalayalam\b/i, /\bin\s+malayalam\b/i, /മലയാളം/, /മലയാളത്തിൽ/] },
+    { language: "bengali", patterns: [/\bbengali\b/i, /\bin\s+bengali\b/i, /বাংলা/, /বাংলায়/] },
+    { language: "marathi", patterns: [/\bmarathi\b/i, /\bin\s+marathi\b/i, /मराठी/, /मराठीत/] },
+    { language: "gujarati", patterns: [/\bgujarati\b/i, /\bin\s+gujarati\b/i, /ગુજરાતી/, /ગુજરાતીમાં/] },
+    { language: "punjabi", patterns: [/\bpunjabi\b/i, /\bin\s+punjabi\b/i, /ਪੰਜਾਬੀ/, /ਪੰਜਾਬੀ ਵਿੱਚ/] },
+    { language: "urdu", patterns: [/\burdu\b/i, /\bin\s+urdu\b/i, /اردو/, /اردو میں/] },
+    { language: "odia", patterns: [/\b(?:odia|oriya)\b/i, /\bin\s+(?:odia|oriya)\b/i, /ଓଡ଼ିଆ/, /ଓଡ଼ିଆରେ/] },
+    { language: "assamese", patterns: [/\bassamese\b/i, /\bin\s+assamese\b/i, /অসমীয়া/, /অসমীয়াত/] },
+    { language: "nepali", patterns: [/\bnepali\b/i, /\bin\s+nepali\b/i, /नेपाली/, /नेपालीमा/] },
+    { language: "french", patterns: [/\bfrench\b/i, /\bin\s+french\b/i, /\bfrench\s+language\b/i] },
+    { language: "spanish", patterns: [/\bspanish\b/i, /\bin\s+spanish\b/i, /\bspanish\s+language\b/i] },
+    { language: "german", patterns: [/\bgerman\b/i, /\bin\s+german\b/i, /\bgerman\s+language\b/i] },
+    { language: "portuguese", patterns: [/\bportuguese\b/i, /\bin\s+portuguese\b/i, /\bportuguese\s+language\b/i] },
+    { language: "english", patterns: [/\benglish\b/i, /\bin\s+english\b/i, /\benglish\s+language\b/i] },
+];
+
+function detectExplicitLanguageFromCourseText(
+    title: string | null | undefined,
+    description: string | null | undefined
+): string | null {
+    const titleText = (title || "").trim();
+    const descriptionText = (description || "").trim();
+
+    const detect = (text: string): string[] =>
+        DATABASE_LANGUAGE_PATTERNS
+            .filter(({ patterns }) =>
+                patterns.some((pattern) => pattern.test(text))
+            )
+            .map(({ language }) => language);
+
+    const titleMatches = Array.from(new Set(detect(titleText)));
+    if (titleMatches.length === 1) return titleMatches[0];
+
+    const descriptionMatches = Array.from(new Set(detect(descriptionText)));
+    if (descriptionMatches.length === 1) return descriptionMatches[0];
+
+    const combined = `${titleText} ${descriptionText}`;
+
+    if (/[\u0C00-\u0C7F]/.test(combined)) return "telugu";
+    if (/[\u0B80-\u0BFF]/.test(combined)) return "tamil";
+    if (/[\u0C80-\u0CFF]/.test(combined)) return "kannada";
+    if (/[\u0D00-\u0D7F]/.test(combined)) return "malayalam";
+    if (/[\u0980-\u09FF]/.test(combined)) return "bengali";
+    if (/[\u0A80-\u0AFF]/.test(combined)) return "gujarati";
+    if (/[\u0A00-\u0A7F]/.test(combined)) return "punjabi";
+    if (/[\u0B00-\u0B7F]/.test(combined)) return "odia";
+    if (/[\u0600-\u06FF]/.test(combined)) return "urdu";
+    if (/[\u0900-\u097F]/.test(combined)) return "hindi";
+
+    return null;
+}
+
+function matchesPreferredDatabaseLanguage(
+    courseLanguage: string | null | undefined,
+    title: string | null | undefined,
+    description: string | null | undefined,
+    preferredLanguage: string
+): boolean {
+    const storedLanguage = normalizeText(courseLanguage || "");
+    const explicitLanguage = detectExplicitLanguageFromCourseText(title, description);
+
+    if (explicitLanguage) return explicitLanguage === preferredLanguage;
+    if (!storedLanguage || storedLanguage === "unknown") return false;
+
+    return storedLanguage === preferredLanguage;
 }
 
 
@@ -924,14 +1001,10 @@ export async function GET(
             relevantDatabaseCourses.filter(
                 (course) => {
 
-                    const courseLanguage =
-                        normalizeText(
-                            course.language ||
-                                "English"
-                        );
-
-                    return (
-                        courseLanguage ===
+                    return matchesPreferredDatabaseLanguage(
+                        course.language,
+                        course.title,
+                        course.description,
                         normalizedPreferredLanguage
                     );
                 }
@@ -1702,15 +1775,13 @@ export async function GET(
             finalCourses.filter(
                 (course) => {
 
-                    const language =
-                        normalizeText(
-                            course.language ||
-                                "English"
-                        );
-
                     const languageMatch =
-                        language ===
-                        normalizedPreferredLanguage;
+                        matchesPreferredDatabaseLanguage(
+                            course.language,
+                            course.title,
+                            course.description,
+                            normalizedPreferredLanguage
+                        );
 
                     const subjectMatch =
                         isRelevantDatabaseCourse(
