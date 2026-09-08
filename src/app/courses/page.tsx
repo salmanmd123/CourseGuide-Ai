@@ -1,6 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import {
+    useEffect,
+    useMemo,
+    useState,
+    type FormEvent,
+} from "react";
 import Link from "next/link";
 import {
     ArrowRight,
@@ -8,6 +13,8 @@ import {
     CheckCircle2,
     Clock3,
     Search,
+    Sparkles,
+    Star,
     ThumbsUp,
     X,
 } from "lucide-react";
@@ -24,18 +31,24 @@ type Course = {
     level: string;
     duration: string;
     lessonsCount: number;
+
     rating: string | null;
     students: string | null;
+
     views?: number | null;
     likes?: number | null;
-    source: string | null;
-    featured: boolean | null;
 
-    recommendationScore?: number | null;
+    source: string | null;
+
+    featured: boolean | null;
     adminRecommended?: boolean | null;
+    recommendationScore?: number | null;
 
     thumbnailUrl?: string | null;
     youtubeUrl?: string | null;
+
+    // YouTube channel name
+    channelName?: string | null;
 
     language?: string | null;
 };
@@ -61,7 +74,7 @@ const languages = [
 ];
 
 /* =========================================================
-   NORMALIZE TEXT
+   TEXT HELPERS
 ========================================================= */
 
 function normalizeText(
@@ -77,10 +90,6 @@ function normalizeText(
         .trim();
 }
 
-/* =========================================================
-   NORMALIZE LANGUAGE
-========================================================= */
-
 function normalizeLanguage(
     value: string | null | undefined
 ): string {
@@ -88,13 +97,12 @@ function normalizeLanguage(
 }
 
 /* =========================================================
-   COURSE SUBJECT KEYWORDS
+   CATEGORY KEYWORDS
 ========================================================= */
 
 const programmingKeywords = [
     "python",
     "java",
-    " c ",
     " c ",
     "c plus plus",
     "cpp",
@@ -135,7 +143,6 @@ const webDevelopmentKeywords = [
     "back end",
     "full stack",
     "web development",
-    "web development",
 ];
 
 const databaseKeywords = [
@@ -160,7 +167,6 @@ const aiMlKeywords = [
     "deep learning",
     "ai",
     " ml ",
-    "ml ",
     "natural language processing",
     "nlp",
     "computer vision",
@@ -195,27 +201,6 @@ const computerScienceKeywords = [
 
 /* =========================================================
    CATEGORY NORMALIZATION
-
-   IMPORTANT:
-   The database currently may contain:
-
-   Python
-   Java
-   C++
-   React
-   SQL
-   etc.
-
-   But the UI has only:
-
-   Programming
-   Computer Science
-   AI & ML
-   Web Development
-   Databases
-
-   This function converts both old and new values
-   into the correct UI category.
 ========================================================= */
 
 function getCourseCategory(
@@ -230,30 +215,21 @@ function getCourseCategory(
     const description =
         normalizeText(course.description);
 
-    /*
-     * First handle categories that are already
-     * canonical.
-     */
-
     if (
-        rawCategory ===
-        "programming"
+        rawCategory === "programming"
     ) {
         return "Programming";
     }
 
     if (
-        rawCategory ===
-        "computer science"
+        rawCategory === "computer science"
     ) {
         return "Computer Science";
     }
 
     if (
-        rawCategory ===
-        "ai ml" ||
-        rawCategory ===
-        "ai and ml" ||
+        rawCategory === "ai ml" ||
+        rawCategory === "ai and ml" ||
         rawCategory ===
         "artificial intelligence and machine learning"
     ) {
@@ -261,26 +237,19 @@ function getCourseCategory(
     }
 
     if (
-        rawCategory ===
-        "web development"
+        rawCategory === "web development"
     ) {
         return "Web Development";
     }
 
     if (
-        rawCategory ===
-        "databases" ||
-        rawCategory ===
-        "database"
+        rawCategory === "database" ||
+        rawCategory === "databases"
     ) {
         return "Databases";
     }
 
-    /*
-     * =====================================================
-     * OLD DATABASE CATEGORY VALUES
-     * =====================================================
-     */
+    /* Programming */
 
     if (
         rawCategory === "python" ||
@@ -292,11 +261,14 @@ function getCourseCategory(
         rawCategory === "java script" ||
         rawCategory === "typescript" ||
         rawCategory === "type script" ||
-        rawCategory === "programming languages" ||
+        rawCategory ===
+        "programming languages" ||
         rawCategory === "coding"
     ) {
         return "Programming";
     }
+
+    /* Web */
 
     if (
         rawCategory === "react" ||
@@ -313,6 +285,8 @@ function getCourseCategory(
         return "Web Development";
     }
 
+    /* Database */
+
     if (
         rawCategory === "sql" ||
         rawCategory === "mysql" ||
@@ -325,130 +299,90 @@ function getCourseCategory(
         return "Databases";
     }
 
+    /* AI / ML */
+
     if (
         rawCategory === "ai" ||
         rawCategory === "ml" ||
         rawCategory === "machine learning" ||
         rawCategory ===
-            "artificial intelligence" ||
+        "artificial intelligence" ||
         rawCategory === "deep learning" ||
         rawCategory === "nlp"
     ) {
         return "AI & ML";
     }
 
+    /* Computer Science */
+
     if (
         rawCategory === "dsa" ||
         rawCategory ===
-            "data structures" ||
+        "data structures" ||
         rawCategory === "algorithms" ||
         rawCategory ===
-            "operating systems" ||
+        "operating systems" ||
         rawCategory ===
-            "computer networks"
+        "computer networks"
     ) {
         return "Computer Science";
     }
 
-    /*
-     * =====================================================
-     * TITLE-BASED FALLBACK
-     *
-     * This is important for YouTube courses because
-     * some existing records may have an unexpected
-     * category value.
-     * =====================================================
-     */
+    /* Fallback based on title */
 
     const combined =
         ` ${title} ${rawCategory} ${description} `;
 
-    /*
-     * Web-specific technologies are checked before
-     * generic programming so React/Node/MERN are
-     * classified correctly.
-     */
-
     if (
         webDevelopmentKeywords.some(
             (keyword) =>
-                combined.includes(
-                    keyword
-                )
+                combined.includes(keyword)
         )
     ) {
         return "Web Development";
     }
 
-    /*
-     * Databases.
-     */
-
     if (
         databaseKeywords.some(
             (keyword) =>
-                combined.includes(
-                    keyword
-                )
+                combined.includes(keyword)
         )
     ) {
         return "Databases";
     }
 
-    /*
-     * AI / ML.
-     */
-
     if (
         aiMlKeywords.some(
             (keyword) =>
-                combined.includes(
-                    keyword
-                )
+                combined.includes(keyword)
         )
     ) {
         return "AI & ML";
     }
 
-    /*
-     * Computer Science.
-     */
-
     if (
         computerScienceKeywords.some(
             (keyword) =>
-                combined.includes(
-                    keyword
-                )
+                combined.includes(keyword)
         )
     ) {
         return "Computer Science";
     }
 
-    /*
-     * Programming.
-     */
-
     if (
         programmingKeywords.some(
             (keyword) =>
-                combined.includes(
-                    keyword
-                )
+                combined.includes(keyword)
         )
     ) {
         return "Programming";
     }
 
-    /*
-     * Unknown category.
-     */
-
     return course.category?.trim() || "";
 }
 
 /* =========================================================
-   DURATION TO MINUTES
+   DURATION
 ========================================================= */
 
 function durationToMinutes(
@@ -500,10 +434,6 @@ function durationToMinutes(
             ) / 60;
     }
 
-    /*
-     * HH:MM:SS
-     */
-
     if (
         !hoursMatch &&
         !minutesMatch &&
@@ -535,47 +465,98 @@ function durationToMinutes(
 }
 
 /* =========================================================
-   STUDENT COUNT
+   ADMIN PRIORITY
 ========================================================= */
 
-function parseStudentCount(
-    value: string | null | undefined
+function getAdminPriority(
+    course: Course
 ): number {
-    if (!value) {
-        return 0;
-    }
+    const featured =
+        Boolean(course.featured);
 
-    const normalized =
-        value
-            .toLowerCase()
-            .replace(/,/g, "")
-            .trim();
-
-    const match =
-        normalized.match(
-            /(\d+(?:\.\d+)?)\s*([km])?/
+    const recommended =
+        Boolean(
+            course.adminRecommended
         );
 
-    if (!match) {
-        return 0;
+    /*
+     * Highest:
+     * Featured + Recommended
+     */
+    if (
+        featured &&
+        recommended
+    ) {
+        return 3;
     }
 
+    /*
+     * Second:
+     * Featured
+     */
+    if (featured) {
+        return 2;
+    }
+
+    /*
+     * Third:
+     * Recommended
+     */
+    if (recommended) {
+        return 1;
+    }
+
+    /*
+     * Normal
+     */
+    return 0;
+}
+
+/* =========================================================
+   FORMAT LARGE NUMBERS
+========================================================= */
+
+function formatNumber(
+    value: number | null | undefined
+): string {
     const number =
-        Number(match[1]);
+        Number(value ?? 0);
 
-    if (
-        match[2] === "k"
-    ) {
-        return number * 1000;
+    if (number >= 1000000) {
+        const formatted =
+            number / 1000000;
+
+        return `${formatted
+            .toFixed(
+                formatted >= 10
+                    ? 0
+                    : 1
+            )
+            .replace(
+                /\.0$/,
+                ""
+            )}M`;
     }
 
-    if (
-        match[2] === "m"
-    ) {
-        return number * 1000000;
+    if (number >= 1000) {
+        const formatted =
+            number / 1000;
+
+        return `${formatted
+            .toFixed(
+                formatted >= 100
+                    ? 0
+                    : formatted >= 10
+                        ? 1
+                        : 1
+            )
+            .replace(
+                /\.0$/,
+                ""
+            )}K`;
     }
 
-    return number;
+    return number.toLocaleString();
 }
 
 /* =========================================================
@@ -622,14 +603,14 @@ export default function CoursesPage() {
             "";
 
         const urlLanguage =
-            params.get(
-                "language"
-            )?.trim();
+            params
+                .get("language")
+                ?.trim();
 
         const urlCategory =
-            params.get(
-                "category"
-            )?.trim();
+            params
+                .get("category")
+                ?.trim();
 
         setSearch(urlSearch);
 
@@ -695,16 +676,12 @@ export default function CoursesPage() {
                     "";
 
                 const selectedLanguage =
-                    params.get(
-                        "language"
-                    )?.trim() ||
+                    params
+                        .get("language")
+                        ?.trim() ||
                     "English";
 
                 let response: Response;
-
-                /*
-                 * SEARCH API
-                 */
 
                 if (query) {
                     const searchParams =
@@ -728,13 +705,7 @@ export default function CoursesPage() {
                                     "no-store",
                             }
                         );
-                }
-
-                /*
-                 * NORMAL COURSE API
-                 */
-
-                else {
+                } else {
                     const courseParams =
                         new URLSearchParams();
 
@@ -778,10 +749,6 @@ export default function CoursesPage() {
                     loadedCourses =
                         data.courses;
                 }
-
-                /*
-                 * HARD LANGUAGE FILTER
-                 */
 
                 const selected =
                     normalizeLanguage(
@@ -887,9 +854,7 @@ export default function CoursesPage() {
             let result =
                 [...courses];
 
-            /*
-             * LANGUAGE
-             */
+            /* LANGUAGE */
 
             const selectedLanguage =
                 normalizeLanguage(
@@ -905,21 +870,7 @@ export default function CoursesPage() {
                         selectedLanguage
                 );
 
-            /*
-             * CATEGORY
-             *
-             * IMPORTANT:
-             * We compare getCourseCategory(course)
-             * instead of course.category directly.
-             *
-             * Therefore:
-             *
-             * Python -> Programming
-             * Java -> Programming
-             * C++ -> Programming
-             * React -> Web Development
-             * SQL -> Databases
-             */
+            /* CATEGORY */
 
             if (
                 activeCategory !==
@@ -935,36 +886,36 @@ export default function CoursesPage() {
                     );
             }
 
-            /*
-             * SEARCH
-             */
+            /* SEARCH */
 
             const searchTerm =
-                search
-                    .trim()
-                    .toLowerCase();
+                normalizeText(
+                    search
+                );
 
             if (searchTerm) {
                 result =
                     result.filter(
                         (course) => {
                             const title =
-                                (
-                                    course.title ||
-                                    ""
-                                ).toLowerCase();
+                                normalizeText(
+                                    course.title
+                                );
 
                             const category =
-                                (
-                                    course.category ||
-                                    ""
-                                ).toLowerCase();
+                                normalizeText(
+                                    course.category
+                                );
 
                             const description =
-                                (
-                                    course.description ||
-                                    ""
-                                ).toLowerCase();
+                                normalizeText(
+                                    course.description
+                                );
+
+                            const channel =
+                                normalizeText(
+                                    course.channelName
+                                );
 
                             return (
                                 title.includes(
@@ -975,28 +926,53 @@ export default function CoursesPage() {
                                 ) ||
                                 description.includes(
                                     searchTerm
+                                ) ||
+                                channel.includes(
+                                    searchTerm
                                 )
                             );
                         }
                     );
             }
 
-            /*
-             * SORT
-             */
+            /* =================================================
+               ADMIN PRIORITY FIRST
+            ================================================= */
 
             result.sort(
                 (a, b) => {
+                    const priorityA =
+                        getAdminPriority(
+                            a
+                        );
+
+                    const priorityB =
+                        getAdminPriority(
+                            b
+                        );
+
+                    if (
+                        priorityA !==
+                        priorityB
+                    ) {
+                        return (
+                            priorityB -
+                            priorityA
+                        );
+                    }
+
+                    /* Selected sorting */
+
                     if (
                         sortBy ===
                         "Recommended"
                     ) {
                         return (
-                            (
+                            Number(
                                 b.recommendationScore ??
                                 0
                             ) -
-                            (
+                            Number(
                                 a.recommendationScore ??
                                 0
                             )
@@ -1010,11 +986,11 @@ export default function CoursesPage() {
                         return (
                             Number(
                                 b.likes ??
-                                    0
+                                0
                             ) -
                             Number(
                                 a.likes ??
-                                    0
+                                0
                             )
                         );
                     }
@@ -1026,11 +1002,11 @@ export default function CoursesPage() {
                         return (
                             Number(
                                 b.views ??
-                                    0
+                                0
                             ) -
                             Number(
                                 a.views ??
-                                    0
+                                0
                             )
                         );
                     }
@@ -1104,10 +1080,9 @@ export default function CoursesPage() {
         window.history.replaceState(
             null,
             "",
-            `/courses${
-                queryString
-                    ? `?${queryString}`
-                    : ""
+            `/courses${queryString
+                ? `?${queryString}`
+                : ""
             }`
         );
 
@@ -1119,7 +1094,7 @@ export default function CoursesPage() {
     ===================================================== */
 
     function handleSearchSubmit(
-        event: React.FormEvent<HTMLFormElement>
+        event: FormEvent<HTMLFormElement>
     ) {
         event.preventDefault();
 
@@ -1165,10 +1140,6 @@ export default function CoursesPage() {
     function handleLanguageChange(
         newLanguage: string
     ) {
-        setLanguage(
-            newLanguage
-        );
-
         const params =
             new URLSearchParams();
 
@@ -1203,8 +1174,6 @@ export default function CoursesPage() {
     ===================================================== */
 
     function clearSearch() {
-        setSearch("");
-
         const params =
             new URLSearchParams();
 
@@ -1228,60 +1197,432 @@ export default function CoursesPage() {
     }
 
     /* =====================================================
-       RESET FILTERS
+       RESET
     ===================================================== */
 
     function resetFilters() {
-        setActiveCategory(
-            "All"
-        );
-
-        setSearch("");
-
         window.location.href =
             `/courses?language=${encodeURIComponent(
                 language
             )}`;
     }
 
+    /* =====================================================
+       COURSE CARD
+    ===================================================== */
+
+    function CourseCard({
+        course,
+    }: {
+        course: Course;
+    }) {
+        const displayCategory =
+            getCourseCategory(
+                course
+            );
+
+        const isFeatured =
+            Boolean(
+                course.featured
+            );
+
+        const isRecommended =
+            Boolean(
+                course.adminRecommended
+            );
+
+        const isPriority =
+            isFeatured ||
+            isRecommended;
+
+        return (
+            <article
+                className={`
+                    group overflow-hidden rounded-2xl border
+                    bg-white transition-all duration-300
+                    hover:-translate-y-1 hover:shadow-xl
+                    dark:bg-zinc-900
+                    ${isFeatured &&
+                        isRecommended
+                        ? "border-amber-300 shadow-md shadow-amber-500/10 dark:border-amber-700"
+                        : isFeatured
+                            ? "border-amber-200 dark:border-amber-800"
+                            : isRecommended
+                                ? "border-indigo-200 dark:border-indigo-800"
+                                : "border-zinc-200 dark:border-zinc-800"
+                    }
+                `}
+            >
+
+                {/* =================================================
+                   THUMBNAIL
+                ================================================= */}
+
+                <div className="relative aspect-video overflow-hidden bg-zinc-100 dark:bg-zinc-800">
+
+                    {course.thumbnailUrl ? (
+                        <img
+                            src={
+                                course.thumbnailUrl
+                            }
+                            alt={
+                                course.title
+                            }
+                            loading="lazy"
+                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                        />
+                    ) : (
+                        <div className="flex h-full items-center justify-center">
+                            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-indigo-600 shadow-sm dark:bg-zinc-900 dark:text-indigo-400">
+                                <BookOpen
+                                    size={26}
+                                />
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Image overlay */}
+
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-black/10" />
+
+                    {/* =================================================
+                       STATUS BADGE
+                    ================================================= */}
+
+                    {isPriority && (
+                        <div className="absolute left-3 top-3">
+
+                            {isFeatured ? (
+                                <span className="inline-flex items-center gap-1.5 rounded-full border border-white/70 bg-white/95 px-3 py-1.5 text-xs font-bold text-amber-700 shadow-md backdrop-blur-sm dark:border-zinc-700 dark:bg-zinc-950/95 dark:text-amber-400">
+
+                                    <Star
+                                        size={12}
+                                        fill="currentColor"
+                                    />
+
+                                    Featured
+
+                                </span>
+                            ) : (
+                                <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-indigo-600 px-3 py-1.5 text-xs font-bold text-white shadow-md">
+
+                                    <Sparkles
+                                        size={12}
+                                    />
+
+                                    Recommended
+
+                                </span>
+                            )}
+
+                        </div>
+                    )}
+
+                    {/* Language */}
+
+                    <div className="absolute right-3 top-3">
+
+                        <span className="rounded-full border border-white/30 bg-black/45 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-md">
+                            {
+                                course.language ||
+                                "English"
+                            }
+                        </span>
+
+                    </div>
+
+                    {/* Both indicator */}
+
+                    {isFeatured &&
+                        isRecommended && (
+                            <div className="absolute bottom-3 left-3">
+
+                                <span className="inline-flex items-center gap-1 rounded-md bg-black/55 px-2 py-1 text-[10px] font-semibold text-white backdrop-blur-md">
+
+                                    <Sparkles
+                                        size={10}
+                                    />
+
+                                    Recommended
+
+                                </span>
+
+                            </div>
+                        )}
+
+                </div>
+
+                {/* =================================================
+                   CARD CONTENT
+                ================================================= */}
+
+                <div className="p-5">
+
+                    {/* Category + Level */}
+
+                    <div className="flex items-center justify-between gap-3">
+
+                        <span className="truncate text-xs font-semibold text-indigo-600 dark:text-indigo-400">
+                            {
+                                displayCategory
+                            }
+                        </span>
+
+                        <span className="shrink-0 rounded-md bg-zinc-100 px-2 py-1 text-[11px] font-medium text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
+                            {
+                                course.level
+                            }
+                        </span>
+
+                    </div>
+
+                    {/* Title */}
+
+                    <h3 className="mt-3 line-clamp-2 min-h-[48px] text-[17px] font-bold leading-6 tracking-tight text-zinc-950 dark:text-white">
+                        {
+                            course.title
+                        }
+                    </h3>
+
+                    {/* Description */}
+
+                    <p className="mt-2 line-clamp-2 min-h-[44px] text-sm leading-[22px] text-zinc-500 dark:text-zinc-400">
+                        {
+                            course.description
+                        }
+                    </p>
+
+                    {/* =================================================
+                       YOUTUBE CHANNEL
+                    ================================================= */}
+
+                    <div className="mt-4 flex items-center gap-3 rounded-xl bg-zinc-50 px-3 py-2.5 dark:bg-zinc-800/60">
+
+                        {/* YouTube icon */}
+
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-red-50 text-red-600 dark:bg-red-950/30 dark:text-red-400">
+
+                            <svg
+                                viewBox="0 0 24 24"
+                                className="h-[18px] w-[18px] fill-current"
+                                aria-hidden="true"
+                            >
+                                <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.9V8.1l6.5 3.9-6.5 3.9Z" />
+                            </svg>
+
+                        </div>
+
+                        <div className="min-w-0 flex-1">
+
+                            <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-zinc-400">
+                                YouTube Channel
+                            </p>
+
+                            <p
+                                className="truncate text-sm font-semibold text-zinc-800 dark:text-zinc-200"
+                                title={
+                                    course.channelName ||
+                                    "YouTube"
+                                }
+                            >
+                                {
+                                    course.channelName ||
+                                    "YouTube"
+                                }
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    {/* =================================================
+                       LESSONS + DURATION
+                    ================================================= */}
+
+                    <div className="mt-4 flex items-center justify-between">
+
+                        <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
+
+                            <BookOpen
+                                size={14}
+                                className="text-zinc-400"
+                            />
+
+                            <span>
+                                {
+                                    course.lessonsCount
+                                }{" "}
+                                lessons
+                            </span>
+
+                        </div>
+
+                        <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
+
+                            <Clock3
+                                size={14}
+                                className="text-zinc-400"
+                            />
+
+                            <span>
+                                {
+                                    course.duration
+                                }
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    {/* =================================================
+                       STATS
+                    ================================================= */}
+
+                    <div className="mt-4 border-t border-zinc-100 pt-4 dark:border-zinc-800">
+
+                        <div className="flex items-center justify-between">
+
+                            {/* Likes */}
+
+                            <div className="flex items-center gap-2">
+
+                                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-50 text-indigo-500 dark:bg-indigo-950/30 dark:text-indigo-400">
+
+                                    <ThumbsUp
+                                        size={14}
+                                    />
+
+                                </div>
+
+                                <div class="flex flex-row gap-x-[3px]">
+
+                                    <p className="text-xs font-bold text-zinc-800 dark:text-zinc-200">
+                                        {formatNumber(
+                                            course.likes
+                                        )}
+                                    </p>
+
+                                    <p className="text-[10px] text-zinc-400">
+                                        likes
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                            {/* Views */}
+
+                            <div className="flex items-center gap-2">
+
+                                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
+
+                                    <span className="text-xs font-bold">
+                                        ▶
+                                    </span>
+
+                                </div>
+
+                                <div class="flex flex-row gap-x-[3px]">
+
+                                    <p className="text-xs font-bold text-zinc-800 dark:text-zinc-200">
+                                        {formatNumber(
+                                            course.views
+                                        )}
+                                    </p>
+
+                                    <p className="text-[10px] text-zinc-400">
+                                        views
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {/* =================================================
+                       BUTTON
+                    ================================================= */}
+
+                    <Link
+                        href={`/courses/${course.slug}`}
+                        className={`
+                            mt-5 flex h-11 items-center
+                            justify-center gap-2 rounded-xl
+                            text-sm font-semibold
+                            transition-all
+                            ${isFeatured
+                                ? "bg-zinc-950 text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
+                                : isRecommended
+                                    ? "bg-indigo-600 text-white hover:bg-indigo-700"
+                                    : "bg-zinc-950 text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
+                            }
+                        `}
+                    >
+                        View course
+
+                        <ArrowRight
+                            size={16}
+                            className="transition-transform group-hover:translate-x-0.5"
+                        />
+
+                    </Link>
+
+                </div>
+            </article>
+        );
+    }
+
+    /* =========================================================
+       PAGE
+    ========================================================= */
+
     return (
-        <main className="min-h-screen bg-zinc-50 text-zinc-950 transition-colors dark:bg-zinc-950 dark:text-zinc-50">
+        <main className="min-h-screen bg-zinc-50 text-zinc-950 dark:bg-zinc-950 dark:text-zinc-50">
+
             <Navbar />
 
-            <div className="mx-auto max-w-7xl px-6 py-10">
+            <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
+
                 {/* =================================================
-                    HEADER
+                   HEADER
                 ================================================= */}
 
                 <div>
-                    <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">
-                        COURSE DISCOVERY
+
+                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-indigo-600 dark:text-indigo-400">
+                        Course Discovery
                     </p>
 
                     <h1 className="mt-2 text-3xl font-bold tracking-tight text-zinc-950 dark:text-white sm:text-4xl">
                         Find something worth learning.
                     </h1>
 
-                    <p className="mt-3 max-w-2xl text-zinc-500 dark:text-zinc-400">
+                    <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-500 dark:text-zinc-400 sm:text-base">
                         Explore carefully selected
                         courses and find the right
                         learning path for your goals.
                     </p>
+
                 </div>
 
                 {/* =================================================
-                    SEARCH
+                   SEARCH
                 ================================================= */}
 
                 <form
                     onSubmit={
                         handleSearchSubmit
                     }
-                    className="mt-8 flex flex-col gap-3 sm:flex-row"
+                    className="mt-7 flex flex-col gap-3 sm:flex-row"
                 >
-                    <div className="flex h-12 flex-1 items-center rounded-xl border border-zinc-200 bg-white px-4 shadow-sm transition focus-within:border-indigo-500 dark:border-zinc-800 dark:bg-zinc-900 dark:shadow-none">
+
+                    <div className="flex h-12 flex-1 items-center rounded-xl border border-zinc-200 bg-white px-4 shadow-sm transition focus-within:border-indigo-500 focus-within:ring-4 focus-within:ring-indigo-500/10 dark:border-zinc-800 dark:bg-zinc-900">
+
                         <Search
-                            size={19}
+                            size={18}
                             className="shrink-0 text-zinc-400"
                         />
 
@@ -1305,123 +1646,116 @@ export default function CoursesPage() {
                                 onClick={
                                     clearSearch
                                 }
-                                className="mr-2 text-zinc-400 transition hover:text-zinc-900 dark:hover:text-white"
+                                className="text-zinc-400 transition hover:text-zinc-900 dark:hover:text-white"
                                 aria-label="Clear search"
                             >
                                 <X
-                                    size={
-                                        17
-                                    }
+                                    size={17}
                                 />
                             </button>
                         )}
+
                     </div>
 
                     <button
                         type="submit"
-                        className="flex h-12 items-center justify-center gap-2 rounded-xl bg-zinc-950 px-5 text-sm font-semibold text-white transition hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
+                        className="flex h-12 items-center justify-center gap-2 rounded-xl bg-zinc-950 px-6 text-sm font-semibold text-white transition hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
                     >
+
                         <Search
                             size={17}
                         />
+
                         Search
+
                     </button>
+
                 </form>
 
                 {/* =================================================
-                    LANGUAGE
+                   LANGUAGE
                 ================================================= */}
 
-                <div className="mt-6">
-                    <div className="flex flex-wrap items-center gap-3">
-                        <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
-                            Preferred language:
-                        </span>
+                <div className="mt-5 flex flex-wrap items-center gap-3">
 
-                        <div className="flex flex-wrap gap-2">
-                            {languages.map(
-                                (item) => (
-                                    <button
-                                        key={
+                    <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                        Preferred language:
+                    </span>
+
+                    <div className="flex flex-wrap gap-2">
+
+                        {languages.map(
+                            (item) => (
+                                <button
+                                    key={
+                                        item.value
+                                    }
+                                    type="button"
+                                    onClick={() =>
+                                        handleLanguageChange(
                                             item.value
-                                        }
-                                        type="button"
-                                        onClick={() =>
-                                            handleLanguageChange(
-                                                item.value
-                                            )
-                                        }
-                                        className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
-                                            language ===
+                                        )
+                                    }
+                                    className={`rounded-full border px-4 py-2 text-sm font-medium transition ${language ===
                                             item.value
-                                                ? "border-indigo-600 bg-indigo-600 text-white shadow-sm"
-                                                : "border-zinc-200 bg-white text-zinc-600 hover:border-indigo-300 hover:bg-indigo-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-indigo-700 dark:hover:bg-indigo-950/30"
+                                            ? "border-indigo-600 bg-indigo-600 text-white"
+                                            : "border-zinc-200 bg-white text-zinc-600 hover:border-indigo-300 hover:bg-indigo-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"
                                         }`}
-                                    >
-                                        {
-                                            item.label
-                                        }
-                                    </button>
-                                )
-                            )}
-                        </div>
+                                >
+                                    {
+                                        item.label
+                                    }
+                                </button>
+                            )
+                        )}
+
                     </div>
+
                 </div>
 
                 {/* =================================================
-                    ACTIVE FILTER STATUS
+                   ACTIVE FILTERS
                 ================================================= */}
 
                 {(search.trim() ||
                     activeCategory !==
-                        "All") && (
-                    <div className="mt-4 flex flex-wrap items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
-                        {search.trim() && (
-                            <>
-                                <Search
-                                    size={
-                                        15
+                    "All") && (
+                        <div className="mt-4 flex flex-wrap items-center gap-2">
+
+                            {search.trim() && (
+                                <span className="rounded-full bg-zinc-100 px-3 py-1.5 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+                                    Search: "
+                                    {
+                                        search.trim()
                                     }
-                                />
-
-                                <span>
-                                    Results for{" "}
-                                    <span className="font-semibold text-zinc-900 dark:text-white">
-                                        "{search.trim()}"
-                                    </span>
+                                    "
                                 </span>
-                            </>
-                        )}
+                            )}
 
-                        <span className="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-medium text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400">
-                            Preferred:{" "}
-                            {language}
-                        </span>
+                            {activeCategory !==
+                                "All" && (
+                                    <span className="rounded-full bg-indigo-50 px-3 py-1.5 text-xs font-medium text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400">
+                                        {
+                                            activeCategory
+                                        }
+                                    </span>
+                                )}
 
-                        {activeCategory !==
-                            "All" && (
-                            <span className="rounded-full bg-violet-50 px-2.5 py-1 text-xs font-medium text-violet-600 dark:bg-violet-950/40 dark:text-violet-400">
-                                Category:{" "}
-                                {
-                                    activeCategory
-                                }
-                            </span>
-                        )}
-                    </div>
-                )}
+                        </div>
+                    )}
 
                 {/* =================================================
-                    ERROR
+                   ERROR
                 ================================================= */}
 
                 {error && (
-                    <div className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-900/40 dark:bg-red-950/20 dark:text-red-400">
+                    <div className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-900/40 dark:bg-red-950/20 dark:text-red-400">
                         {error}
                     </div>
                 )}
 
                 {/* =================================================
-                    MOBILE FILTER
+                   MOBILE FILTER
                 ================================================= */}
 
                 <button
@@ -1432,39 +1766,44 @@ export default function CoursesPage() {
                                 !previous
                         )
                     }
-                    className="mt-6 flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-700 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 lg:hidden"
+                    className="mt-5 flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-700 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 lg:hidden"
                 >
+
                     {showFilters
                         ? "Hide filters"
                         : "Show filters"}
 
                     {activeCategory !==
                         "All" && (
-                        <span className="rounded-full bg-indigo-600 px-2 py-0.5 text-xs text-white">
-                            1
-                        </span>
-                    )}
+                            <span className="rounded-full bg-indigo-600 px-2 py-0.5 text-xs text-white">
+                                1
+                            </span>
+                        )}
+
                 </button>
 
                 {/* =================================================
-                    CONTENT
+                   MAIN
                 ================================================= */}
 
-                <div className="mt-8 grid gap-8 lg:grid-cols-[220px_1fr]">
+                <div className="mt-7 grid gap-7 lg:grid-cols-[220px_1fr]">
+
                     {/* =================================================
-                        SIDEBAR
+                       SIDEBAR
                     ================================================= */}
 
                     <aside
-                        className={`${
-                            showFilters
+                        className={`${showFilters
                                 ? "block"
                                 : "hidden"
-                        } lg:block`}
+                            } lg:block`}
                     >
+
                         <div className="sticky top-24 rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
+
                             <div className="flex items-center justify-between">
-                                <h2 className="font-semibold text-zinc-900 dark:text-white">
+
+                                <h2 className="font-semibold">
                                     Filters
                                 </h2>
 
@@ -1475,29 +1814,28 @@ export default function CoursesPage() {
                                             false
                                         )
                                     }
-                                    className="text-zinc-500 lg:hidden"
+                                    className="text-zinc-400 lg:hidden"
                                 >
                                     <X
-                                        size={
-                                            17
-                                        }
+                                        size={17}
                                     />
                                 </button>
+
                             </div>
 
-                            {/* CATEGORY */}
-
                             <div className="mt-6">
-                                <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+
+                                <p className="text-[11px] font-bold uppercase tracking-wider text-zinc-400">
                                     Category
                                 </p>
 
                                 <div className="mt-3 space-y-1">
+
                                     {categories.map(
                                         (
                                             category
                                         ) => {
-                                            const isActive =
+                                            const active =
                                                 activeCategory ===
                                                 category;
 
@@ -1512,13 +1850,14 @@ export default function CoursesPage() {
                                                             category
                                                         )
                                                     }
-                                                    className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm transition ${
-                                                        isActive
+                                                    className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm transition ${active
                                                             ? "bg-indigo-50 font-semibold text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400"
                                                             : "text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-800"
-                                                    }`}
+                                                        }`}
                                                 >
+
                                                     <span className="flex items-center gap-2">
+
                                                         {
                                                             category
                                                         }
@@ -1526,68 +1865,67 @@ export default function CoursesPage() {
                                                         <span className="text-xs text-zinc-400">
                                                             {
                                                                 categoryCounts[
-                                                                    category
+                                                                category
                                                                 ]
                                                             }
                                                         </span>
+
                                                     </span>
 
-                                                    {isActive && (
+                                                    {active && (
                                                         <CheckCircle2
                                                             size={
                                                                 15
                                                             }
                                                         />
                                                     )}
+
                                                 </button>
                                             );
                                         }
                                     )}
+
                                 </div>
+
                             </div>
 
                             {(activeCategory !==
                                 "All" ||
                                 search.trim()) && (
-                                <button
-                                    type="button"
-                                    onClick={
-                                        resetFilters
-                                    }
-                                    className="mt-5 w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm font-medium text-zinc-600 transition hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
-                                >
-                                    Reset filters
-                                </button>
-                            )}
+                                    <button
+                                        type="button"
+                                        onClick={
+                                            resetFilters
+                                        }
+                                        className="mt-5 w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                    >
+                                        Reset filters
+                                    </button>
+                                )}
+
                         </div>
+
                     </aside>
 
                     {/* =================================================
-                        RESULTS
+                       RESULTS
                     ================================================= */}
 
                     <section>
+
+                        {/* Toolbar */}
+
                         <div className="flex items-center justify-between gap-4">
+
                             <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                                <span className="font-semibold text-zinc-900 dark:text-white">
+
+                                <span className="font-bold text-zinc-900 dark:text-white">
                                     {
                                         filteredCourses.length
                                     }
                                 </span>{" "}
                                 courses found
 
-                                {activeCategory !==
-                                    "All" && (
-                                    <>
-                                        {" "}
-                                        in{" "}
-                                        <span className="font-semibold text-zinc-800 dark:text-zinc-200">
-                                            {
-                                                activeCategory
-                                            }
-                                        </span>
-                                    </>
-                                )}
                             </p>
 
                             <select
@@ -1604,6 +1942,7 @@ export default function CoursesPage() {
                                 }
                                 className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-600 outline-none focus:border-indigo-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"
                             >
+
                                 <option>
                                     Recommended
                                 </option>
@@ -1619,10 +1958,12 @@ export default function CoursesPage() {
                                 <option>
                                     Shortest
                                 </option>
+
                             </select>
+
                         </div>
 
-                        {/* LOADING */}
+                        {/* Loading */}
 
                         {loading && (
                             <div className="mt-5">
@@ -1630,238 +1971,63 @@ export default function CoursesPage() {
                             </div>
                         )}
 
-                        {/* COURSE GRID */}
+                        {/* =================================================
+                           SINGLE GRID
+                        ================================================= */}
 
                         {!loading &&
                             filteredCourses.length >
-                                0 && (
-                                <div className="mt-5 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                            0 && (
+                                <div className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+
                                     {filteredCourses.map(
                                         (
                                             course
-                                        ) => {
-                                            const displayCategory =
-                                                getCourseCategory(
+                                        ) => (
+                                            <CourseCard
+                                                key={
+                                                    course.id
+                                                }
+                                                course={
                                                     course
-                                                );
-
-                                            return (
-                                                <article
-                                                    key={
-                                                        course.id
-                                                    }
-                                                    className="group overflow-hidden rounded-2xl border border-zinc-200 bg-white transition hover:-translate-y-1 hover:shadow-xl dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
-                                                >
-                                                    {/* IMAGE */}
-
-                                                    <div className="relative h-44 overflow-hidden bg-zinc-100 dark:bg-zinc-800">
-                                                        {course.thumbnailUrl ? (
-                                                            <img
-                                                                src={
-                                                                    course.thumbnailUrl
-                                                                }
-                                                                alt={
-                                                                    course.title
-                                                                }
-                                                                className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-                                                            />
-                                                        ) : (
-                                                            <div className="flex h-full items-center justify-center">
-                                                                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-indigo-600 shadow-sm dark:bg-zinc-900 dark:text-indigo-400">
-                                                                    <BookOpen
-                                                                        size={
-                                                                            26
-                                                                        }
-                                                                    />
-                                                                </div>
-                                                            </div>
-                                                        )}
-
-                                                        {/* CATEGORY */}
-
-                                                        <div className="absolute left-3 top-3">
-                                                            <span className="rounded-full bg-black/70 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-white backdrop-blur-sm">
-                                                                {
-                                                                    displayCategory
-                                                                }
-                                                            </span>
-                                                        </div>
-
-                                                        {/* LANGUAGE */}
-
-                                                        <div className="absolute right-3 top-3">
-                                                            <span className="rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-semibold text-zinc-800 shadow-sm backdrop-blur-sm dark:bg-zinc-900/90 dark:text-zinc-200">
-                                                                {
-                                                                    course.language
-                                                                }
-                                                            </span>
-                                                        </div>
-                                                    </div>
-
-                                                    {/* CONTENT */}
-
-                                                    <div className="p-5">
-                                                        <div className="flex items-center justify-between gap-2">
-                                                            <span className="text-xs font-medium text-indigo-600 dark:text-indigo-400">
-                                                                {
-                                                                    displayCategory
-                                                                }
-                                                            </span>
-
-                                                            <div className="flex items-center gap-2">
-                                                                <span className="text-xs text-zinc-400">
-                                                                    {
-                                                                        course.level
-                                                                    }
-                                                                </span>
-
-                                                                <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400">
-                                                                    {course.language ||
-                                                                        "Unknown"}
-                                                                </span>
-                                                            </div>
-                                                        </div>
-
-                                                        <h3 className="mt-3 line-clamp-2 font-bold text-zinc-950 dark:text-white">
-                                                            {
-                                                                course.title
-                                                            }
-                                                        </h3>
-
-                                                        <p className="mt-2 line-clamp-2 text-sm leading-6 text-zinc-500 dark:text-zinc-400">
-                                                            {
-                                                                course.description
-                                                            }
-                                                        </p>
-
-                                                        {/* META */}
-
-                                                        <div className="mt-4 flex items-center justify-between text-xs text-zinc-400">
-                                                            <div className="flex items-center gap-1">
-                                                                <BookOpen
-                                                                    size={
-                                                                        13
-                                                                    }
-                                                                />
-
-                                                                <span>
-                                                                    {
-                                                                        course.lessonsCount
-                                                                    }{" "}
-                                                                    lessons
-                                                                </span>
-                                                            </div>
-
-                                                            <div className="flex items-center gap-1">
-                                                                <Clock3
-                                                                    size={
-                                                                        13
-                                                                    }
-                                                                />
-
-                                                                <span>
-                                                                    {
-                                                                        course.duration
-                                                                    }
-                                                                </span>
-                                                            </div>
-                                                        </div>
-
-                                                        {/* RATING */}
-
-                                                        <div className="mt-4 flex items-center justify-between border-t border-zinc-100 pt-4 dark:border-zinc-800">
-                                                            <div className="flex items-center gap-4 text-xs">
-                                                                <div className="flex items-center gap-1">
-                                                                    <ThumbsUp
-                                                                        size={14}
-                                                                        className="text-indigo-500"
-                                                                    />
-
-                                                                    <span className="font-semibold text-zinc-800 dark:text-zinc-200">
-                                                                        {Number(
-                                                                            course.likes ??
-                                                                                0
-                                                                        ).toLocaleString()}
-                                                                    </span>
-
-                                                                    <span className="text-zinc-400">
-                                                                        likes
-                                                                    </span>
-                                                                </div>
-
-                                                                <div className="flex items-center gap-1">
-                                                                    <span className="font-semibold text-zinc-800 dark:text-zinc-200">
-                                                                        {Number(
-                                                                            course.views ??
-                                                                                0
-                                                                        ).toLocaleString()}
-                                                                    </span>
-
-                                                                    <span className="text-zinc-400">
-                                                                        views
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                            <span className="text-[10px] font-medium uppercase tracking-wider text-zinc-400">
-                                                                {course.source ||
-                                                                    "YouTube"}
-                                                            </span>
-                                                        </div>
-
-                                                        {/* BUTTON */}
-
-                                                        <Link
-                                                            href={`/courses/${course.slug}`}
-                                                            className="mt-5 flex items-center justify-center gap-2 rounded-xl bg-zinc-950 py-2.5 text-sm font-semibold text-white transition hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
-                                                        >
-                                                            View
-                                                            course
-
-                                                            <ArrowRight
-                                                                size={
-                                                                    15
-                                                                }
-                                                            />
-                                                        </Link>
-                                                    </div>
-                                                </article>
-                                            );
-                                        }
+                                                }
+                                            />
+                                        )
                                     )}
+
                                 </div>
                             )}
 
-                        {/* EMPTY */}
+                        {/* =================================================
+                           EMPTY
+                        ================================================= */}
 
                         {!loading &&
                             filteredCourses.length ===
-                                0 && (
-                                <div className="mt-5 rounded-2xl border border-dashed border-zinc-300 bg-white py-20 text-center dark:border-zinc-700 dark:bg-zinc-900">
-                                    <Search
-                                        size={
-                                            30
-                                        }
-                                        className="mx-auto text-zinc-300 dark:text-zinc-600"
-                                    />
+                            0 && (
+                                <div className="mt-5 rounded-2xl border border-dashed border-zinc-300 bg-white px-6 py-20 text-center dark:border-zinc-700 dark:bg-zinc-900">
+
+                                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-100 text-zinc-400 dark:bg-zinc-800">
+
+                                        <Search
+                                            size={22}
+                                        />
+
+                                    </div>
 
                                     <h3 className="mt-4 font-semibold text-zinc-900 dark:text-white">
                                         No courses found
                                     </h3>
 
-                                    <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
+                                    <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-zinc-500 dark:text-zinc-400">
                                         No{" "}
                                         {
                                             language
                                         }{" "}
-                                        courses are
-                                        available
-                                        {activeCategory !==
-                                            "All" &&
-                                            ` in ${activeCategory}`}
-                                        {search &&
-                                            ` for "${search}"`}
-                                        .
+                                        courses match
+                                        your current
+                                        search and
+                                        filters.
                                     </p>
 
                                     <button
@@ -1869,16 +2035,20 @@ export default function CoursesPage() {
                                         onClick={
                                             resetFilters
                                         }
-                                        className="mt-5 rounded-xl bg-zinc-950 px-4 py-2.5 text-sm font-semibold text-white dark:bg-white dark:text-zinc-950"
+                                        className="mt-5 rounded-xl bg-zinc-950 px-5 py-2.5 text-sm font-semibold text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
                                     >
-                                        Reset
-                                        filters
+                                        Reset filters
                                     </button>
+
                                 </div>
                             )}
+
                     </section>
+
                 </div>
+
             </div>
+
         </main>
     );
 }
