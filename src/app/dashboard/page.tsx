@@ -505,7 +505,7 @@ export default async function DashboardPage() {
   // =========================================================
 
   return (
-    <main className="min-h-screen bg-zinc-50 text-zinc-950 transition-colors dark:bg-zinc-950 dark:text-zinc-50">
+    <main className="min-h-screen w-full min-w-0 overflow-x-hidden bg-zinc-50 text-zinc-950 transition-colors dark:bg-zinc-950 dark:text-zinc-50">
 
       <ProgressAutoRefresh />
 

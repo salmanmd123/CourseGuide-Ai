@@ -63,7 +63,7 @@ export const courses = pgTable("courses", {
 
   /* =========================
      LANGUAGE
-     ENGLISH / HINDI 
+     ENGLISH / HINDI
   ========================= */
 
   language: varchar("language", {
@@ -173,11 +173,15 @@ export const lessons = pgTable("lessons", {
 
   videoUrl: text("video_url"),
 
-  duration: varchar("duration", { length: 50 }),
+  duration: varchar("duration", {
+    length: 50,
+  }),
 
   order: integer("order").notNull(),
 
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  createdAt: timestamp("created_at")
+    .defaultNow()
+    .notNull(),
 });
 
 
@@ -242,9 +246,13 @@ export const quizzes = pgTable("quizzes", {
       onDelete: "cascade",
     }),
 
-  title: varchar("title", { length: 200 }).notNull(),
+  title: varchar("title", {
+    length: 200,
+  }).notNull(),
 
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  createdAt: timestamp("created_at")
+    .defaultNow()
+    .notNull(),
 });
 
 
@@ -298,62 +306,95 @@ export const quizAttempts = pgTable("quiz_attempts", {
 
   score: integer("score").notNull(),
 
-  totalQuestions: integer("total_questions").notNull(),
+  totalQuestions: integer("total_questions")
+    .notNull(),
 
-  completedAt: timestamp("completed_at").defaultNow().notNull(),
+  completedAt: timestamp("completed_at")
+    .defaultNow()
+    .notNull(),
 });
 
 
 /* =========================
    AI NOTES
+
+   ONE NOTE PER LESSON
+
+   The generated notes are shared
+   by all learners.
 ========================= */
 
-export const aiNotes = pgTable("ai_notes", {
-  id: serial("id").primaryKey(),
+export const aiNotes = pgTable(
+  "ai_notes",
+  {
+    id: serial("id").primaryKey(),
 
-  userId: integer("user_id")
-    .notNull()
-    .references(() => users.id, {
-      onDelete: "cascade",
-    }),
+    /*
+     * User who originally generated
+     * the shared note.
+     */
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id, {
+        onDelete: "cascade",
+      }),
 
-  lessonId: integer("lesson_id")
-    .notNull()
-    .references(() => lessons.id, {
-      onDelete: "cascade",
-    }),
+    /*
+     * One AI note belongs to one lesson.
+     */
+    lessonId: integer("lesson_id")
+      .notNull()
+      .references(() => lessons.id, {
+        onDelete: "cascade",
+      }),
 
-  content: text("content").notNull(),
+    content: text("content").notNull(),
 
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+    createdAt: timestamp("created_at")
+      .defaultNow()
+      .notNull(),
 
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .notNull(),
+  },
+
+  (table) => ({
+    lessonUnique: unique().on(
+      table.lessonId,
+    ),
+  }),
+);
 
 
 /* =========================
    AI TUTOR CONVERSATIONS
 ========================= */
 
-export const aiTutorMessages = pgTable("ai_tutor_messages", {
-  id: serial("id").primaryKey(),
+export const aiTutorMessages = pgTable(
+  "ai_tutor_messages",
+  {
+    id: serial("id").primaryKey(),
 
-  userId: integer("user_id")
-    .notNull()
-    .references(() => users.id, {
-      onDelete: "cascade",
-    }),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id, {
+        onDelete: "cascade",
+      }),
 
-  lessonId: integer("lesson_id")
-    .references(() => lessons.id, {
-      onDelete: "cascade",
-    }),
+    lessonId: integer("lesson_id")
+      .references(() => lessons.id, {
+        onDelete: "cascade",
+      }),
 
-  role: varchar("role", {
-    length: 20,
-  }).notNull(),
+    role: varchar("role", {
+      length: 20,
+    }).notNull(),
 
-  message: text("message").notNull(),
+    message: text("message").notNull(),
 
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+    createdAt: timestamp("created_at")
+      .defaultNow()
+      .notNull(),
+  },
+);
