@@ -86,6 +86,11 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
+  // ADMIN users must use the admin dashboard
+  if (user.role === "ADMIN") {
+    redirect("/admin");
+  }
+
   // =========================================================
   // GET ALL COURSES
   // =========================================================

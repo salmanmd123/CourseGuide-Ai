@@ -58,6 +58,7 @@ export async function getCurrentUser() {
         id: users.id,
         name: users.name,
         email: users.email,
+        role: users.role,
       })
       .from(users)
       .where(eq(users.id, userId));
@@ -66,6 +67,20 @@ export async function getCurrentUser() {
   } catch {
     return null;
   }
+}
+
+export async function requireAdmin() {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return null;
+  }
+
+  if (user.role !== "ADMIN") {
+    return null;
+  }
+
+  return user;
 }
 
 export async function logout() {

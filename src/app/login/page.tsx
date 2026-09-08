@@ -38,7 +38,13 @@ export default function LoginPage() {
             }
 
             // Login successful
-            window.location.href = "/dashboard";
+            // Login successful
+            if (data.user?.role === "ADMIN") {
+                window.location.href = "/admin";
+            } else {
+                window.location.href = "/dashboard";
+            }
+
         } catch (error) {
             console.error(error);
             setError("Something went wrong. Please try again.");

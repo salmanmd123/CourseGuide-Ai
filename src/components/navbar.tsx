@@ -21,6 +21,7 @@ type UserData = {
     id: number;
     name: string;
     email: string;
+    role: "USER" | "ADMIN";
 };
 
 export default function Navbar() {
@@ -357,7 +358,7 @@ export default function Navbar() {
                         >
 
                             {theme ===
-                            "dark" ? (
+                                "dark" ? (
 
                                 <Sun
                                     size={19}
@@ -426,11 +427,10 @@ export default function Navbar() {
 
                                 <ChevronDown
                                     size={15}
-                                    className={`transition-transform ${
-                                        profileOpen
+                                    className={`transition-transform ${profileOpen
                                             ? "rotate-180"
                                             : ""
-                                    }`}
+                                        }`}
                                 />
 
                             </button>
