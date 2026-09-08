@@ -1494,7 +1494,7 @@ export default function CoursesPage() {
 
                                 </div>
 
-                                <div class="flex flex-row gap-x-[3px]">
+                                <div className="flex flex-row gap-x-[3px]">
 
                                     <p className="text-xs font-bold text-zinc-800 dark:text-zinc-200">
                                         {formatNumber(
@@ -1522,7 +1522,7 @@ export default function CoursesPage() {
 
                                 </div>
 
-                                <div class="flex flex-row gap-x-[3px]">
+                                <div className="flex flex-row gap-x-[3px]">
 
                                     <p className="text-xs font-bold text-zinc-800 dark:text-zinc-200">
                                         {formatNumber(
