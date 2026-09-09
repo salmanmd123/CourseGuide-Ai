@@ -223,16 +223,16 @@ export default async function LearningPage({
   const previousLesson =
     currentLessonIndex > 0
       ? courseLessons[
-          currentLessonIndex - 1
-        ]
+      currentLessonIndex - 1
+      ]
       : null;
 
   const nextLesson =
     currentLessonIndex <
       courseLessons.length - 1
       ? courseLessons[
-          currentLessonIndex + 1
-        ]
+      currentLessonIndex + 1
+      ]
       : null;
 
   // =========================================================
@@ -318,16 +318,16 @@ export default async function LearningPage({
   const progressPercentage =
     totalCourseSeconds > 0
       ? Math.min(
-          100,
-          Math.max(
-            0,
-            Math.round(
-              (totalWatchedSeconds /
-                totalCourseSeconds) *
-                100
-            )
+        100,
+        Math.max(
+          0,
+          Math.round(
+            (totalWatchedSeconds /
+              totalCourseSeconds) *
+            100
           )
         )
+      )
       : 0;
 
   // =========================================================
@@ -599,23 +599,21 @@ export default async function LearningPage({
                       lessonItem.id
                     }
                     href={`/learn/${course.slug}?lesson=${lessonItem.id}`}
-                    className={`flex w-full min-w-0 items-center gap-3 border-b border-zinc-100 px-5 py-4 text-left transition dark:border-zinc-900 ${
-                      current
+                    className={`flex w-full min-w-0 items-center gap-3 border-b border-zinc-100 px-5 py-4 text-left transition dark:border-zinc-900 ${current
                         ? "bg-indigo-50 dark:bg-indigo-950/40"
                         : "hover:bg-zinc-50 dark:hover:bg-zinc-900"
-                    }`}
+                      }`}
                   >
 
                     {/* NUMBER */}
 
                     <div
-                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-xs font-semibold ${
-                        completed
+                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-xs font-semibold ${completed
                           ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400"
                           : current
                             ? "bg-indigo-600 text-white"
                             : "bg-zinc-100 text-zinc-400 dark:bg-zinc-900 dark:text-zinc-500"
-                      }`}
+                        }`}
                     >
 
                       {completed ? (
@@ -633,13 +631,12 @@ export default async function LearningPage({
                     <div className="min-w-0 flex-1">
 
                       <p
-                        className={`truncate text-sm ${
-                          current
+                        className={`truncate text-sm ${current
                             ? "font-semibold text-indigo-700 dark:text-indigo-400"
                             : completed
                               ? "text-zinc-500 dark:text-zinc-500"
                               : "text-zinc-600 dark:text-zinc-300"
-                        }`}
+                          }`}
                       >
                         {
                           lessonItem.title
@@ -731,9 +728,10 @@ export default async function LearningPage({
           <div className="mt-8 w-full min-w-0 max-w-full overflow-hidden">
 
             <LessonContentTabs
-              lessonId={
-                currentLesson.id
-              }
+              courseId={course.id}
+              lessonId={currentLesson.id}
+              courseTitle={course.title}
+              lessonTitle={currentLesson.title}
             />
 
           </div>

@@ -3,20 +3,26 @@
 import { useState } from "react";
 
 import {
+  ArrowRight,
   FileText,
   MessageCircle,
+  StickyNote,
   Trophy,
-  ArrowRight,
 } from "lucide-react";
 
 import AiNotes from "@/components/ai-notes";
+import MyNotes from "@/components/my-notes";
 
 type LessonContentTabsProps = {
+  courseId: number;
   lessonId: number;
+  courseTitle: string;
+  lessonTitle: string;
 };
 
 type Tab =
   | "ai-notes"
+  | "my-notes"
   | "quiz"
   | "ai-tutor";
 
@@ -31,6 +37,11 @@ const tabs: {
     icon: FileText,
   },
   {
+    id: "my-notes",
+    label: "My Notes",
+    icon: StickyNote,
+  },
+  {
     id: "quiz",
     label: "Quiz",
     icon: Trophy,
@@ -43,7 +54,10 @@ const tabs: {
 ];
 
 export default function LessonContentTabs({
+  courseId,
   lessonId,
+  courseTitle,
+  lessonTitle,
 }: LessonContentTabsProps) {
   const [activeTab, setActiveTab] =
     useState<Tab>("ai-notes");
@@ -115,6 +129,21 @@ export default function LessonContentTabs({
           <section>
             <AiNotes
               lessonId={lessonId}
+            />
+          </section>
+        )}
+
+        {/* ===================================================
+            MY NOTES
+        =================================================== */}
+
+        {activeTab === "my-notes" && (
+          <section>
+            <MyNotes
+              courseId={courseId}
+              lessonId={lessonId}
+              courseTitle={courseTitle}
+              lessonTitle={lessonTitle}
             />
           </section>
         )}
