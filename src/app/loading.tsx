@@ -2,10 +2,10 @@ import LogoLoader from "@/components/LogoLoader";
 
 export default function Loading() {
     return (
-        <main className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
-            <div className="flex min-h-screen items-center justify-center px-4">
+        <div className="fixed inset-0 z-[9999] flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-zinc-950">
+            <div className="w-full max-w-md px-6">
                 <LogoLoader />
             </div>
-        </main>
+        </div>
     );
 }
