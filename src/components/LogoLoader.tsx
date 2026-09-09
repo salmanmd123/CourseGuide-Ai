@@ -234,12 +234,11 @@ export default function LogoLoader() {
 
                 <div className="mt-5 text-center">
                     <p className="text-base font-semibold text-zinc-900 dark:text-white">
-                        Finding the best courses
+                        CourseGuide AI
                     </p>
 
                     <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-                        Please wait while we load your
-                        courses...
+                        Preparing your learning experience...
                     </p>
                 </div>
 
