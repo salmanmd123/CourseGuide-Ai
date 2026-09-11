@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   title: "CourseGuide AI",
   description:
     "Find the right courses, learn difficult topics, practice what you learn, and stay on track with CourseGuide AI.",
+  icons: {
+    icon: "/logo2.png",
+  },
 };
 
 export default function RootLayout({
