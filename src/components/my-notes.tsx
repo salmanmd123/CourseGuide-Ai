@@ -478,12 +478,11 @@ export default function MyNotes({
           rounded-[20px]
           bg-[#e0e5ec]
           p-6
+          shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]
+          dark:bg-[#1e2229]
+          dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]
           sm:p-7
         "
-        style={{
-          boxShadow:
-            "9px 9px 16px rgba(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.8)",
-        }}
       >
         <div className="flex items-center gap-3">
           <div
@@ -495,15 +494,14 @@ export default function MyNotes({
               justify-center
               rounded-[12px]
               bg-[#e0e5ec]
+              shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]
+              dark:bg-[#1e2229]
+              dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]
             "
-            style={{
-              boxShadow:
-                "5px 5px 10px rgba(163, 177, 198, 0.5), -5px -5px 10px rgba(255, 255, 255, 0.8)",
-            }}
           >
             <FileText
               size={18}
-              className="text-[#ff4500]"
+              className="text-[#ff4500] dark:text-[orangered]"
             />
           </div>
 
@@ -515,6 +513,7 @@ export default function MyNotes({
                 animate-pulse
                 rounded-[12px]
                 bg-[#d2d7de]
+                dark:bg-[#30353e]
               "
             />
 
@@ -525,6 +524,7 @@ export default function MyNotes({
                 animate-pulse
                 rounded-[12px]
                 bg-[#d7dce3]
+                dark:bg-[#292e36]
               "
             />
           </div>
@@ -539,12 +539,11 @@ export default function MyNotes({
         rounded-[20px]
         bg-[#e0e5ec]
         p-6
+        shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]
+        dark:bg-[#1e2229]
+        dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]
         sm:p-7
       "
-      style={{
-        boxShadow:
-          "9px 9px 16px rgba(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.8)",
-      }}
     >
       {/* =====================================================
           HEADER
@@ -563,11 +562,11 @@ export default function MyNotes({
               rounded-[12px]
               bg-[#e0e5ec]
               text-[#ff4500]
+              shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]
+              dark:bg-[#1e2229]
+              dark:text-[orangered]
+              dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]
             "
-            style={{
-              boxShadow:
-                "5px 5px 10px rgba(163, 177, 198, 0.5), -5px -5px 10px rgba(255, 255, 255, 0.8)",
-            }}
           >
             <FileText
               size={19}
@@ -575,11 +574,11 @@ export default function MyNotes({
           </div>
 
           <div className="min-w-0">
-            <h2 className="font-bold text-black">
+            <h2 className="font-bold text-black dark:text-[#f5f7fa]">
               My Notes
             </h2>
 
-            <p className="mt-1 text-xs text-[#3f3e3e]">
+            <p className="mt-1 text-xs text-[#3f3e3e] dark:text-[#a8adb7]">
               Write and save your personal notes for this lesson.
             </p>
           </div>
@@ -617,14 +616,18 @@ export default function MyNotes({
               text-[11px]
               font-semibold
               text-black
+              shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]
               transition-all
               duration-200
               hover:text-[#ff4500]
+              hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
+
+              dark:bg-[#1e2229]
+              dark:text-[#f5f7fa]
+              dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]
+              dark:hover:text-[orangered]
+              dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.6),inset_-3px_-3px_6px_rgba(43,48,58,0.6)]
             "
-            style={{
-              boxShadow:
-                "5px 5px 10px rgba(163, 177, 198, 0.5), -5px -5px 10px rgba(255, 255, 255, 0.8)",
-            }}
           >
             <Upload
               size={13}
@@ -653,16 +656,19 @@ export default function MyNotes({
               text-[11px]
               font-semibold
               text-white
+              shadow-[5px_5px_12px_rgba(163,177,198,0.5),-5px_-5px_12px_rgba(255,255,255,0.8)]
               transition-all
               duration-200
               hover:bg-red-600
+              hover:shadow-[inset_2px_2px_5px_rgba(120,40,0,0.35),inset_-2px_-2px_5px_rgba(255,120,80,0.16)]
               disabled:cursor-not-allowed
               disabled:opacity-40
+
+              dark:bg-[orangered]
+              dark:shadow-[5px_5px_10px_rgba(5,7,10,0.55),-5px_-5px_10px_rgba(43,48,58,0.55)]
+              dark:hover:bg-[red]
+              dark:hover:shadow-[inset_2px_2px_5px_rgba(120,20,0,0.35),inset_-2px_-2px_5px_rgba(255,120,80,0.16)]
             "
-            style={{
-              boxShadow:
-                "5px 5px 12px rgba(79, 70, 229, 0.35), -5px -5px 12px rgba(255, 255, 255, 0.8)",
-            }}
           >
             <Download
               size={13}
@@ -684,17 +690,16 @@ export default function MyNotes({
           bg-[#e0e5ec]
           px-4
           py-3
+          shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
+          dark:bg-[#1e2229]
+          dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]
         "
-        style={{
-          boxShadow:
-            "inset 3px 3px 6px rgba(163, 177, 198, 0.6), inset -3px -3px 6px rgba(255, 255, 255, 0.8)",
-        }}
       >
-        <p className="text-[10px] font-semibold uppercase tracking-wider text-[#ff4500]">
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-[#ff4500] dark:text-[orangered]">
           Your notes for
         </p>
 
-        <p className="mt-1 truncate text-sm font-semibold text-black">
+        <p className="mt-1 truncate text-sm font-semibold text-black dark:text-[#f5f7fa]">
           {lessonTitle}
         </p>
       </div>
@@ -714,11 +719,11 @@ export default function MyNotes({
             text-xs
             leading-5
             text-red-600
+            shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
+            dark:bg-[#1e2229]
+            dark:text-red-400
+            dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]
           "
-          style={{
-            boxShadow:
-              "inset 3px 3px 6px rgba(163, 177, 198, 0.6), inset -3px -3px 6px rgba(255, 255, 255, 0.8)",
-          }}
         >
           {error}
         </div>
@@ -750,15 +755,17 @@ export default function MyNotes({
             leading-7
             text-black
             outline-none
+            shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)]
             transition-all
             duration-200
             placeholder:text-[#777777]
             focus:ring-0
+
+            dark:bg-[#1e2229]
+            dark:text-[#f5f7fa]
+            dark:shadow-[inset_6px_6px_10px_rgba(5,7,10,0.75),inset_-6px_-6px_10px_rgba(43,48,58,0.75)]
+            dark:placeholder:text-[#707782]
           "
-          style={{
-            boxShadow:
-              "inset 6px 6px 10px rgba(163, 177, 198, 0.7), inset -6px -6px 10px rgba(255, 255, 255, 0.9)",
-          }}
         />
       </div>
 
@@ -771,10 +778,10 @@ export default function MyNotes({
           <>
             <Loader2
               size={12}
-              className="animate-spin text-[#ff4500]"
+              className="animate-spin text-[#ff4500] dark:text-[orangered]"
             />
 
-            <span className="text-[10px] text-[#3f3e3e]">
+            <span className="text-[10px] text-[#3f3e3e] dark:text-[#a8adb7]">
               Saving...
             </span>
           </>
@@ -784,10 +791,10 @@ export default function MyNotes({
           <>
             <CheckCircle2
               size={12}
-              className="text-[#ff4500]"
+              className="text-[#ff4500] dark:text-[orangered]"
             />
 
-            <span className="text-[10px] text-[#3f3e3e]">
+            <span className="text-[10px] text-[#3f3e3e] dark:text-[#a8adb7]">
               Saved on this device
             </span>
           </>
@@ -796,7 +803,7 @@ export default function MyNotes({
         {!saving &&
           !saved &&
           content && (
-            <span className="text-[10px] text-[#3f3e3e]">
+            <span className="text-[10px] text-[#3f3e3e] dark:text-[#a8adb7]">
               Changes will be saved automatically.
             </span>
           )}
@@ -813,13 +820,12 @@ export default function MyNotes({
           bg-[#e0e5ec]
           px-4
           py-3
+          shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
+          dark:bg-[#1e2229]
+          dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]
         "
-        style={{
-          boxShadow:
-            "inset 3px 3px 6px rgba(163, 177, 198, 0.6), inset -3px -3px 6px rgba(255, 255, 255, 0.8)",
-        }}
       >
-        <p className="text-[10px] leading-5 text-[#3f3e3e]">
+        <p className="text-[10px] leading-5 text-[#3f3e3e] dark:text-[#a8adb7]">
           Your personal notes are stored locally in this browser using IndexedDB. They are not saved in the CourseGuide AI database.
         </p>
       </div>

@@ -74,11 +74,10 @@ export default function LessonContentTabs({
           rounded-[20px]
           bg-[#e0e5ec]
           p-2
+          shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)]
+          dark:bg-[#1e2229]
+          dark:shadow-[inset_6px_6px_10px_rgba(5,7,10,0.75),inset_-6px_-6px_10px_rgba(43,48,58,0.75)]
         "
-        style={{
-          boxShadow:
-            "inset 6px 6px 10px rgba(163, 177, 198, 0.7), inset -6px -6px 10px rgba(255, 255, 255, 0.9)",
-        }}
       >
         <div className="flex gap-2 overflow-x-auto">
 
@@ -111,20 +110,28 @@ export default function LessonContentTabs({
                     font-semibold
                     transition-all
                     duration-200
+
                     ${
                       active
-                        ? "bg-[#e0e5ec] text-[#ff4500]"
-                        : "bg-transparent text-[#3f3e3e] hover:text-[#ff4500]"
+                        ? `
+                          bg-[#e0e5ec]
+                          text-[#ff4500]
+                          shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]
+
+                          dark:bg-[#1e2229]
+                          dark:text-[orangered]
+                          dark:shadow-[5px_5px_10px_rgba(5,7,10,0.55),-5px_-5px_10px_rgba(43,48,58,0.55)]
+                        `
+                        : `
+                          bg-transparent
+                          text-[#3f3e3e]
+                          hover:text-[#ff4500]
+
+                          dark:text-[#a8adb7]
+                          dark:hover:text-[orangered]
+                        `
                     }
                   `}
-                  style={
-                    active
-                      ? {
-                          boxShadow:
-                            "5px 5px 10px rgba(163, 177, 198, 0.5), -5px -5px 10px rgba(255, 255, 255, 0.8)",
-                        }
-                      : undefined
-                  }
                 >
                   <Icon size={15} />
 
@@ -183,12 +190,12 @@ export default function LessonContentTabs({
                 rounded-[20px]
                 bg-[#e0e5ec]
                 p-6
+                shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]
                 sm:p-7
+
+                dark:bg-[#1e2229]
+                dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]
               "
-              style={{
-                boxShadow:
-                  "9px 9px 16px rgba(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.8)",
-              }}
             >
               <div className="flex items-start gap-4">
 
@@ -203,24 +210,23 @@ export default function LessonContentTabs({
                     rounded-[12px]
                     bg-[#e0e5ec]
                     text-[#ff4500]
+                    shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]
+
+                    dark:bg-[#1e2229]
+                    dark:text-[orangered]
+                    dark:shadow-[5px_5px_10px_rgba(5,7,10,0.55),-5px_-5px_10px_rgba(43,48,58,0.55)]
                   "
-                  style={{
-                    boxShadow:
-                      "5px 5px 10px rgba(163, 177, 198, 0.5), -5px -5px 10px rgba(255, 255, 255, 0.8)",
-                  }}
                 >
-                  <Trophy
-                    size={19}
-                  />
+                  <Trophy size={19} />
                 </div>
 
                 <div className="min-w-0">
 
-                  <h2 className="text-base font-bold text-black">
+                  <h2 className="text-base font-bold text-black dark:text-[#f5f7fa]">
                     Test yourself
                   </h2>
 
-                  <p className="mt-1.5 max-w-xl text-sm leading-6 text-[#3f3e3e]">
+                  <p className="mt-1.5 max-w-xl text-sm leading-6 text-[#3f3e3e] dark:text-[#a8adb7]">
                     Take a short quiz to
                     check your
                     understanding of
@@ -241,20 +247,23 @@ export default function LessonContentTabs({
                       text-xs
                       font-semibold
                       text-white
+
+                      shadow-[5px_5px_12px_rgba(163,177,198,0.5),-5px_-5px_12px_rgba(255,255,255,0.8)]
+
                       transition-all
                       duration-200
+
                       hover:bg-red-600
+
+                      dark:bg-[orangered]
+                      dark:shadow-[5px_5px_10px_rgba(5,7,10,0.55),-5px_-5px_10px_rgba(43,48,58,0.55)]
+                      dark:hover:bg-[red]
+                      dark:hover:shadow-[inset_2px_2px_5px_rgba(120,20,0,0.35),inset_-2px_-2px_5px_rgba(255,120,80,0.16)]
                     "
-                    style={{
-                      boxShadow:
-                        "5px 5px 12px rgba(79, 70, 229, 0.35), -5px -5px 12px rgba(255, 255, 255, 0.8)",
-                    }}
                   >
                     Start quiz
 
-                    <ArrowRight
-                      size={14}
-                    />
+                    <ArrowRight size={14} />
                   </button>
 
                 </div>
@@ -274,12 +283,12 @@ export default function LessonContentTabs({
                 rounded-[20px]
                 bg-[#e0e5ec]
                 p-6
+                shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]
                 sm:p-7
+
+                dark:bg-[#1e2229]
+                dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]
               "
-              style={{
-                boxShadow:
-                  "9px 9px 16px rgba(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.8)",
-              }}
             >
               <div className="flex items-start gap-4">
 
@@ -294,24 +303,23 @@ export default function LessonContentTabs({
                     rounded-[12px]
                     bg-[#e0e5ec]
                     text-[#ff4500]
+                    shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]
+
+                    dark:bg-[#1e2229]
+                    dark:text-[orangered]
+                    dark:shadow-[5px_5px_10px_rgba(5,7,10,0.55),-5px_-5px_10px_rgba(43,48,58,0.55)]
                   "
-                  style={{
-                    boxShadow:
-                      "5px 5px 10px rgba(163, 177, 198, 0.5), -5px -5px 10px rgba(255, 255, 255, 0.8)",
-                  }}
                 >
-                  <MessageCircle
-                    size={19}
-                  />
+                  <MessageCircle size={19} />
                 </div>
 
                 <div className="min-w-0">
 
-                  <h2 className="text-base font-bold text-black">
+                  <h2 className="text-base font-bold text-black dark:text-[#f5f7fa]">
                     AI Tutor
                   </h2>
 
-                  <p className="mt-1.5 max-w-xl text-sm leading-6 text-[#3f3e3e]">
+                  <p className="mt-1.5 max-w-xl text-sm leading-6 text-[#3f3e3e] dark:text-[#a8adb7]">
                     Ask questions and
                     get help
                     understanding this
@@ -333,20 +341,23 @@ export default function LessonContentTabs({
                       text-xs
                       font-semibold
                       text-white
+
+                      shadow-[5px_5px_12px_rgba(163,177,198,0.5),-5px_-5px_12px_rgba(255,255,255,0.8)]
+
                       transition-all
                       duration-200
+
                       hover:bg-red-600
+
+                      dark:bg-[orangered]
+                      dark:shadow-[5px_5px_10px_rgba(5,7,10,0.55),-5px_-5px_10px_rgba(43,48,58,0.55)]
+                      dark:hover:bg-[red]
+                      dark:hover:shadow-[inset_2px_2px_5px_rgba(120,20,0,0.35),inset_-2px_-2px_5px_rgba(255,120,80,0.16)]
                     "
-                    style={{
-                      boxShadow:
-                        "5px 5px 12px rgba(79, 70, 229, 0.35), -5px -5px 12px rgba(255, 255, 255, 0.8)",
-                    }}
                   >
                     Ask AI Tutor
 
-                    <ArrowRight
-                      size={14}
-                    />
+                    <ArrowRight size={14} />
                   </button>
 
                 </div>

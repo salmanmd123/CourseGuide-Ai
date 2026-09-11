@@ -18,10 +18,11 @@ export default function LogoLoader() {
         justify-center
         rounded-[20px]
         bg-[#e0e5ec]
+        dark:bg-[#1a1d23]
       "
       style={{
         boxShadow:
-          "9px 9px 16px rgba(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.8)",
+          "var(--loader-shadow, 9px 9px 16px rgba(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.8))",
       }}
     >
       <div className="flex flex-col items-center justify-center">
@@ -245,11 +246,11 @@ export default function LogoLoader() {
         {/* LOADING TEXT */}
 
         <div className="mt-5 text-center">
-          <p className="text-base font-semibold text-black">
+          <p className="text-base font-semibold text-black dark:text-[#f5f7fa]">
             CourseGuide AI
           </p>
 
-          <p className="mt-1 text-sm text-[#3f3e3e]">
+          <p className="mt-1 text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
             Preparing your learning experience...
           </p>
         </div>

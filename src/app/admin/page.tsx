@@ -190,7 +190,7 @@ export default async function AdminDashboardPage() {
     ========================================================= */
 
     return (
-        <main className="min-h-screen bg-[#e0e5ec] text-black transition-colors">
+        <main className="min-h-screen bg-[#e0e5ec] text-black transition-colors dark:bg-[#1a1d23] dark:text-[#f5f7fa]">
 
             <AdminNavbar
                 name={admin.name}
@@ -207,7 +207,7 @@ export default async function AdminDashboardPage() {
 
                     <div>
 
-                        <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#e0e5ec] px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+                        <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#e0e5ec] px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.65),inset_-3px_-3px_6px_rgba(43,48,58,0.65)]">
 
                             <ShieldCheck
                                 size={14}
@@ -221,7 +221,7 @@ export default async function AdminDashboardPage() {
                             Admin Dashboard
                         </h1>
 
-                        <p className="mt-3 max-w-2xl text-sm leading-6 text-[#3f3e3e] sm:text-base">
+                        <p className="mt-3 max-w-2xl text-sm leading-6 text-[#3f3e3e] dark:text-[#a8adb7] sm:text-base">
                             Manage CourseGuide
                             AI and monitor
                             platform activity
@@ -232,9 +232,9 @@ export default async function AdminDashboardPage() {
 
                     {/* ADMIN PROFILE */}
 
-                    <div className="flex items-center gap-3 rounded-[20px] bg-[#e0e5ec] px-4 py-3 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]">
+                    <div className="flex items-center gap-3 rounded-[20px] bg-[#e0e5ec] px-4 py-3 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
 
-                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.65),inset_-3px_-3px_6px_rgba(43,48,58,0.65)]">
 
                             <ShieldCheck
                                 size={21}
@@ -248,7 +248,7 @@ export default async function AdminDashboardPage() {
                                 {admin.name}
                             </p>
 
-                            <p className="truncate text-xs text-[#3f3e3e]">
+                            <p className="truncate text-xs text-[#3f3e3e] dark:text-[#a8adb7]">
                                 {admin.email}
                             </p>
 
@@ -348,7 +348,7 @@ export default async function AdminDashboardPage() {
                             Quick Actions
                         </h2>
 
-                        <p className="mt-1 text-sm text-[#3f3e3e]">
+                        <p className="mt-1 text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
                             Manage important
                             parts of the
                             platform.
@@ -404,9 +404,9 @@ export default async function AdminDashboardPage() {
                            RECENT USERS
                         ================================================= */}
 
-                        <div className="overflow-hidden rounded-[20px] bg-[#e0e5ec] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]">
+                        <div className="overflow-hidden rounded-[20px] bg-[#e0e5ec] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
 
-                            <div className="flex items-center justify-between px-5 py-4 shadow-[inset_0_-3px_6px_rgba(163,177,198,0.25)]">
+                            <div className="flex items-center justify-between px-5 py-4 shadow-[inset_0_-3px_6px_rgba(163,177,198,0.25)] dark:shadow-[inset_0_-3px_6px_rgba(5,7,10,0.35)]">
 
                                 <div>
 
@@ -414,7 +414,7 @@ export default async function AdminDashboardPage() {
                                         Recent Users
                                     </h2>
 
-                                    <p className="mt-1 text-xs text-[#3f3e3e]">
+                                    <p className="mt-1 text-xs text-[#3f3e3e] dark:text-[#a8adb7]">
                                         Latest registered
                                         users
                                     </p>
@@ -423,7 +423,7 @@ export default async function AdminDashboardPage() {
 
                                 <Link
                                     href="/admin/users"
-                                    className="flex items-center gap-1 rounded-[12px] px-3 py-2 text-sm font-semibold text-[orangered] transition-all duration-200 hover:bg-[#e0e5ec] hover:text-[red] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
+                                    className="flex items-center gap-1 rounded-[12px] px-3 py-2 text-sm font-semibold text-[orangered] transition-all duration-200 hover:bg-[#e0e5ec] hover:text-[red] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:hover:bg-[#1e2229] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.65),inset_-3px_-3px_6px_rgba(43,48,58,0.65)]"
                                 >
                                     View all
 
@@ -440,7 +440,7 @@ export default async function AdminDashboardPage() {
                                 {recentUsers.length ===
                                 0 ? (
 
-                                    <div className="px-5 py-10 text-center text-sm text-[#3f3e3e]">
+                                    <div className="px-5 py-10 text-center text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
                                         No users
                                         found.
                                     </div>
@@ -456,12 +456,12 @@ export default async function AdminDashboardPage() {
                                                 key={
                                                     user.id
                                                 }
-                                                className="flex items-center justify-between gap-4 px-5 py-4 transition-all duration-200 hover:bg-[#e0e5ec] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.35),inset_-3px_-3px_6px_rgba(255,255,255,0.5)]"
+                                                className="flex items-center justify-between gap-4 px-5 py-4 transition-all duration-200 hover:bg-[#e0e5ec] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.35),inset_-3px_-3px_6px_rgba(255,255,255,0.5)] dark:hover:bg-[#1e2229] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.55),inset_-3px_-3px_6px_rgba(43,48,58,0.55)]"
                                             >
 
                                                 <div className="flex min-w-0 items-center gap-3">
 
-                                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#e0e5ec] text-sm font-bold text-[orangered] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]">
+                                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#e0e5ec] text-sm font-bold text-[orangered] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]">
 
                                                         {user.name
                                                             .charAt(
@@ -479,7 +479,7 @@ export default async function AdminDashboardPage() {
                                                             }
                                                         </p>
 
-                                                        <p className="truncate text-xs text-[#3f3e3e]">
+                                                        <p className="truncate text-xs text-[#3f3e3e] dark:text-[#a8adb7]">
                                                             {
                                                                 user.email
                                                             }
@@ -490,11 +490,11 @@ export default async function AdminDashboardPage() {
                                                 </div>
 
                                                 <span
-                                                    className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide shadow-[inset_3px_3px_6px_rgba(163,177,198,0.45),inset_-3px_-3px_6px_rgba(255,255,255,0.7)] ${
+                                                    className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide shadow-[inset_3px_3px_6px_rgba(163,177,198,0.45),inset_-3px_-3px_6px_rgba(255,255,255,0.7)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.55),inset_-3px_-3px_6px_rgba(43,48,58,0.6)] ${
                                                         user.role ===
                                                         "ADMIN"
                                                             ? "text-[orangered]"
-                                                            : "text-[#3f3e3e]"
+                                                            : "text-[#3f3e3e] dark:text-[#a8adb7]"
                                                     }`}
                                                 >
                                                     {
@@ -517,9 +517,9 @@ export default async function AdminDashboardPage() {
                            RECENT COURSES
                         ================================================= */}
 
-                        <div className="overflow-hidden rounded-[20px] bg-[#e0e5ec] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]">
+                        <div className="overflow-hidden rounded-[20px] bg-[#e0e5ec] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
 
-                            <div className="flex items-center justify-between px-5 py-4 shadow-[inset_0_-3px_6px_rgba(163,177,198,0.25)]">
+                            <div className="flex items-center justify-between px-5 py-4 shadow-[inset_0_-3px_6px_rgba(163,177,198,0.25)] dark:shadow-[inset_0_-3px_6px_rgba(5,7,10,0.35)]">
 
                                 <div>
 
@@ -527,7 +527,7 @@ export default async function AdminDashboardPage() {
                                         Recent Courses
                                     </h2>
 
-                                    <p className="mt-1 text-xs text-[#3f3e3e]">
+                                    <p className="mt-1 text-xs text-[#3f3e3e] dark:text-[#a8adb7]">
                                         Recently added
                                         courses
                                     </p>
@@ -536,7 +536,7 @@ export default async function AdminDashboardPage() {
 
                                 <Link
                                     href="/admin/courses"
-                                    className="flex items-center gap-1 rounded-[12px] px-3 py-2 text-sm font-semibold text-[orangered] transition-all duration-200 hover:bg-[#e0e5ec] hover:text-[red] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
+                                    className="flex items-center gap-1 rounded-[12px] px-3 py-2 text-sm font-semibold text-[orangered] transition-all duration-200 hover:bg-[#e0e5ec] hover:text-[red] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:hover:bg-[#1e2229] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.65),inset_-3px_-3px_6px_rgba(43,48,58,0.65)]"
                                 >
                                     View all
 
@@ -553,7 +553,7 @@ export default async function AdminDashboardPage() {
                                 {recentCourses.length ===
                                 0 ? (
 
-                                    <div className="px-5 py-10 text-center text-sm text-[#3f3e3e]">
+                                    <div className="px-5 py-10 text-center text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
                                         No courses
                                         found.
                                     </div>
@@ -569,7 +569,7 @@ export default async function AdminDashboardPage() {
                                                 key={
                                                     course.id
                                                 }
-                                                className="flex items-center justify-between gap-4 px-5 py-4 transition-all duration-200 hover:bg-[#e0e5ec] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.35),inset_-3px_-3px_6px_rgba(255,255,255,0.5)]"
+                                                className="flex items-center justify-between gap-4 px-5 py-4 transition-all duration-200 hover:bg-[#e0e5ec] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.35),inset_-3px_-3px_6px_rgba(255,255,255,0.5)] dark:hover:bg-[#1e2229] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.55),inset_-3px_-3px_6px_rgba(43,48,58,0.55)]"
                                             >
 
                                                 <div className="min-w-0">
@@ -580,7 +580,7 @@ export default async function AdminDashboardPage() {
                                                         }
                                                     </p>
 
-                                                    <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-[#3f3e3e]">
+                                                    <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-[#3f3e3e] dark:text-[#a8adb7]">
 
                                                         <span>
                                                             {course.courseType ===
@@ -606,7 +606,7 @@ export default async function AdminDashboardPage() {
                                                 <Link
                                                     href={`/courses/${course.slug}`}
                                                     target="_blank"
-                                                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#e0e5ec] text-[orangered] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:text-[red] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
+                                                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#e0e5ec] text-[orangered] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:text-[red] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.65),inset_-3px_-3px_6px_rgba(43,48,58,0.65)]"
                                                     aria-label={`View ${course.title}`}
                                                 >
                                                     <ArrowRight className="h-4 w-4" />
@@ -631,9 +631,9 @@ export default async function AdminDashboardPage() {
                    ADMIN STATUS
                 ================================================= */}
 
-                <div className="mt-10 flex items-start gap-3 rounded-[20px] bg-[#e0e5ec] px-5 py-4 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]">
+                <div className="mt-10 flex items-start gap-3 rounded-[20px] bg-[#e0e5ec] px-5 py-4 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
 
-                    <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-[12px] bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+                    <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-[12px] bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.65),inset_-3px_-3px_6px_rgba(43,48,58,0.65)]">
 
                         <ShieldCheck
                             size={18}
@@ -648,7 +648,7 @@ export default async function AdminDashboardPage() {
                             enabled
                         </p>
 
-                        <p className="mt-1 text-xs leading-5 text-[#3f3e3e]">
+                        <p className="mt-1 text-xs leading-5 text-[#3f3e3e] dark:text-[#a8adb7]">
                             You are signed in
                             as an administrator.
                             Administrative
@@ -683,13 +683,13 @@ function StatCard({
     description: string;
 }) {
     return (
-        <div className="rounded-[20px] bg-[#e0e5ec] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-300">
+        <div className="rounded-[20px] bg-[#e0e5ec] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-300 dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
 
             <div className="flex items-start justify-between gap-4">
 
                 <div>
 
-                    <p className="text-sm font-medium text-[#3f3e3e]">
+                    <p className="text-sm font-medium text-[#3f3e3e] dark:text-[#a8adb7]">
                         {title}
                     </p>
 
@@ -697,13 +697,13 @@ function StatCard({
                         {value.toLocaleString()}
                     </p>
 
-                    <p className="mt-1 text-xs text-[#3f3e3e]">
+                    <p className="mt-1 text-xs text-[#3f3e3e] dark:text-[#a8adb7]">
                         {description}
                     </p>
 
                 </div>
 
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.65),inset_-3px_-3px_6px_rgba(43,48,58,0.65)]">
 
                     {icon}
 
@@ -733,12 +733,12 @@ function AdminActionCard({
     return (
         <Link
             href={href}
-            className="group rounded-[20px] bg-[#e0e5ec] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-300 hover:shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)]"
+            className="group rounded-[20px] bg-[#e0e5ec] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-300 hover:shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] dark:hover:shadow-[inset_6px_6px_10px_rgba(5,7,10,0.7),inset_-6px_-6px_10px_rgba(43,48,58,0.7)]"
         >
 
             <div className="flex items-start gap-4">
 
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[12px] bg-[orangered] text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 group-hover:bg-[red]">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[12px] bg-[orangered] text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 group-hover:bg-[red] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]">
 
                     {icon}
 
@@ -756,7 +756,7 @@ function AdminActionCard({
 
                     </div>
 
-                    <p className="mt-1 text-sm leading-6 text-[#3f3e3e]">
+                    <p className="mt-1 text-sm leading-6 text-[#3f3e3e] dark:text-[#a8adb7]">
                         {description}
                     </p>
 

@@ -405,6 +405,7 @@ export default function YouTubePlayer({
         rounded-[20px]
         bg-[#e0e5ec]
         p-2
+        dark:bg-[#1e2229]
       "
       style={{
         boxShadow:

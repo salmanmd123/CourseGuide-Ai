@@ -72,7 +72,7 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#e0e5ec] text-black">
+    <main className="min-h-screen overflow-x-hidden bg-[#e0e5ec] text-black transition-colors duration-300 dark:bg-[#1a1d23] dark:text-[#f5f7fa]">
 
       {/* =========================================================
           NAVBAR
@@ -84,7 +84,7 @@ export default function Home() {
           HERO SECTION
       ========================================================= */}
 
-      <section className="bg-[#e0e5ec]">
+      <section className="bg-[#e0e5ec] dark:bg-[#1a1d23]">
 
         <div className="mx-auto max-w-[1200px] px-8 pb-28 pt-16">
 
@@ -115,6 +115,10 @@ export default function Home() {
                   transition-all
                   duration-200
                   hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
+
+                  dark:bg-[#1e2229]
+                  dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]
+                  dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]
                 "
               >
                 <Sparkles
@@ -139,6 +143,7 @@ export default function Home() {
                   text-black
                   sm:text-[3.8rem]
                   lg:text-[4rem]
+                  dark:text-[#f5f7fa]
                 "
               >
                 <span className="text-[orangered]">
@@ -162,6 +167,7 @@ export default function Home() {
                   leading-7
                   text-[#3f3e3e]
                   sm:text-[17px]
+                  dark:text-[#a8adb7]
                 "
               >
                 CourseGuide AI helps you find the right courses, understand
@@ -182,12 +188,14 @@ export default function Home() {
                   bg-[#e0e5ec]
                   p-1.5
                   shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)]
+                  dark:bg-[#1e2229]
+                  dark:shadow-[inset_6px_6px_10px_rgba(5,7,10,0.75),inset_-6px_-6px_10px_rgba(43,48,58,0.75)]
                 "
               >
                 <Search
                   size={18}
                   strokeWidth={1.8}
-                  className="ml-4 shrink-0 text-[#3f3e3e]"
+                  className="ml-4 shrink-0 text-[#3f3e3e] dark:text-[#a8adb7]"
                 />
 
                 <input
@@ -207,6 +215,8 @@ export default function Home() {
                     text-black
                     outline-none
                     placeholder:text-[#3f3e3e]
+                    dark:text-[#f5f7fa]
+                    dark:placeholder:text-[#a8adb7]
                   "
                 />
 
@@ -226,6 +236,8 @@ export default function Home() {
                     hover:-translate-y-[1px]
                     hover:bg-[red]
                     active:translate-y-[1px]
+
+                    dark:shadow-[5px_5px_12px_rgba(255,90,31,0.3),-5px_-5px_12px_rgba(43,48,58,0.7)]
                   "
                 >
                   Search
@@ -260,6 +272,13 @@ export default function Home() {
                       hover:text-[orangered]
                       hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
                       active:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
+
+                      dark:bg-[#1e2229]
+                      dark:text-[#a8adb7]
+                      dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]
+                      dark:hover:text-[orangered]
+                      dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]
+                      dark:active:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]
                     "
                   >
                     {topic}
@@ -289,6 +308,9 @@ export default function Home() {
                   bg-[#e0e5ec]
                   p-8
                   shadow-[14px_14px_28px_rgba(163,177,198,0.6),-14px_-14px_28px_rgba(255,255,255,0.8)]
+
+                  dark:bg-[#1e2229]
+                  dark:shadow-[14px_14px_28px_rgba(5,7,10,0.8),-14px_-14px_28px_rgba(43,48,58,0.8)]
                 "
               >
 
@@ -305,6 +327,7 @@ export default function Home() {
                         uppercase
                         tracking-[1px]
                         text-[#3f3e3e]
+                        dark:text-[#a8adb7]
                       "
                     >
                       Continue learning
@@ -316,6 +339,7 @@ export default function Home() {
                         text-[17px]
                         font-bold
                         text-black
+                        dark:text-[#f5f7fa]
                       "
                     >
                       Python Fundamentals
@@ -334,6 +358,9 @@ export default function Home() {
                       bg-[#e0e5ec]
                       text-[orangered]
                       shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]
+
+                      dark:bg-[#1a1d23]
+                      dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]
                     "
                   >
                     <BookOpen
@@ -355,6 +382,9 @@ export default function Home() {
                     bg-[#e0e5ec]
                     p-5
                     shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)]
+
+                    dark:bg-[#1a1d23]
+                    dark:shadow-[inset_6px_6px_10px_rgba(5,7,10,0.75),inset_-6px_-6px_10px_rgba(43,48,58,0.75)]
                   "
                 >
 
@@ -375,6 +405,7 @@ export default function Home() {
                       text-[15px]
                       font-bold
                       text-black
+                      dark:text-[#f5f7fa]
                     "
                   >
                     Conditional Statements
@@ -392,6 +423,9 @@ export default function Home() {
                       bg-[#e0e5ec]
                       p-[2px]
                       shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
+
+                      dark:bg-[#1a1d23]
+                      dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]
                     "
                   >
                     <div
@@ -412,6 +446,7 @@ export default function Home() {
                       text-[10px]
                       font-semibold
                       text-[#3f3e3e]
+                      dark:text-[#a8adb7]
                     "
                   >
                     <span>
@@ -444,6 +479,9 @@ export default function Home() {
                       transition-all
                       duration-200
                       hover:-translate-y-[2px]
+
+                      dark:bg-[#1a1d23]
+                      dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]
                     "
                   >
 
@@ -459,6 +497,9 @@ export default function Home() {
                         bg-[#e0e5ec]
                         text-[orangered]
                         shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
+
+                        dark:bg-[#1a1d23]
+                        dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]
                       "
                     >
                       <CheckCircle2
@@ -472,6 +513,7 @@ export default function Home() {
                         text-[13px]
                         font-bold
                         text-black
+                        dark:text-[#f5f7fa]
                       "
                     >
                       AI Notes
@@ -481,6 +523,7 @@ export default function Home() {
                       className="
                         text-[10px]
                         text-[#3f3e3e]
+                        dark:text-[#a8adb7]
                       "
                     >
                       Ready to review
@@ -503,6 +546,9 @@ export default function Home() {
                       transition-all
                       duration-200
                       hover:-translate-y-[2px]
+
+                      dark:bg-[#1a1d23]
+                      dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]
                     "
                   >
 
@@ -518,6 +564,9 @@ export default function Home() {
                         bg-[#e0e5ec]
                         text-[orangered]
                         shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
+
+                        dark:bg-[#1a1d23]
+                        dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]
                       "
                     >
                       <Target
@@ -531,6 +580,7 @@ export default function Home() {
                         text-[13px]
                         font-bold
                         text-black
+                        dark:text-[#f5f7fa]
                       "
                     >
                       Quiz
@@ -540,6 +590,7 @@ export default function Home() {
                       className="
                         text-[10px]
                         text-[#3f3e3e]
+                        dark:text-[#a8adb7]
                       "
                     >
                       8 questions
@@ -567,6 +618,9 @@ export default function Home() {
                   py-3
                   shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]
                   sm:flex
+
+                  dark:bg-[#1e2229]
+                  dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]
                 "
               >
 
@@ -581,6 +635,9 @@ export default function Home() {
                     bg-[#e0e5ec]
                     text-[orangered]
                     shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
+
+                    dark:bg-[#1a1d23]
+                    dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]
                   "
                 >
                   <CheckCircle2
@@ -598,6 +655,7 @@ export default function Home() {
                       font-bold
                       leading-tight
                       text-black
+                      dark:text-[#f5f7fa]
                     "
                   >
                     Learning streak
@@ -631,7 +689,7 @@ export default function Home() {
 
       <section
         id="features"
-        className="bg-[#e0e5ec] px-8 py-24"
+        className="bg-[#e0e5ec] dark:bg-[#1a1d23] px-8 py-24"
       >
 
         <div className="mx-auto max-w-[1200px]">
@@ -661,6 +719,7 @@ export default function Home() {
                 leading-[1.2]
                 tracking-[-0.5px]
                 text-black
+                dark:text-[#f5f7fa]
               "
             >
               Learning should feel simple.
@@ -671,6 +730,7 @@ export default function Home() {
                 mt-3
                 text-[16px]
                 text-[#3f3e3e]
+                dark:text-[#a8adb7]
               "
             >
               One place to discover, learn, practice, and improve.
@@ -701,6 +761,9 @@ export default function Home() {
                     transition-all
                     duration-300
                     hover:-translate-y-[5px]
+
+                    dark:bg-[#1e2229]
+                    dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]
                   "
                 >
 
@@ -717,6 +780,9 @@ export default function Home() {
                       bg-[#e0e5ec]
                       text-[orangered]
                       shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)]
+
+                      dark:bg-[#1a1d23]
+                      dark:shadow-[inset_6px_6px_10px_rgba(5,7,10,0.75),inset_-6px_-6px_10px_rgba(43,48,58,0.75)]
                     "
                   >
                     <Icon
@@ -733,6 +799,7 @@ export default function Home() {
                       text-[17px]
                       font-bold
                       text-black
+                      dark:text-[#f5f7fa]
                     "
                   >
                     {feature.title}
@@ -746,6 +813,7 @@ export default function Home() {
                       text-[13px]
                       leading-6
                       text-[#3f3e3e]
+                      dark:text-[#a8adb7]
                     "
                   >
                     {feature.description}
@@ -768,7 +836,7 @@ export default function Home() {
 
       <section
         id="how-it-works"
-        className="bg-[#e0e5ec] px-8 py-24"
+        className="bg-[#e0e5ec] dark:bg-[#1a1d23] px-8 py-24"
       >
 
         <div className="mx-auto max-w-[1200px]">
@@ -798,6 +866,7 @@ export default function Home() {
                 leading-[1.2]
                 tracking-[-0.5px]
                 text-black
+                dark:text-[#f5f7fa]
               "
             >
               From search to understanding.
@@ -842,6 +911,10 @@ export default function Home() {
                   transition-all
                   duration-200
                   hover:shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)]
+
+                  dark:bg-[#1e2229]
+                  dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]
+                  dark:hover:shadow-[inset_6px_6px_10px_rgba(5,7,10,0.75),inset_-6px_-6px_10px_rgba(43,48,58,0.75)]
                 "
               >
 
@@ -868,6 +941,7 @@ export default function Home() {
                     text-[17px]
                     font-bold
                     text-black
+                    dark:text-[#f5f7fa]
                   "
                 >
                   {title}
@@ -881,6 +955,7 @@ export default function Home() {
                     text-[13px]
                     leading-6
                     text-[#3f3e3e]
+                    dark:text-[#a8adb7]
                   "
                 >
                   {description}
@@ -910,6 +985,9 @@ export default function Home() {
               sm:p-12
               md:flex-row
               md:items-center
+
+              dark:bg-[#1e2229]
+              dark:shadow-[14px_14px_28px_rgba(5,7,10,0.8),-14px_-14px_28px_rgba(43,48,58,0.8)]
             "
           >
 
@@ -920,6 +998,7 @@ export default function Home() {
                   text-[2rem]
                   font-extrabold
                   text-black
+                  dark:text-[#f5f7fa]
                 "
               >
                 Ready to learn better?
@@ -930,6 +1009,7 @@ export default function Home() {
                   mt-2
                   text-[15px]
                   text-[#3f3e3e]
+                  dark:text-[#a8adb7]
                 "
               >
                 Find your next course and start building your skills today.
@@ -957,6 +1037,8 @@ export default function Home() {
                 hover:-translate-y-[2px]
                 hover:bg-[red]
                 active:translate-y-[1px]
+
+                dark:shadow-[5px_5px_12px_rgba(255,90,31,0.3),-5px_-5px_12px_rgba(43,48,58,0.7)]
               "
             >
               <span>
@@ -987,6 +1069,8 @@ export default function Home() {
           bg-[#e0e5ec]
           px-8
           py-10
+          dark:border-[#3b414c]
+          dark:bg-[#1a1d23]
         "
       >
 
@@ -1003,6 +1087,7 @@ export default function Home() {
             font-semibold
             text-[#3f3e3e]
             sm:flex-row
+            dark:text-[#a8adb7]
           "
         >
 

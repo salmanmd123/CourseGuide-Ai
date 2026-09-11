@@ -356,7 +356,7 @@ export default function AdminUsersPage() {
     }
 
     return (
-        <main className="min-h-screen bg-[#e0e5ec] text-black transition-colors">
+        <main className="min-h-screen bg-[#e0e5ec] text-black transition-colors dark:bg-[#1a1d23] dark:text-[#f5f7fa]">
             {/* =================================================
                 NAVBAR
             ================================================= */}
@@ -381,7 +381,7 @@ export default function AdminUsersPage() {
                 <div className="mb-8">
                     <Link
                         href="/admin"
-                        className="mb-5 inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:text-orangered hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
+                        className="mb-5 inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:text-orangered hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:text-[#a8adb7] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] dark:hover:text-[orangered] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.55),inset_-3px_-3px_6px_rgba(43,48,58,0.55)]"
                     >
                         <ArrowLeft className="h-4 w-4" />
                         Back to Admin Dashboard
@@ -393,18 +393,18 @@ export default function AdminUsersPage() {
                                 ADMINISTRATION
                             </p>
 
-                            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+                            <h1 className="text-3xl font-bold tracking-tight text-black dark:text-[#f5f7fa] sm:text-4xl">
                                 Manage Users
                             </h1>
 
-                            <p className="mt-2 max-w-2xl text-sm leading-6 text-[#3f3e3e]">
+                            <p className="mt-2 max-w-2xl text-sm leading-6 text-[#3f3e3e] dark:text-[#a8adb7]">
                                 Manage learner accounts,
                                 administrator access,
                                 and user permissions.
                             </p>
                         </div>
 
-                        <div className="inline-flex items-center gap-2 self-start rounded-full bg-[#e0e5ec] px-5 py-3 text-sm font-medium text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] lg:self-auto">
+                        <div className="inline-flex items-center gap-2 self-start rounded-full bg-[#e0e5ec] px-5 py-3 text-sm font-medium text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:text-[#a8adb7] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] lg:self-auto">
                             <Users className="h-4 w-4 text-[orangered]" />
 
                             <span>
@@ -419,7 +419,7 @@ export default function AdminUsersPage() {
                 ================================================= */}
 
                 {error && (
-                    <div className="mb-6 flex items-start gap-3 rounded-[20px] bg-[#e0e5ec] px-4 py-3 text-sm text-red-600 shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+                    <div className="mb-6 flex items-start gap-3 rounded-[20px] bg-[#e0e5ec] px-4 py-3 text-sm text-red-600 shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:text-red-400 dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
                         <X className="mt-0.5 h-4 w-4 shrink-0" />
 
                         <span className="flex-1">
@@ -431,7 +431,7 @@ export default function AdminUsersPage() {
                             onClick={() =>
                                 setError(null)
                             }
-                            className="rounded-full p-1 text-red-600 transition-all duration-200 hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
+                            className="rounded-full p-1 text-red-600 transition-all duration-200 hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:text-red-400 dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.55),inset_-3px_-3px_6px_rgba(43,48,58,0.55)]"
                         >
                             <X className="h-4 w-4" />
                         </button>
@@ -439,7 +439,7 @@ export default function AdminUsersPage() {
                 )}
 
                 {success && (
-                    <div className="mb-6 flex items-start gap-3 rounded-[20px] bg-[#e0e5ec] px-4 py-3 text-sm text-emerald-700 shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+                    <div className="mb-6 flex items-start gap-3 rounded-[20px] bg-[#e0e5ec] px-4 py-3 text-sm text-emerald-700 shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:text-emerald-400 dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
                         <Check className="mt-0.5 h-4 w-4 shrink-0" />
 
                         <span className="flex-1">
@@ -451,7 +451,7 @@ export default function AdminUsersPage() {
                             onClick={() =>
                                 setSuccess(null)
                             }
-                            className="rounded-full p-1 text-emerald-700 transition-all duration-200 hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
+                            className="rounded-full p-1 text-emerald-700 transition-all duration-200 hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:text-emerald-400 dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.55),inset_-3px_-3px_6px_rgba(43,48,58,0.55)]"
                         >
                             <X className="h-4 w-4" />
                         </button>
@@ -492,12 +492,12 @@ export default function AdminUsersPage() {
                     CONTROLS
                 ================================================= */}
 
-                <div className="mb-6 rounded-[30px] bg-[#e0e5ec] p-4 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] sm:p-5">
+                <div className="mb-6 rounded-[30px] bg-[#e0e5ec] p-4 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] sm:p-5">
                     <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                         {/* SEARCH */}
 
                         <div className="relative w-full lg:max-w-md">
-                            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#3f3e3e]" />
+                            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#3f3e3e] dark:text-[#a8adb7]" />
 
                             <input
                                 value={search}
@@ -507,7 +507,7 @@ export default function AdminUsersPage() {
                                     )
                                 }
                                 placeholder="Search by name or email..."
-                                className="h-11 w-full rounded-[20px] border-0 bg-[#e0e5ec] pl-11 pr-4 text-sm text-black outline-none transition-all duration-200 placeholder:text-[#3f3e3e] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] focus:shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)]"
+                                className="h-11 w-full rounded-[20px] border-0 bg-[#e0e5ec] pl-11 pr-4 text-sm text-black outline-none transition-all duration-200 placeholder:text-[#3f3e3e] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] focus:shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] dark:bg-[#1e2229] dark:text-[#f5f7fa] dark:placeholder:text-[#a8adb7] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)] dark:focus:shadow-[inset_6px_6px_10px_rgba(5,7,10,0.75),inset_-6px_-6px_10px_rgba(43,48,58,0.75)]"
                             />
                         </div>
 
@@ -555,9 +555,9 @@ export default function AdminUsersPage() {
                 ================================================= */}
 
                 <div className="mb-4 flex items-center justify-between">
-                    <p className="text-sm text-[#3f3e3e]">
+                    <p className="text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
                         Showing{" "}
-                        <span className="font-semibold text-black">
+                        <span className="font-semibold text-black dark:text-[#f5f7fa]">
                             {filteredUsers.length}
                         </span>{" "}
                         {filteredUsers.length === 1
@@ -571,36 +571,36 @@ export default function AdminUsersPage() {
                 ================================================= */}
 
                 {loading ? (
-                    <div className="flex min-h-[300px] items-center justify-center rounded-[30px] bg-[#e0e5ec] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]">
-                        <div className="flex items-center gap-3 text-sm text-[#3f3e3e]">
+                    <div className="flex min-h-[300px] items-center justify-center rounded-[30px] bg-[#e0e5ec] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
+                        <div className="flex items-center gap-3 text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
                             <Loader2 className="h-5 w-5 animate-spin text-[orangered]" />
 
                             Loading users...
                         </div>
                     </div>
                 ) : filteredUsers.length === 0 ? (
-                    <div className="rounded-[30px] bg-[#e0e5ec] px-6 py-16 text-center shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]">
-                        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#e0e5ec] text-[#3f3e3e] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+                    <div className="rounded-[30px] bg-[#e0e5ec] px-6 py-16 text-center shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
+                        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#e0e5ec] text-[#3f3e3e] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:text-[#a8adb7] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
                             <Users className="h-6 w-6" />
                         </div>
 
-                        <h2 className="text-lg font-semibold">
+                        <h2 className="text-lg font-semibold text-black dark:text-[#f5f7fa]">
                             No users found
                         </h2>
 
-                        <p className="mt-1 text-sm text-[#3f3e3e]">
+                        <p className="mt-1 text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
                             Try changing your search
                             or filter.
                         </p>
                     </div>
                 ) : (
-                    <div className="overflow-hidden rounded-[30px] bg-[#e0e5ec] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]">
+                    <div className="overflow-hidden rounded-[30px] bg-[#e0e5ec] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
                         {/* DESKTOP TABLE */}
 
                         <div className="hidden overflow-x-auto md:block">
                             <table className="w-full text-left">
                                 <thead>
-                                    <tr className="bg-[#e0e5ec] text-xs font-semibold uppercase tracking-wider text-[#3f3e3e] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+                                    <tr className="bg-[#e0e5ec] text-xs font-semibold uppercase tracking-wider text-[#3f3e3e] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:text-[#a8adb7] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
                                         <th className="px-6 py-4">
                                             User
                                         </th>
@@ -624,13 +624,13 @@ export default function AdminUsersPage() {
                                         (user) => (
                                             <tr
                                                 key={user.id}
-                                                className="border-b border-[#d2d8e1] last:border-0 transition-all duration-200 hover:bg-[#dce1e8]"
+                                                className="border-b border-[#d2d8e1] last:border-0 transition-all duration-200 hover:bg-[#dce1e8] dark:border-[#30353e] dark:hover:bg-[#20252c]"
                                             >
                                                 {/* USER */}
 
                                                 <td className="px-6 py-5">
                                                     <div className="flex items-center gap-3">
-                                                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#e0e5ec] text-sm font-bold text-[orangered] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]">
+                                                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#e0e5ec] text-sm font-bold text-[orangered] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]">
                                                             {getInitials(
                                                                 user.name
                                                             )}
@@ -638,7 +638,7 @@ export default function AdminUsersPage() {
 
                                                         <div className="min-w-0">
                                                             <div className="flex items-center gap-2">
-                                                                <p className="truncate font-semibold text-black">
+                                                                <p className="truncate font-semibold text-black dark:text-[#f5f7fa]">
                                                                     {
                                                                         user.name
                                                                     }
@@ -646,13 +646,13 @@ export default function AdminUsersPage() {
 
                                                                 {user.id ===
                                                                     currentUser?.id && (
-                                                                    <span className="rounded-full bg-[#e0e5ec] px-2 py-0.5 text-[10px] font-semibold text-[#3f3e3e] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+                                                                    <span className="rounded-full bg-[#e0e5ec] px-2 py-0.5 text-[10px] font-semibold text-[#3f3e3e] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:text-[#a8adb7] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
                                                                         YOU
                                                                     </span>
                                                                 )}
                                                             </div>
 
-                                                            <p className="mt-0.5 truncate text-sm text-[#3f3e3e]">
+                                                            <p className="mt-0.5 truncate text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
                                                                 {
                                                                     user.email
                                                                 }
@@ -673,7 +673,7 @@ export default function AdminUsersPage() {
 
                                                 {/* DATE */}
 
-                                                <td className="px-6 py-5 text-sm text-[#3f3e3e]">
+                                                <td className="px-6 py-5 text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
                                                     {formatDate(
                                                         user.createdAt
                                                     )}
@@ -696,7 +696,7 @@ export default function AdminUsersPage() {
                                                                     user
                                                                 )
                                                             }
-                                                            className="inline-flex h-9 items-center gap-2 rounded-full bg-[#e0e5ec] px-3 text-xs font-semibold text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] disabled:cursor-not-allowed disabled:opacity-50"
+                                                            className="inline-flex h-9 items-center gap-2 rounded-full bg-[#e0e5ec] px-3 text-xs font-semibold text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] disabled:cursor-not-allowed disabled:opacity-50 dark:bg-[#1e2229] dark:text-[#a8adb7] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] dark:hover:text-[orangered] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.55),inset_-3px_-3px_6px_rgba(43,48,58,0.55)]"
                                                         >
                                                             {updatingId ===
                                                             user.id ? (
@@ -727,7 +727,7 @@ export default function AdminUsersPage() {
                                                                     user
                                                                 )
                                                             }
-                                                            className="inline-flex h-9 items-center gap-2 rounded-full bg-[#e0e5ec] px-3 text-xs font-semibold text-red-600 shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] disabled:cursor-not-allowed disabled:opacity-50"
+                                                            className="inline-flex h-9 items-center gap-2 rounded-full bg-[#e0e5ec] px-3 text-xs font-semibold text-red-600 shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] disabled:cursor-not-allowed disabled:opacity-50 dark:bg-[#1e2229] dark:text-red-400 dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.55),inset_-3px_-3px_6px_rgba(43,48,58,0.55)]"
                                                         >
                                                             {deletingId ===
                                                             user.id ? (
@@ -749,7 +749,7 @@ export default function AdminUsersPage() {
 
                         {/* MOBILE CARDS */}
 
-                        <div className="divide-y divide-[#d2d8e1] md:hidden">
+                        <div className="divide-y divide-[#d2d8e1] dark:divide-[#30353e] md:hidden">
                             {filteredUsers.map(
                                 (user) => (
                                     <div
@@ -757,7 +757,7 @@ export default function AdminUsersPage() {
                                         className="p-5"
                                     >
                                         <div className="flex items-start gap-3">
-                                            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#e0e5ec] text-sm font-bold text-[orangered] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]">
+                                            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#e0e5ec] text-sm font-bold text-[orangered] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]">
                                                 {getInitials(
                                                     user.name
                                                 )}
@@ -765,7 +765,7 @@ export default function AdminUsersPage() {
 
                                             <div className="min-w-0 flex-1">
                                                 <div className="flex items-center gap-2">
-                                                    <p className="truncate font-semibold">
+                                                    <p className="truncate font-semibold text-black dark:text-[#f5f7fa]">
                                                         {
                                                             user.name
                                                         }
@@ -773,13 +773,13 @@ export default function AdminUsersPage() {
 
                                                     {user.id ===
                                                         currentUser?.id && (
-                                                        <span className="rounded-full bg-[#e0e5ec] px-2 py-0.5 text-[10px] font-semibold text-[#3f3e3e] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+                                                        <span className="rounded-full bg-[#e0e5ec] px-2 py-0.5 text-[10px] font-semibold text-[#3f3e3e] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:text-[#a8adb7] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
                                                             YOU
                                                         </span>
                                                     )}
                                                 </div>
 
-                                                <p className="mt-0.5 break-all text-sm text-[#3f3e3e]">
+                                                <p className="mt-0.5 break-all text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
                                                     {
                                                         user.email
                                                     }
@@ -792,7 +792,7 @@ export default function AdminUsersPage() {
                                                         }
                                                     />
 
-                                                    <span className="text-xs text-[#3f3e3e]">
+                                                    <span className="text-xs text-[#3f3e3e] dark:text-[#a8adb7]">
                                                         Joined{" "}
                                                         {formatDate(
                                                             user.createdAt
@@ -816,7 +816,7 @@ export default function AdminUsersPage() {
                                                         user
                                                     )
                                                 }
-                                                className="inline-flex h-10 items-center justify-center gap-2 rounded-full bg-[#e0e5ec] text-xs font-semibold text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] disabled:cursor-not-allowed disabled:opacity-50"
+                                                className="inline-flex h-10 items-center justify-center gap-2 rounded-full bg-[#e0e5ec] text-xs font-semibold text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] disabled:cursor-not-allowed disabled:opacity-50 dark:bg-[#1e2229] dark:text-[#a8adb7] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] dark:hover:text-[orangered] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.55),inset_-3px_-3px_6px_rgba(43,48,58,0.55)]"
                                             >
                                                 {updatingId ===
                                                 user.id ? (
@@ -844,7 +844,7 @@ export default function AdminUsersPage() {
                                                         user
                                                     )
                                                 }
-                                                className="inline-flex h-10 items-center justify-center gap-2 rounded-full bg-[#e0e5ec] text-xs font-semibold text-red-600 shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] disabled:cursor-not-allowed disabled:opacity-50"
+                                                className="inline-flex h-10 items-center justify-center gap-2 rounded-full bg-[#e0e5ec] text-xs font-semibold text-red-600 shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] disabled:cursor-not-allowed disabled:opacity-50 dark:bg-[#1e2229] dark:text-red-400 dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.55),inset_-3px_-3px_6px_rgba(43,48,58,0.55)]"
                                             >
                                                 {deletingId ===
                                                 user.id ? (
@@ -881,19 +881,19 @@ function StatCard({
     icon: React.ReactNode;
 }) {
     return (
-        <div className="rounded-[30px] bg-[#e0e5ec] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-300">
+        <div className="rounded-[30px] bg-[#e0e5ec] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-300 dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
             <div className="flex items-center justify-between">
                 <div>
-                    <p className="text-sm text-[#3f3e3e]">
+                    <p className="text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
                         {label}
                     </p>
 
-                    <p className="mt-2 text-3xl font-bold tracking-tight text-black">
+                    <p className="mt-2 text-3xl font-bold tracking-tight text-black dark:text-[#f5f7fa]">
                         {value}
                     </p>
                 </div>
 
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#e0e5ec] text-[orangered] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]">
+                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#e0e5ec] text-[orangered] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]">
                     {icon}
                 </div>
             </div>
@@ -921,7 +921,7 @@ function FilterButton({
             className={`rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ${
                 active
                     ? "bg-[orangered] text-white shadow-[inset_3px_3px_6px_rgba(180,45,0,0.35),inset_-3px_-3px_6px_rgba(255,165,120,0.45)] hover:bg-[red]"
-                    : "bg-[#e0e5ec] text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
+                    : "bg-[#e0e5ec] text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:text-[#a8adb7] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] dark:hover:text-[orangered] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.55),inset_-3px_-3px_6px_rgba(43,48,58,0.55)]"
             }`}
         >
             {children}
@@ -940,7 +940,7 @@ function RoleBadge({
 }) {
     if (role === "ADMIN") {
         return (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e0e5ec] px-3 py-1.5 text-xs font-semibold text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e0e5ec] px-3 py-1.5 text-xs font-semibold text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
                 <ShieldCheck className="h-3.5 w-3.5" />
                 Admin
             </span>
@@ -948,7 +948,7 @@ function RoleBadge({
     }
 
     return (
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e0e5ec] px-3 py-1.5 text-xs font-semibold text-[#3f3e3e] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e0e5ec] px-3 py-1.5 text-xs font-semibold text-[#3f3e3e] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:text-[#a8adb7] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
             <Users className="h-3.5 w-3.5" />
             Learner
         </span>

@@ -28,11 +28,8 @@ export default function Navbar() {
     const { theme, setTheme } = useTheme();
 
     const [mounted, setMounted] = useState(false);
-
     const [user, setUser] = useState<UserData | null>(null);
-
     const [loading, setLoading] = useState(true);
-
     const [profileOpen, setProfileOpen] = useState(false);
 
     /* =========================================================
@@ -40,7 +37,6 @@ export default function Navbar() {
     ========================================================= */
 
     const [searchOpen, setSearchOpen] = useState(false);
-
     const [search, setSearch] = useState("");
 
     /* =========================================================
@@ -89,7 +85,6 @@ export default function Navbar() {
 
             if (response.ok) {
                 setUser(null);
-
                 setProfileOpen(false);
 
                 window.location.href = "/login";
@@ -143,12 +138,11 @@ export default function Navbar() {
 
     function closeSearch() {
         setSearchOpen(false);
-
         setSearch("");
     }
 
     return (
-        <header className="sticky top-0 z-50 bg-[#e0e5ec]/95 backdrop-blur-md dark:bg-zinc-950/95">
+        <header className="sticky top-0 z-50 bg-[#e0e5ec]/95 backdrop-blur-md transition-colors duration-300 dark:bg-[#1a1d23]/95">
 
             <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
 
@@ -174,11 +168,11 @@ export default function Navbar() {
 
                         <div className="translate-y-1">
 
-                            <span className="text-[16px] font-bold leading-none tracking-tight text-black dark:text-white">
+                            <span className="text-[16px] font-bold leading-none tracking-tight text-black dark:text-[#f5f7fa]">
                                 Course
                             </span>
 
-                            <span className="text-[16px] font-bold leading-none tracking-tight text-[#ff4500] dark:text-white">
+                            <span className="text-[16px] font-bold leading-none tracking-tight text-[#ff4500]">
                                 Guide
                             </span>
 
@@ -211,11 +205,21 @@ export default function Navbar() {
                             duration-200
                             ease-out
 
+                            dark:text-[#f5f7fa]
+
                             hover:bg-[#e0e5ec]
                             hover:text-[#ff4500]
+
+                            dark:hover:bg-[#1e2229]
+                            dark:hover:text-[#ff4500]
+
                             hover:shadow-[5px_5px_10px_rgba(163,177,198,0.55),-5px_-5px_10px_rgba(255,255,255,0.9)]
 
+                            dark:hover:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]
+
                             active:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
+
+                            dark:active:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]
                         "
                     >
                         Courses
@@ -234,11 +238,21 @@ export default function Navbar() {
                             duration-200
                             ease-out
 
+                            dark:text-[#f5f7fa]
+
                             hover:bg-[#e0e5ec]
                             hover:text-[#ff4500]
+
+                            dark:hover:bg-[#1e2229]
+                            dark:hover:text-[#ff4500]
+
                             hover:shadow-[5px_5px_10px_rgba(163,177,198,0.55),-5px_-5px_10px_rgba(255,255,255,0.9)]
 
+                            dark:hover:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]
+
                             active:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
+
+                            dark:active:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]
                         "
                     >
                         How it works
@@ -257,11 +271,21 @@ export default function Navbar() {
                             duration-200
                             ease-out
 
+                            dark:text-[#f5f7fa]
+
                             hover:bg-[#e0e5ec]
                             hover:text-[#ff4500]
+
+                            dark:hover:bg-[#1e2229]
+                            dark:hover:text-[#ff4500]
+
                             hover:shadow-[5px_5px_10px_rgba(163,177,198,0.55),-5px_-5px_10px_rgba(255,255,255,0.9)]
 
+                            dark:hover:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]
+
                             active:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
+
+                            dark:active:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]
                         "
                     >
                         Features
@@ -276,7 +300,7 @@ export default function Navbar() {
                 <div className="flex items-center gap-2 sm:gap-3">
 
                     {/* =================================================
-                       NAVBAR SEARCH
+                       SEARCH
                     ================================================= */}
 
                     {searchOpen ? (
@@ -288,7 +312,7 @@ export default function Navbar() {
 
                             <Search
                                 size={17}
-                                className="ml-2 shrink-0 text-zinc-500"
+                                className="ml-2 shrink-0 text-zinc-500 dark:text-[#a8adb7]"
                             />
 
                             <input
@@ -301,14 +325,14 @@ export default function Navbar() {
                                     )
                                 }
                                 placeholder="Search courses..."
-                                className="min-w-0 flex-1 bg-transparent px-2 text-sm text-zinc-900 outline-none placeholder:text-zinc-500 dark:text-white"
+                                className="min-w-0 flex-1 bg-transparent px-2 text-sm text-zinc-900 outline-none placeholder:text-zinc-500 dark:text-[#f5f7fa] dark:placeholder:text-[#a8adb7]"
                             />
 
                             <button
                                 type="button"
                                 onClick={closeSearch}
                                 aria-label="Close search"
-                                className="neo-button flex h-7 w-7 items-center justify-center rounded-full text-[#3f3e3e]"
+                                className="neo-button flex h-7 w-7 items-center justify-center rounded-full text-[#3f3e3e] dark:text-[#f5f7fa]"
                             >
                                 <X size={16} />
                             </button>
@@ -321,7 +345,7 @@ export default function Navbar() {
                             type="button"
                             aria-label="Search courses"
                             onClick={openSearch}
-                            className="neo-button flex h-10 w-10 items-center justify-center rounded-full text-[#3f3e3e]"
+                            className="neo-button flex h-10 w-10 items-center justify-center rounded-full text-[#3f3e3e] dark:text-[#f5f7fa]"
                         >
                             <Search
                                 size={19}
@@ -347,7 +371,7 @@ export default function Navbar() {
                                 )
                             }
                             aria-label="Toggle dark mode"
-                            className="neo-button flex h-10 w-10 items-center justify-center rounded-full text-[#3f3e3e]"
+                            className="neo-button flex h-10 w-10 items-center justify-center rounded-full text-[#3f3e3e] dark:text-[#f5f7fa]"
                         >
 
                             {theme === "dark" ? (
@@ -402,15 +426,19 @@ export default function Navbar() {
                                     px-2
                                     py-1.5
                                     text-[#111111]
+                                    dark:text-[#f5f7fa]
                                     transition-all
                                     duration-200
+
                                     hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
+
+                                    dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]
                                 "
                             >
 
                                 {/* Avatar */}
 
-                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ff4500] text-xs font-bold text-white shadow-[3px_3px_7px_rgba(163,177,198,0.5)]">
+                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ff4500] text-xs font-bold text-white shadow-[3px_3px_7px_rgba(163,177,198,0.5)] dark:shadow-[3px_3px_7px_rgba(5,7,10,0.6)]">
 
                                     {user.name
                                         .charAt(0)
@@ -449,11 +477,11 @@ export default function Navbar() {
 
                                     <div className="px-4 py-4">
 
-                                        <p className="text-sm font-semibold text-zinc-950 dark:text-white">
+                                        <p className="text-sm font-semibold text-zinc-950 dark:text-[#f5f7fa]">
                                             {user.name}
                                         </p>
 
-                                        <p className="mt-1 truncate text-xs text-zinc-500">
+                                        <p className="mt-1 truncate text-xs text-zinc-500 dark:text-[#a8adb7]">
                                             {user.email}
                                         </p>
 
@@ -470,7 +498,7 @@ export default function Navbar() {
                                                     false
                                                 )
                                             }
-                                            className="neo-button flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-[#3f3e3e]"
+                                            className="neo-button flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-[#3f3e3e] dark:text-[#f5f7fa]"
                                         >
 
                                             <User size={17} />
@@ -486,7 +514,7 @@ export default function Navbar() {
                                                     false
                                                 )
                                             }
-                                            className="neo-button flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-[#3f3e3e]"
+                                            className="neo-button flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-[#3f3e3e] dark:text-[#f5f7fa]"
                                         >
 
                                             <BookOpen size={17} />
@@ -502,7 +530,7 @@ export default function Navbar() {
                                                     false
                                                 )
                                             }
-                                            className="neo-button flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-[#3f3e3e]"
+                                            className="neo-button flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-[#3f3e3e] dark:text-[#f5f7fa]"
                                         >
 
                                             <Settings size={17} />
@@ -547,7 +575,7 @@ export default function Navbar() {
 
                             <Link
                                 href="/login"
-                                className="hidden px-3 py-2 text-sm font-semibold text-[#3f3e3e] transition hover:text-[#ff4500] sm:block"
+                                className="hidden px-3 py-2 text-sm font-semibold text-[#3f3e3e] transition hover:text-[#ff4500] dark:text-[#f5f7fa] sm:block"
                             >
                                 Log in
                             </Link>

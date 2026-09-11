@@ -349,7 +349,7 @@ export default async function MyLearningPage() {
   // =========================================================
 
   return (
-    <main className="min-h-screen bg-[#e0e5ec] text-black">
+    <main className="min-h-screen bg-[#e0e5ec] dark:bg-[#1e2229] text-black dark:text-[#f5f7fa]">
 
       {/* =====================================================
           AUTO REFRESH
@@ -377,7 +377,7 @@ export default async function MyLearningPage() {
               My Learning
             </h1>
 
-            <p className="mt-2 max-w-xl text-sm text-[#3f3e3e] sm:text-base">
+            <p className="mt-2 max-w-xl text-sm text-[#3f3e3e] dark:text-[#a8adb7] sm:text-base">
               Continue your courses and track your progress.
             </p>
 
@@ -385,7 +385,7 @@ export default async function MyLearningPage() {
 
           <Link
             href="/courses"
-            className="flex w-fit items-center gap-2 rounded-[12px] bg-[orangered] px-5 py-3 text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.3)]"
+            className="flex w-fit items-center gap-2 rounded-[12px] bg-[orangered] px-5 py-3 text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.3)] dark:hover:shadow-[inset_2px_2px_5px_rgba(120,20,0,0.35),inset_-2px_-2px_5px_rgba(255,120,80,0.16)]"
           >
             <BookOpen size={17} />
             Browse courses
@@ -403,13 +403,13 @@ export default async function MyLearningPage() {
               COURSES STARTED
           ================================================= */}
 
-          <div className="rounded-[20px] bg-[#e0e5ec] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]">
+          <div className="rounded-[20px] bg-[#e0e5ec] dark:bg-[#1e2229] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
 
-            <div className="flex h-11 w-11 items-center justify-center rounded-[12px] bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+            <div className="flex h-11 w-11 items-center justify-center rounded-[12px] bg-[#e0e5ec] dark:bg-[#1e2229] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
               <BookOpen size={19} />
             </div>
 
-            <p className="mt-4 text-sm text-[#3f3e3e]">
+            <p className="mt-4 text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
               Courses started
             </p>
 
@@ -423,13 +423,13 @@ export default async function MyLearningPage() {
               COMPLETED LESSONS
           ================================================= */}
 
-          <div className="rounded-[20px] bg-[#e0e5ec] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]">
+          <div className="rounded-[20px] bg-[#e0e5ec] dark:bg-[#1e2229] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
 
-            <div className="flex h-11 w-11 items-center justify-center rounded-[12px] bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+            <div className="flex h-11 w-11 items-center justify-center rounded-[12px] bg-[#e0e5ec] dark:bg-[#1e2229] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
               <CheckCircle2 size={19} />
             </div>
 
-            <p className="mt-4 text-sm text-[#3f3e3e]">
+            <p className="mt-4 text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
               Lessons completed
             </p>
 
@@ -443,13 +443,13 @@ export default async function MyLearningPage() {
               AVERAGE PROGRESS
           ================================================= */}
 
-          <div className="rounded-[20px] bg-[#e0e5ec] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]">
+          <div className="rounded-[20px] bg-[#e0e5ec] dark:bg-[#1e2229] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
 
-            <div className="flex h-11 w-11 items-center justify-center rounded-[12px] bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+            <div className="flex h-11 w-11 items-center justify-center rounded-[12px] bg-[#e0e5ec] dark:bg-[#1e2229] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
               <Clock3 size={19} />
             </div>
 
-            <p className="mt-4 text-sm text-[#3f3e3e]">
+            <p className="mt-4 text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
               Average progress
             </p>
 
@@ -473,7 +473,7 @@ export default async function MyLearningPage() {
               Your courses
             </h2>
 
-            <p className="mt-1 text-sm text-[#3f3e3e]">
+            <p className="mt-1 text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
               Courses you've started appear here.
             </p>
 
@@ -485,9 +485,9 @@ export default async function MyLearningPage() {
 
           {courseProgress.length === 0 ? (
 
-            <div className="mt-6 rounded-[20px] bg-[#e0e5ec] p-10 text-center shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] sm:p-12">
+            <div className="mt-6 rounded-[20px] bg-[#e0e5ec] dark:bg-[#1e2229] p-10 text-center shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] sm:p-12">
 
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-[20px] bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-[20px] bg-[#e0e5ec] dark:bg-[#1e2229] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
                 <BookOpen size={24} />
               </div>
 
@@ -495,13 +495,13 @@ export default async function MyLearningPage() {
                 No courses started yet
               </h3>
 
-              <p className="mx-auto mt-2 max-w-md text-sm text-[#3f3e3e]">
+              <p className="mx-auto mt-2 max-w-md text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
                 Start watching a course and it will appear here automatically.
               </p>
 
               <Link
                 href="/courses"
-                className="mt-5 inline-flex items-center gap-2 rounded-[12px] bg-[orangered] px-5 py-2.5 text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.3)]"
+                className="mt-5 inline-flex items-center gap-2 rounded-[12px] bg-[orangered] px-5 py-2.5 text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.3)] dark:hover:shadow-[inset_2px_2px_5px_rgba(120,20,0,0.35),inset_-2px_-2px_5px_rgba(255,120,80,0.16)]"
               >
                 Explore courses
                 <ArrowRight size={15} />
@@ -520,7 +520,7 @@ export default async function MyLearningPage() {
                     key={
                       course.courseId
                     }
-                    className="overflow-hidden rounded-[20px] bg-[#e0e5ec] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-300"
+                    className="overflow-hidden rounded-[20px] bg-[#e0e5ec] dark:bg-[#1e2229] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] transition-all duration-300"
                   >
 
                     <div className="grid md:grid-cols-[190px_1fr]">
@@ -529,19 +529,19 @@ export default async function MyLearningPage() {
                           COURSE VISUAL
                       =================================== */}
 
-                      <div className="flex min-h-[190px] items-center justify-center bg-[#e0e5ec] p-6 shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)]">
+                      <div className="flex min-h-[190px] items-center justify-center bg-[#e0e5ec] dark:bg-[#1e2229] p-6 shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] dark:shadow-[inset_6px_6px_10px_rgba(5,7,10,0.75),inset_-6px_-6px_10px_rgba(43,48,58,0.75)]">
 
                         <div className="text-center">
 
-                          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-[20px] bg-[orangered] text-white shadow-[5px_5px_12px_rgba(79,70,229,0.25),-5px_-5px_12px_rgba(255,255,255,0.8)]">
+                          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-[20px] bg-[orangered] text-white shadow-[5px_5px_12px_rgba(79,70,229,0.25),-5px_-5px_12px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_12px_rgba(5,7,10,0.7),-5px_-5px_12px_rgba(43,48,58,0.7)]">
                             <BookOpen size={25} />
                           </div>
 
-                          <p className="mt-4 text-[10px] font-medium uppercase tracking-wider text-[#3f3e3e]">
+                          <p className="mt-4 text-[10px] font-medium uppercase tracking-wider text-[#3f3e3e] dark:text-[#a8adb7]">
                             {course.category}
                           </p>
 
-                          <p className="mt-1 text-sm font-semibold text-black">
+                          <p className="mt-1 text-sm font-semibold text-black dark:text-[#f5f7fa]">
                             {course.level}
                           </p>
 
@@ -559,7 +559,7 @@ export default async function MyLearningPage() {
 
                           <div className="min-w-0">
 
-                            <span className="inline-flex rounded-full bg-[#e0e5ec] px-3 py-1 text-xs font-semibold text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+                            <span className="inline-flex rounded-full bg-[#e0e5ec] dark:bg-[#1e2229] px-3 py-1 text-xs font-semibold text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
                               {course.category}
                             </span>
 
@@ -567,7 +567,7 @@ export default async function MyLearningPage() {
                               {course.title}
                             </h3>
 
-                            <p className="mt-2 max-w-3xl text-sm leading-6 text-[#3f3e3e]">
+                            <p className="mt-2 max-w-3xl text-sm leading-6 text-[#3f3e3e] dark:text-[#a8adb7]">
                               {course.description}
                             </p>
 
@@ -583,7 +583,7 @@ export default async function MyLearningPage() {
                             PROGRESS BAR
                         ================================= */}
 
-                        <div className="mt-6 h-3 overflow-hidden rounded-full bg-[#e0e5ec] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+                        <div className="mt-6 h-3 overflow-hidden rounded-full bg-[#e0e5ec] dark:bg-[#1e2229] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
 
                           <div
                             className="h-full rounded-full bg-[orangered] transition-all duration-300"
@@ -600,7 +600,7 @@ export default async function MyLearningPage() {
 
                         <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
 
-                          <div className="flex items-center gap-4 text-xs text-[#3f3e3e]">
+                          <div className="flex items-center gap-4 text-xs text-[#3f3e3e] dark:text-[#a8adb7]">
 
                             <span>
                               {course.completed}{" "}
@@ -617,7 +617,7 @@ export default async function MyLearningPage() {
 
                           <Link
                             href={`/learn/${course.slug}`}
-                            className="flex items-center gap-2 rounded-[12px] bg-[orangered] px-4 py-2.5 text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.3)]"
+                            className="flex items-center gap-2 rounded-[12px] bg-[orangered] px-4 py-2.5 text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.3)] dark:hover:shadow-[inset_2px_2px_5px_rgba(120,20,0,0.35),inset_-2px_-2px_5px_rgba(255,120,80,0.16)]"
                           >
 
                             <Play

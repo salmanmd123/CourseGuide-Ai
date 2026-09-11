@@ -1202,8 +1202,8 @@ export default function CoursesPage() {
                     group
                     overflow-hidden
                     rounded-[24px]
-                    bg-[#e0e5ec]
-                    shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]
+                    bg-[#e0e5ec] dark:bg-[#1e2229]
+                    shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]
                     transition-all
                     duration-300
                     hover:-translate-y-1
@@ -1220,7 +1220,7 @@ export default function CoursesPage() {
                    THUMBNAIL
                 ================================================= */}
 
-                <div className="relative aspect-video overflow-hidden rounded-t-[24px] bg-[#e0e5ec]">
+                <div className="relative aspect-video overflow-hidden rounded-t-[24px] bg-[#e0e5ec] dark:bg-[#1e2229]">
 
                     {course.thumbnailUrl ? (
                         <img
@@ -1257,9 +1257,9 @@ export default function CoursesPage() {
                                     items-center
                                     justify-center
                                     rounded-[18px]
-                                    bg-[#e0e5ec]
+                                    bg-[#e0e5ec] dark:bg-[#1e2229]
                                     text-[orangered]
-                                    shadow-[inset_4px_4px_8px_rgba(163,177,198,0.65),inset_-4px_-4px_8px_rgba(255,255,255,0.85)]
+                                    shadow-[inset_4px_4px_8px_rgba(163,177,198,0.65),inset_-4px_-4px_8px_rgba(255,255,255,0.85)] dark:shadow-[inset_4px_4px_8px_rgba(5,7,10,0.75),inset_-4px_-4px_8px_rgba(43,48,58,0.75)]
                                 "
                             >
                                 <BookOpen
@@ -1295,13 +1295,13 @@ export default function CoursesPage() {
                                         items-center
                                         gap-1.5
                                         rounded-full
-                                        bg-[#e0e5ec]/95
+                                        bg-[#e0e5ec] dark:bg-[#1e2229]/95
                                         px-3
                                         py-1.5
                                         text-xs
                                         font-bold
                                         text-[orangered]
-                                        shadow-[4px_4px_8px_rgba(0,0,0,0.18),-3px_-3px_8px_rgba(255,255,255,0.55)]
+                                        shadow-[4px_4px_8px_rgba(0,0,0,0.18),-3px_-3px_8px_rgba(255,255,255,0.55)] dark:shadow-[4px_4px_8px_rgba(5,7,10,0.75),-3px_-3px_8px_rgba(43,48,58,0.75)]
                                         backdrop-blur-sm
                                     "
                                 >
@@ -1325,7 +1325,7 @@ export default function CoursesPage() {
                                         text-xs
                                         font-bold
                                         text-white
-                                        shadow-[4px_4px_8px_rgba(0,0,0,0.22)]
+                                        shadow-[4px_4px_8px_rgba(0,0,0,0.22)] dark:shadow-[4px_4px_8px_rgba(5,7,10,0.80)]
                                     "
                                 >
                                     <Sparkles
@@ -1423,13 +1423,13 @@ export default function CoursesPage() {
                             className="
                                 shrink-0
                                 rounded-full
-                                bg-[#e0e5ec]
+                                bg-[#e0e5ec] dark:bg-[#1e2229]
                                 px-3
                                 py-1
                                 text-[10px]
                                 font-semibold
-                                text-[#3f3e3e]
-                                shadow-[inset_2px_2px_5px_rgba(163,177,198,0.55),inset_-2px_-2px_5px_rgba(255,255,255,0.8)]
+                                text-[#3f3e3e] dark:text-[#f5f7fa]
+                                shadow-[inset_2px_2px_5px_rgba(163,177,198,0.55),inset_-2px_-2px_5px_rgba(255,255,255,0.8)] dark:shadow-[inset_2px_2px_5px_rgba(5,7,10,0.75),inset_-2px_-2px_5px_rgba(43,48,58,0.75)]
                             "
                         >
                             {
@@ -1450,7 +1450,7 @@ export default function CoursesPage() {
                             font-extrabold
                             leading-6
                             tracking-tight
-                            text-black
+                            text-black dark:text-[#f5f7fa]
                         "
                     >
                         {
@@ -1467,7 +1467,7 @@ export default function CoursesPage() {
                             min-h-[44px]
                             text-sm
                             leading-[22px]
-                            text-[#3f3e3e]
+                            text-[#3f3e3e] dark:text-[#f5f7fa]
                         "
                     >
                         {
@@ -1486,10 +1486,10 @@ export default function CoursesPage() {
                             items-center
                             gap-3
                             rounded-[16px]
-                            bg-[#e0e5ec]
+                            bg-[#e0e5ec] dark:bg-[#1e2229]
                             px-3
                             py-2.5
-                            shadow-[inset_3px_3px_6px_rgba(163,177,198,0.55),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
+                            shadow-[inset_3px_3px_6px_rgba(163,177,198,0.55),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.75),inset_-3px_-3px_6px_rgba(43,48,58,0.75)]
                         "
                     >
 
@@ -1502,9 +1502,9 @@ export default function CoursesPage() {
                                 items-center
                                 justify-center
                                 rounded-full
-                                bg-[#e0e5ec]
+                                bg-[#e0e5ec] dark:bg-[#1e2229]
                                 text-red-600
-                                shadow-[3px_3px_6px_rgba(163,177,198,0.45),-3px_-3px_6px_rgba(255,255,255,0.75)]
+                                shadow-[3px_3px_6px_rgba(163,177,198,0.45),-3px_-3px_6px_rgba(255,255,255,0.75)] dark:shadow-[3px_3px_6px_rgba(5,7,10,0.70),-3px_-3px_6px_rgba(43,48,58,0.70)]
                             "
                         >
                             <svg
@@ -1524,7 +1524,7 @@ export default function CoursesPage() {
                                     font-bold
                                     uppercase
                                     tracking-[0.12em]
-                                    text-[#3f3e3e]
+                                    text-[#3f3e3e] dark:text-[#f5f7fa]
                                     opacity-70
                                 "
                             >
@@ -1536,7 +1536,7 @@ export default function CoursesPage() {
                                     truncate
                                     text-sm
                                     font-bold
-                                    text-black
+                                    text-black dark:text-[#f5f7fa]
                                 "
                                 title={
                                     course.channelName ||
@@ -1572,7 +1572,7 @@ export default function CoursesPage() {
                                 items-center
                                 gap-2
                                 text-xs
-                                text-[#3f3e3e]
+                                text-[#3f3e3e] dark:text-[#f5f7fa]
                             "
                         >
                             <BookOpen
@@ -1594,7 +1594,7 @@ export default function CoursesPage() {
                                 items-center
                                 gap-2
                                 text-xs
-                                text-[#3f3e3e]
+                                text-[#3f3e3e] dark:text-[#f5f7fa]
                             "
                         >
                             <Clock3
@@ -1638,9 +1638,9 @@ export default function CoursesPage() {
                                         items-center
                                         justify-center
                                         rounded-full
-                                        bg-[#e0e5ec]
+                                        bg-[#e0e5ec] dark:bg-[#1e2229]
                                         text-[orangered]
-                                        shadow-[3px_3px_6px_rgba(163,177,198,0.5),-3px_-3px_6px_rgba(255,255,255,0.8)]
+                                        shadow-[3px_3px_6px_rgba(163,177,198,0.5),-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[3px_3px_6px_rgba(5,7,10,0.75),-3px_-3px_6px_rgba(43,48,58,0.75)]
                                     "
                                 >
                                     <ThumbsUp
@@ -1654,7 +1654,7 @@ export default function CoursesPage() {
                                         className="
                                             text-xs
                                             font-extrabold
-                                            text-black
+                                            text-black dark:text-[#f5f7fa]
                                         "
                                     >
                                         {formatNumber(
@@ -1665,7 +1665,7 @@ export default function CoursesPage() {
                                     <p
                                         className="
                                             text-[10px]
-                                            text-[#3f3e3e]
+                                            text-[#3f3e3e] dark:text-[#f5f7fa]
                                         "
                                     >
                                         likes
@@ -1687,9 +1687,9 @@ export default function CoursesPage() {
                                         items-center
                                         justify-center
                                         rounded-full
-                                        bg-[#e0e5ec]
-                                        text-[#3f3e3e]
-                                        shadow-[3px_3px_6px_rgba(163,177,198,0.5),-3px_-3px_6px_rgba(255,255,255,0.8)]
+                                        bg-[#e0e5ec] dark:bg-[#1e2229]
+                                        text-[#3f3e3e] dark:text-[#f5f7fa]
+                                        shadow-[3px_3px_6px_rgba(163,177,198,0.5),-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[3px_3px_6px_rgba(5,7,10,0.75),-3px_-3px_6px_rgba(43,48,58,0.75)]
                                     "
                                 >
                                     <span className="text-xs font-bold">
@@ -1703,7 +1703,7 @@ export default function CoursesPage() {
                                         className="
                                             text-xs
                                             font-extrabold
-                                            text-black
+                                            text-black dark:text-[#f5f7fa]
                                         "
                                     >
                                         {formatNumber(
@@ -1714,7 +1714,7 @@ export default function CoursesPage() {
                                     <p
                                         className="
                                             text-[10px]
-                                            text-[#3f3e3e]
+                                            text-[#3f3e3e] dark:text-[#f5f7fa]
                                         "
                                     >
                                         views
@@ -1746,7 +1746,7 @@ export default function CoursesPage() {
                             text-sm
                             font-bold
                             text-white
-                            shadow-[5px_5px_12px_rgba(255,69,0,0.28),-5px_-5px_12px_rgba(255,255,255,0.8)]
+                            shadow-[5px_5px_12px_rgba(255,69,0,0.28),-5px_-5px_12px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_12px_rgba(255,69,0,0.28),-5px_-5px_12px_rgba(43,48,58,0.75)]
                             transition-all
                             duration-200
                             hover:-translate-y-[1px]
@@ -1776,7 +1776,7 @@ export default function CoursesPage() {
     ========================================================= */
 
     return (
-        <main className="min-h-screen bg-[#e0e5ec] text-black">
+        <main className="min-h-screen bg-[#e0e5ec] dark:bg-[#1e2229] text-black dark:text-[#f5f7fa]">
 
             <Navbar />
 
@@ -1815,7 +1815,7 @@ export default function CoursesPage() {
                             text-3xl
                             font-extrabold
                             tracking-tight
-                            text-black
+                            text-black dark:text-[#f5f7fa]
                             sm:text-4xl
                         "
                     >
@@ -1828,7 +1828,7 @@ export default function CoursesPage() {
                             max-w-2xl
                             text-sm
                             leading-6
-                            text-[#3f3e3e]
+                            text-[#3f3e3e] dark:text-[#f5f7fa]
                             sm:text-base
                         "
                     >
@@ -1863,11 +1863,11 @@ export default function CoursesPage() {
                             flex-1
                             items-center
                             rounded-full
-                            bg-[#e0e5ec]
+                            bg-[#e0e5ec] dark:bg-[#1e2229]
                             px-4
-                            shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)]
+                            shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] dark:shadow-[inset_6px_6px_10px_rgba(5,7,10,0.75),inset_-6px_-6px_10px_rgba(43,48,58,0.75)]
                             transition-all
-                            focus-within:shadow-[inset_7px_7px_12px_rgba(163,177,198,0.75),inset_-7px_-7px_12px_rgba(255,255,255,0.95)]
+                            focus-within:shadow-[inset_7px_7px_12px_rgba(163,177,198,0.75),inset_-7px_-7px_12px_rgba(255,255,255,0.95)] dark:focus-within:shadow-[inset_7px_7px_12px_rgba(5,7,10,0.75),inset_-7px_-7px_12px_rgba(43,48,58,0.75)]
                         "
                     >
 
@@ -1875,7 +1875,7 @@ export default function CoursesPage() {
                             size={18}
                             className="
                                 shrink-0
-                                text-[#3f3e3e]
+                                text-[#3f3e3e] dark:text-[#f5f7fa]
                             "
                         />
 
@@ -1896,9 +1896,9 @@ export default function CoursesPage() {
                                 bg-transparent
                                 text-sm
                                 font-medium
-                                text-black
+                                text-black dark:text-[#f5f7fa]
                                 outline-none
-                                placeholder:text-[#3f3e3e]
+                                placeholder:text-[#3f3e3e] dark:text-[#f5f7fa]
                             "
                         />
 
@@ -1916,7 +1916,7 @@ export default function CoursesPage() {
                                     items-center
                                     justify-center
                                     rounded-full
-                                    text-[#3f3e3e]
+                                    text-[#3f3e3e] dark:text-[#f5f7fa]
                                     transition
                                     hover:text-[orangered]
                                 "
@@ -1944,7 +1944,7 @@ export default function CoursesPage() {
                             text-sm
                             font-bold
                             text-white
-                            shadow-[5px_5px_12px_rgba(255,69,0,0.3),-5px_-5px_12px_rgba(255,255,255,0.8)]
+                            shadow-[5px_5px_12px_rgba(255,69,0,0.3),-5px_-5px_12px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_12px_rgba(255,69,0,0.3),-5px_-5px_12px_rgba(43,48,58,0.75)]
                             transition-all
                             duration-200
                             hover:-translate-y-[1px]
@@ -1979,7 +1979,7 @@ export default function CoursesPage() {
                         className="
                             text-sm
                             font-bold
-                            text-[#3f3e3e]
+                            text-[#3f3e3e] dark:text-[#f5f7fa]
                         "
                     >
                         Preferred language:
@@ -2010,8 +2010,8 @@ export default function CoursesPage() {
                                         ${
                                             language ===
                                             item.value
-                                                ? "bg-[orangered] text-white shadow-[4px_4px_9px_rgba(255,69,0,0.25),-4px_-4px_9px_rgba(255,255,255,0.8)]"
-                                                : "bg-[#e0e5ec] text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
+                                                ? "bg-[orangered] text-white shadow-[4px_4px_9px_rgba(255,69,0,0.25),-4px_-4px_9px_rgba(255,255,255,0.8)] dark:shadow-[4px_4px_9px_rgba(255,69,0,0.25),-4px_-4px_9px_rgba(43,48,58,0.75)]"
+                                                : "bg-[#e0e5ec] dark:bg-[#1e2229] text-[#3f3e3e] dark:text-[#f5f7fa] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.75),-5px_-5px_10px_rgba(43,48,58,0.75)] hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.75),inset_-3px_-3px_6px_rgba(43,48,58,0.75)]"
                                         }
                                     `}
                                 >
@@ -2047,13 +2047,13 @@ export default function CoursesPage() {
                             <span
                                 className="
                                     rounded-full
-                                    bg-[#e0e5ec]
+                                    bg-[#e0e5ec] dark:bg-[#1e2229]
                                     px-4
                                     py-2
                                     text-xs
                                     font-semibold
-                                    text-[#3f3e3e]
-                                    shadow-[inset_3px_3px_6px_rgba(163,177,198,0.55),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
+                                    text-[#3f3e3e] dark:text-[#f5f7fa]
+                                    shadow-[inset_3px_3px_6px_rgba(163,177,198,0.55),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.75),inset_-3px_-3px_6px_rgba(43,48,58,0.75)]
                                 "
                             >
                                 Search: "
@@ -2069,13 +2069,13 @@ export default function CoursesPage() {
                             <span
                                 className="
                                     rounded-full
-                                    bg-[#e0e5ec]
+                                    bg-[#e0e5ec] dark:bg-[#1e2229]
                                     px-4
                                     py-2
                                     text-xs
                                     font-bold
                                     text-[orangered]
-                                    shadow-[inset_3px_3px_6px_rgba(163,177,198,0.55),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
+                                    shadow-[inset_3px_3px_6px_rgba(163,177,198,0.55),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.75),inset_-3px_-3px_6px_rgba(43,48,58,0.75)]
                                 "
                             >
                                 {
@@ -2096,13 +2096,13 @@ export default function CoursesPage() {
                         className="
                             mt-5
                             rounded-[18px]
-                            bg-[#e0e5ec]
+                            bg-[#e0e5ec] dark:bg-[#1e2229]
                             px-4
                             py-3
                             text-sm
                             font-medium
                             text-red-600
-                            shadow-[inset_4px_4px_8px_rgba(163,177,198,0.55),inset_-4px_-4px_8px_rgba(255,255,255,0.8)]
+                            shadow-[inset_4px_4px_8px_rgba(163,177,198,0.55),inset_-4px_-4px_8px_rgba(255,255,255,0.8)] dark:shadow-[inset_4px_4px_8px_rgba(5,7,10,0.75),inset_-4px_-4px_8px_rgba(43,48,58,0.75)]
                         "
                     >
                         {error}
@@ -2127,13 +2127,13 @@ export default function CoursesPage() {
                         items-center
                         gap-2
                         rounded-full
-                        bg-[#e0e5ec]
+                        bg-[#e0e5ec] dark:bg-[#1e2229]
                         px-5
                         py-2.5
                         text-sm
                         font-bold
-                        text-[#3f3e3e]
-                        shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]
+                        text-[#3f3e3e] dark:text-[#f5f7fa]
+                        shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.75),-5px_-5px_10px_rgba(43,48,58,0.75)]
                         transition-all
                         hover:text-[orangered]
                         lg:hidden
@@ -2200,9 +2200,9 @@ export default function CoursesPage() {
                                 sticky
                                 top-24
                                 rounded-[24px]
-                                bg-[#e0e5ec]
+                                bg-[#e0e5ec] dark:bg-[#1e2229]
                                 p-5
-                                shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]
+                                shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]
                             "
                         >
 
@@ -2212,7 +2212,7 @@ export default function CoursesPage() {
                                     className="
                                         text-base
                                         font-extrabold
-                                        text-black
+                                        text-black dark:text-[#f5f7fa]
                                     "
                                 >
                                     Filters
@@ -2232,7 +2232,7 @@ export default function CoursesPage() {
                                         items-center
                                         justify-center
                                         rounded-full
-                                        text-[#3f3e3e]
+                                        text-[#3f3e3e] dark:text-[#f5f7fa]
                                         lg:hidden
                                     "
                                 >
@@ -2251,7 +2251,7 @@ export default function CoursesPage() {
                                         font-extrabold
                                         uppercase
                                         tracking-[1.2px]
-                                        text-[#3f3e3e]
+                                        text-[#3f3e3e] dark:text-[#f5f7fa]
                                     "
                                 >
                                     Category
@@ -2292,8 +2292,8 @@ export default function CoursesPage() {
                                                         duration-200
                                                         ${
                                                             active
-                                                                ? "bg-[#e0e5ec] font-bold text-[orangered] shadow-[inset_4px_4px_7px_rgba(163,177,198,0.6),inset_-4px_-4px_7px_rgba(255,255,255,0.85)]"
-                                                                : "text-[#3f3e3e] hover:text-[orangered] hover:shadow-[5px_5px_10px_rgba(163,177,198,0.45),-5px_-5px_10px_rgba(255,255,255,0.75)]"
+                                                                ? "bg-[#e0e5ec] dark:bg-[#1e2229] font-bold text-[orangered] shadow-[inset_4px_4px_7px_rgba(163,177,198,0.6),inset_-4px_-4px_7px_rgba(255,255,255,0.85)] dark:shadow-[inset_4px_4px_7px_rgba(5,7,10,0.75),inset_-4px_-4px_7px_rgba(43,48,58,0.75)]"
+                                                                : "text-[#3f3e3e] dark:text-[#f5f7fa] hover:text-[orangered] hover:shadow-[5px_5px_10px_rgba(163,177,198,0.45),-5px_-5px_10px_rgba(255,255,255,0.75)] dark:hover:shadow-[5px_5px_10px_rgba(5,7,10,0.70),-5px_-5px_10px_rgba(43,48,58,0.70)]"
                                                         }
                                                     `}
                                                 >
@@ -2310,7 +2310,7 @@ export default function CoursesPage() {
                                                                 ${
                                                                     active
                                                                         ? "text-[orangered]"
-                                                                        : "text-[#3f3e3e]"
+                                                                        : "text-[#3f3e3e] dark:text-[#f5f7fa]"
                                                                 }
                                                             `}
                                                         >
@@ -2352,13 +2352,13 @@ export default function CoursesPage() {
                                         mt-6
                                         w-full
                                         rounded-full
-                                        bg-[#e0e5ec]
+                                        bg-[#e0e5ec] dark:bg-[#1e2229]
                                         px-4
                                         py-2.5
                                         text-sm
                                         font-semibold
-                                        text-[#3f3e3e]
-                                        shadow-[inset_3px_3px_6px_rgba(163,177,198,0.55),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
+                                        text-[#3f3e3e] dark:text-[#f5f7fa]
+                                        shadow-[inset_3px_3px_6px_rgba(163,177,198,0.55),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.75),inset_-3px_-3px_6px_rgba(43,48,58,0.75)]
                                         transition-all
                                         hover:text-[orangered]
                                     "
@@ -2391,13 +2391,13 @@ export default function CoursesPage() {
                             <p
                                 className="
                                     text-sm
-                                    text-[#3f3e3e]
+                                    text-[#3f3e3e] dark:text-[#f5f7fa]
                                 "
                             >
                                 <span
                                     className="
                                         font-extrabold
-                                        text-black
+                                        text-black dark:text-[#f5f7fa]
                                     "
                                 >
                                     {
@@ -2424,15 +2424,15 @@ export default function CoursesPage() {
                                     className="
                                         appearance-none
                                         rounded-full
-                                        bg-[#e0e5ec]
+                                        bg-[#e0e5ec] dark:bg-[#1e2229]
                                         px-4
                                         py-2.5
                                         pr-9
                                         text-sm
                                         font-semibold
-                                        text-[#3f3e3e]
+                                        text-[#3f3e3e] dark:text-[#f5f7fa]
                                         outline-none
-                                        shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]
+                                        shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.75),-5px_-5px_10px_rgba(43,48,58,0.75)]
                                     "
                                 >
 
@@ -2461,7 +2461,7 @@ export default function CoursesPage() {
                                         right-3
                                         top-1/2
                                         -translate-y-1/2
-                                        text-[#3f3e3e]
+                                        text-[#3f3e3e] dark:text-[#f5f7fa]
                                     "
                                 >
                                     <svg
@@ -2534,11 +2534,11 @@ export default function CoursesPage() {
                                     className="
                                         mt-6
                                         rounded-[28px]
-                                        bg-[#e0e5ec]
+                                        bg-[#e0e5ec] dark:bg-[#1e2229]
                                         px-6
                                         py-20
                                         text-center
-                                        shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]
+                                        shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]
                                     "
                                 >
 
@@ -2551,9 +2551,9 @@ export default function CoursesPage() {
                                             items-center
                                             justify-center
                                             rounded-[18px]
-                                            bg-[#e0e5ec]
-                                            text-[#3f3e3e]
-                                            shadow-[inset_5px_5px_9px_rgba(163,177,198,0.65),inset_-5px_-5px_9px_rgba(255,255,255,0.85)]
+                                            bg-[#e0e5ec] dark:bg-[#1e2229]
+                                            text-[#3f3e3e] dark:text-[#f5f7fa]
+                                            shadow-[inset_5px_5px_9px_rgba(163,177,198,0.65),inset_-5px_-5px_9px_rgba(255,255,255,0.85)] dark:shadow-[inset_5px_5px_9px_rgba(5,7,10,0.75),inset_-5px_-5px_9px_rgba(43,48,58,0.75)]
                                         "
                                     >
                                         <Search
@@ -2565,7 +2565,7 @@ export default function CoursesPage() {
                                         className="
                                             mt-5
                                             font-extrabold
-                                            text-black
+                                            text-black dark:text-[#f5f7fa]
                                         "
                                     >
                                         No courses found
@@ -2578,7 +2578,7 @@ export default function CoursesPage() {
                                             max-w-md
                                             text-sm
                                             leading-6
-                                            text-[#3f3e3e]
+                                            text-[#3f3e3e] dark:text-[#f5f7fa]
                                         "
                                     >
                                         No{" "}
@@ -2605,7 +2605,7 @@ export default function CoursesPage() {
                                             text-sm
                                             font-bold
                                             text-white
-                                            shadow-[5px_5px_12px_rgba(255,69,0,0.28),-5px_-5px_12px_rgba(255,255,255,0.8)]
+                                            shadow-[5px_5px_12px_rgba(255,69,0,0.28),-5px_-5px_12px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_12px_rgba(255,69,0,0.28),-5px_-5px_12px_rgba(43,48,58,0.75)]
                                             transition-all
                                             duration-200
                                             hover:-translate-y-[1px]

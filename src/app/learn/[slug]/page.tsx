@@ -113,23 +113,23 @@ export default async function LearningPage({
 
   if (!course) {
     return (
-      <main className="flex min-h-screen w-full items-center justify-center overflow-x-hidden bg-[#e0e5ec] px-6 text-black">
+      <main className="flex min-h-screen w-full items-center justify-center overflow-x-hidden bg-[#e0e5ec] dark:bg-[#1a1d23] px-6 text-black dark:text-[#f5f7fa]">
         <div className="text-center">
-          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#e0e5ec] text-[orangered] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]">
+          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#e0e5ec] dark:bg-[#1e2229] text-[orangered] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
             <BookOpen size={32} />
           </div>
 
-          <h1 className="mt-7 text-3xl font-bold text-black">
+          <h1 className="mt-7 text-3xl font-bold text-black dark:text-[#f5f7fa]">
             Course not found
           </h1>
 
-          <p className="mt-3 text-sm text-[#3f3e3e]">
+          <p className="mt-3 text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
             The course you're looking for doesn't exist.
           </p>
 
           <Link
             href="/courses"
-            className="mt-6 inline-flex items-center gap-2 rounded-[20px] bg-[orangered] px-5 py-3 text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(170,35,0,0.45),inset_-3px_-3px_6px_rgba(255,180,160,0.45)]"
+            className="mt-6 inline-flex items-center gap-2 rounded-[20px] bg-[orangered] px-5 py-3 text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(170,35,0,0.45),inset_-3px_-3px_6px_rgba(255,180,160,0.45)] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]"
           >
             <ArrowLeft size={16} />
             Back to courses
@@ -155,12 +155,12 @@ export default async function LearningPage({
 
   if (courseLessons.length === 0) {
     return (
-      <main className="min-h-screen w-full overflow-x-hidden bg-[#e0e5ec] text-black">
-        <header className="sticky top-0 z-50 w-full bg-[#e0e5ec] px-5 py-4">
+      <main className="min-h-screen w-full overflow-x-hidden bg-[#e0e5ec] dark:bg-[#1a1d23] text-black dark:text-[#f5f7fa]">
+        <header className="sticky top-0 z-50 w-full bg-[#e0e5ec] dark:bg-[#1e2229] px-5 py-4">
           <div className="mx-auto max-w-7xl">
             <Link
               href={`/courses/${course.slug}`}
-              className="inline-flex items-center gap-2 rounded-[20px] bg-[#e0e5ec] px-4 py-2.5 text-sm font-medium text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
+              className="inline-flex items-center gap-2 rounded-[20px] bg-[#e0e5ec] dark:bg-[#1e2229] px-4 py-2.5 text-sm font-medium text-[#3f3e3e] dark:text-[#a8adb7] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] transition-all duration-200 hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]"
             >
               <ArrowLeft size={16} />
               Back to course
@@ -169,16 +169,16 @@ export default async function LearningPage({
         </header>
 
         <div className="flex min-h-[70vh] items-center justify-center px-6">
-          <div className="rounded-[30px] bg-[#e0e5ec] p-10 text-center shadow-[14px_14px_28px_rgba(163,177,198,0.6),-14px_-14px_28px_rgba(255,255,255,0.8)]">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#e0e5ec] text-[orangered] shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)]">
+          <div className="rounded-[30px] bg-[#e0e5ec] dark:bg-[#1e2229] p-10 text-center shadow-[14px_14px_28px_rgba(163,177,198,0.6),-14px_-14px_28px_rgba(255,255,255,0.8)] dark:shadow-[14px_14px_28px_rgba(5,7,10,0.8),-14px_-14px_28px_rgba(43,48,58,0.8)]">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#e0e5ec] dark:bg-[#1e2229] text-[orangered] shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] dark:shadow-[inset_6px_6px_10px_rgba(5,7,10,0.75),inset_-6px_-6px_10px_rgba(43,48,58,0.75)]">
               <BookOpen size={32} />
             </div>
 
-            <h1 className="mt-5 text-2xl font-bold text-black">
+            <h1 className="mt-5 text-2xl font-bold text-black dark:text-[#f5f7fa]">
               No lessons available
             </h1>
 
-            <p className="mt-2 text-sm text-[#3f3e3e]">
+            <p className="mt-2 text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
               This course doesn't have any lessons yet.
             </p>
           </div>
@@ -339,19 +339,19 @@ export default async function LearningPage({
     0;
 
   return (
-    <main className="min-h-screen w-full min-w-0 overflow-x-hidden bg-[#e0e5ec] text-black">
+    <main className="min-h-screen w-full min-w-0 overflow-x-hidden bg-[#e0e5ec] dark:bg-[#1a1d23] text-black dark:text-[#f5f7fa]">
       {/* =====================================================
           TOP BAR
       ===================================================== */}
 
-      <header className="sticky top-0 z-50 w-full min-w-0 bg-[#e0e5ec] px-3 py-3 sm:px-5">
-        <div className="flex h-14 min-w-0 items-center justify-between rounded-[20px] bg-[#e0e5ec] px-3 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] sm:px-5">
+      <header className="sticky top-0 z-50 w-full min-w-0 bg-[#e0e5ec] dark:bg-[#1e2229] px-3 py-3 sm:px-5">
+        <div className="flex h-14 min-w-0 items-center justify-between rounded-[20px] bg-[#e0e5ec] dark:bg-[#1e2229] px-3 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] sm:px-5">
           {/* LEFT */}
 
           <div className="flex min-w-0 items-center gap-3 sm:gap-5">
             <Link
               href={`/courses/${course.slug}`}
-              className="flex shrink-0 items-center gap-2 rounded-[12px] bg-[#e0e5ec] px-2.5 py-2 text-sm text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] sm:px-3"
+              className="flex shrink-0 items-center gap-2 rounded-[12px] bg-[#e0e5ec] dark:bg-[#1e2229] px-2.5 py-2 text-sm text-[#3f3e3e] dark:text-[#a8adb7] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] transition-all duration-200 hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)] sm:px-3"
             >
               <ArrowLeft size={17} />
 
@@ -360,19 +360,19 @@ export default async function LearningPage({
               </span>
             </Link>
 
-            <div className="hidden h-7 w-px shrink-0 bg-[#c7cdd5] sm:block" />
+            <div className="hidden h-7 w-px shrink-0 bg-[#c7cdd5] dark:bg-[#343a45] sm:block" />
 
             <div className="flex min-w-0 items-center gap-3">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[12px] bg-[#e0e5ec] text-xs font-bold text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[12px] bg-[#e0e5ec] dark:bg-[#1e2229] text-xs font-bold text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
                 C
               </div>
 
               <div className="min-w-0">
-                <p className="max-w-[180px] truncate text-sm font-semibold text-black sm:max-w-[280px]">
+                <p className="max-w-[180px] truncate text-sm font-semibold text-black dark:text-[#f5f7fa] sm:max-w-[280px]">
                   {course.title}
                 </p>
 
-                <p className="text-[11px] text-[#3f3e3e]/60">
+                <p className="text-[11px] text-[#3f3e3e] dark:text-[#a8adb7]/60">
                   Lesson {lessonNumber} of{" "}
                   {courseLessons.length}
                 </p>
@@ -383,11 +383,11 @@ export default async function LearningPage({
           {/* RIGHT - COURSE PROGRESS */}
 
           <div className="ml-3 flex shrink-0 items-center gap-2 sm:ml-4 sm:gap-3">
-            <span className="hidden text-xs text-[#3f3e3e]/60 sm:block">
+            <span className="hidden text-xs text-[#3f3e3e] dark:text-[#a8adb7]/60 sm:block">
               Course progress
             </span>
 
-            <div className="h-2 w-16 overflow-hidden rounded-full bg-[#e0e5ec] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] sm:w-24">
+            <div className="h-2 w-16 overflow-hidden rounded-full bg-[#e0e5ec] dark:bg-[#1e2229] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)] sm:w-24">
               <div
                 id="course-progress-bar"
                 className="h-full rounded-full bg-[orangered] transition-all duration-300"
@@ -416,8 +416,8 @@ export default async function LearningPage({
             VIDEO AREA
         =================================================== */}
 
-        <section className="min-w-0 max-w-full overflow-hidden rounded-[30px] bg-[#e0e5ec] p-2 shadow-[14px_14px_28px_rgba(163,177,198,0.6),-14px_-14px_28px_rgba(255,255,255,0.8)] sm:p-3">
-          <div className="w-full max-w-full overflow-hidden rounded-[24px] bg-[#e0e5ec] shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)]">
+        <section className="min-w-0 max-w-full overflow-hidden rounded-[30px] bg-[#e0e5ec] dark:bg-[#1e2229] p-2 shadow-[14px_14px_28px_rgba(163,177,198,0.6),-14px_-14px_28px_rgba(255,255,255,0.8)] dark:shadow-[14px_14px_28px_rgba(5,7,10,0.8),-14px_-14px_28px_rgba(43,48,58,0.8)] sm:p-3">
+          <div className="w-full max-w-full overflow-hidden rounded-[24px] bg-[#e0e5ec] dark:bg-[#1e2229] shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] dark:shadow-[inset_6px_6px_10px_rgba(5,7,10,0.75),inset_-6px_-6px_10px_rgba(43,48,58,0.75)]">
             {currentLesson.videoUrl ? (
               <LearningClient
                 lessonId={
@@ -440,9 +440,9 @@ export default async function LearningPage({
                 }
               />
             ) : (
-              <div className="flex aspect-video w-full items-center justify-center rounded-[24px] bg-[#e0e5ec]">
+              <div className="flex aspect-video w-full items-center justify-center rounded-[24px] bg-[#e0e5ec] dark:bg-[#1e2229]">
                 <div className="text-center">
-                  <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#e0e5ec] text-[orangered] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-200 hover:shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)]">
+                  <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#e0e5ec] dark:bg-[#1e2229] text-[orangered] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] transition-all duration-200 hover:shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] dark:hover:shadow-[inset_6px_6px_10px_rgba(5,7,10,0.75),inset_-6px_-6px_10px_rgba(43,48,58,0.75)]">
                     <Play
                       size={30}
                       fill="currentColor"
@@ -450,11 +450,11 @@ export default async function LearningPage({
                     />
                   </div>
 
-                  <p className="mt-5 text-sm font-medium text-black">
+                  <p className="mt-5 text-sm font-medium text-black dark:text-[#f5f7fa]">
                     Video coming soon
                   </p>
 
-                  <p className="mt-1 text-xs text-[#3f3e3e]/60">
+                  <p className="mt-1 text-xs text-[#3f3e3e] dark:text-[#a8adb7]/60">
                     Video content will appear here.
                   </p>
                 </div>
@@ -467,32 +467,32 @@ export default async function LearningPage({
             COURSE CONTENT SIDEBAR
         =================================================== */}
 
-        <aside className="min-w-0 max-w-full overflow-hidden rounded-[30px] bg-[#e0e5ec] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] lg:sticky lg:top-[76px] lg:h-[calc(100vh-92px)]">
+        <aside className="min-w-0 max-w-full overflow-hidden rounded-[30px] bg-[#e0e5ec] dark:bg-[#1e2229] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] lg:sticky lg:top-[76px] lg:h-[calc(100vh-92px)]">
           {/* SIDEBAR HEADER */}
 
           <div className="flex items-center justify-between px-5 py-4">
             <div className="min-w-0">
-              <p className="text-sm font-bold text-black">
+              <p className="text-sm font-bold text-black dark:text-[#f5f7fa]">
                 Course content
               </p>
 
-              <p className="mt-1 truncate text-xs text-[#3f3e3e]/60">
+              <p className="mt-1 truncate text-xs text-[#3f3e3e] dark:text-[#a8adb7]/60">
                 {courseLessons.length}{" "}
                 lessons •{" "}
                 {course.duration}
               </p>
             </div>
 
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#e0e5ec] dark:bg-[#1e2229] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
               <ChevronDown size={17} />
             </div>
           </div>
 
           {/* SIDEBAR PROGRESS */}
 
-          <div className="mx-4 rounded-[20px] bg-[#e0e5ec] px-4 py-3 shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+          <div className="mx-4 rounded-[20px] bg-[#e0e5ec] dark:bg-[#1e2229] px-4 py-3 shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-[#3f3e3e]/60">
+              <span className="text-[#3f3e3e] dark:text-[#a8adb7]/60">
                 Your progress
               </span>
 
@@ -504,7 +504,7 @@ export default async function LearningPage({
               </span>
             </div>
 
-            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-[#e0e5ec] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-[#e0e5ec] dark:bg-[#1e2229] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
               <div
                 id="sidebar-course-progress-bar"
                 className="h-full rounded-full bg-[orangered] transition-all duration-300"
@@ -542,8 +542,8 @@ export default async function LearningPage({
                     href={`/learn/${course.slug}?lesson=${lessonItem.id}`}
                     className={`mt-2 flex w-full min-w-0 items-center gap-3 rounded-[20px] px-4 py-3 text-left transition-all duration-200 ${
                       current
-                        ? "bg-[#e0e5ec] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
-                        : "hover:bg-[#e0e5ec] hover:shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]"
+                        ? "bg-[#e0e5ec] dark:bg-[#1e2229] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]"
+                        : "hover:bg-[#e0e5ec] dark:hover:bg-[#252a32] hover:shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:hover:shadow-[5px_5px_10px_rgba(5,7,10,0.55),-5px_-5px_10px_rgba(43,48,58,0.55)]"
                     }`}
                   >
                     {/* NUMBER */}
@@ -551,10 +551,10 @@ export default async function LearningPage({
                     <div
                       className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
                         completed
-                          ? "bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
+                          ? "bg-[#e0e5ec] dark:bg-[#1e2229] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]"
                           : current
-                            ? "bg-[orangered] text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]"
-                            : "bg-[#e0e5ec] text-[#3f3e3e]/50 shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
+                            ? "bg-[orangered] text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]"
+                            : "bg-[#e0e5ec] dark:bg-[#1e2229] text-[#3f3e3e] dark:text-[#a8adb7]/50 shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]"
                       }`}
                     >
                       {completed ? (
@@ -574,8 +574,8 @@ export default async function LearningPage({
                           current
                             ? "font-semibold text-[orangered]"
                             : completed
-                              ? "text-[#3f3e3e]/50"
-                              : "text-[#3f3e3e]"
+                              ? "text-[#3f3e3e] dark:text-[#a8adb7]/50"
+                              : "text-[#3f3e3e] dark:text-[#a8adb7]"
                         }`}
                       >
                         {
@@ -583,7 +583,7 @@ export default async function LearningPage({
                         }
                       </p>
 
-                      <p className="mt-1 flex items-center gap-1 text-[10px] text-[#3f3e3e]/50">
+                      <p className="mt-1 flex items-center gap-1 text-[10px] text-[#3f3e3e] dark:text-[#a8adb7]/50">
                         <Clock3
                           size={11}
                         />
@@ -614,7 +614,7 @@ export default async function LearningPage({
           FULL WIDTH LESSON CONTENT
       ===================================================== */}
 
-      <section className="w-full min-w-0 max-w-full overflow-hidden border-t border-[#d2d7df] bg-[#e0e5ec]">
+      <section className="w-full min-w-0 max-w-full overflow-hidden border-t border-[#d2d7df] dark:border-[#303640] bg-[#e0e5ec] dark:bg-[#1a1d23]">
         <div className="mx-auto w-full max-w-7xl min-w-0 px-5 py-8 sm:px-8 lg:px-10">
           {/* =================================================
               LESSON INFORMATION
@@ -628,7 +628,7 @@ export default async function LearningPage({
               ).padStart(2, "0")}
             </p>
 
-            <h1 className="mt-2 max-w-full break-words text-2xl font-bold tracking-tight text-black sm:text-3xl lg:text-4xl">
+            <h1 className="mt-2 max-w-full break-words text-2xl font-bold tracking-tight text-black dark:text-[#f5f7fa] sm:text-3xl lg:text-4xl">
               {currentLesson.title}
             </h1>
 
@@ -644,7 +644,7 @@ export default async function LearningPage({
               AI NOTES / QUIZ / AI TUTOR
           ================================================= */}
 
-          <div className="mt-8 w-full min-w-0 max-w-full overflow-hidden rounded-[30px] bg-[#e0e5ec] p-2 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] sm:p-3">
+          <div className="mt-8 w-full min-w-0 max-w-full overflow-hidden rounded-[30px] bg-[#e0e5ec] dark:bg-[#1e2229] p-2 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] sm:p-3">
             <LessonContentTabs
               courseId={course.id}
               lessonId={currentLesson.id}
@@ -659,14 +659,14 @@ export default async function LearningPage({
           BOTTOM LESSON NAVIGATION
       ===================================================== */}
 
-      <div className="w-full min-w-0 border-t border-[#d2d7df] bg-[#e0e5ec] px-3 py-4 sm:px-5">
-        <div className="mx-auto flex w-full max-w-7xl min-w-0 items-center justify-between gap-4 rounded-[20px] bg-[#e0e5ec] px-4 py-3 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] sm:px-5">
+      <div className="w-full min-w-0 border-t border-[#d2d7df] dark:border-[#303640] bg-[#e0e5ec] dark:bg-[#1a1d23] px-3 py-4 sm:px-5">
+        <div className="mx-auto flex w-full max-w-7xl min-w-0 items-center justify-between gap-4 rounded-[20px] bg-[#e0e5ec] dark:bg-[#1e2229] px-4 py-3 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] sm:px-5">
           {/* PREVIOUS */}
 
           {previousLesson ? (
             <Link
               href={`/learn/${course.slug}?lesson=${previousLesson.id}`}
-              className="inline-flex shrink-0 items-center gap-2 rounded-[20px] bg-[#e0e5ec] px-3 py-2 text-xs font-semibold text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
+              className="inline-flex shrink-0 items-center gap-2 rounded-[20px] bg-[#e0e5ec] dark:bg-[#1e2229] px-3 py-2 text-xs font-semibold text-[#3f3e3e] dark:text-[#a8adb7] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] transition-all duration-200 hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]"
             >
               <ArrowLeft size={14} />
 
@@ -681,7 +681,7 @@ export default async function LearningPage({
           {nextLesson ? (
             <Link
               href={`/learn/${course.slug}?lesson=${nextLesson.id}`}
-              className="inline-flex shrink-0 items-center gap-2 rounded-[20px] bg-[orangered] px-4 py-2.5 text-xs font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(170,35,0,0.45),inset_-3px_-3px_6px_rgba(255,180,160,0.45)]"
+              className="inline-flex shrink-0 items-center gap-2 rounded-[20px] bg-[orangered] px-4 py-2.5 text-xs font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(170,35,0,0.45),inset_-3px_-3px_6px_rgba(255,180,160,0.45)] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]"
             >
               Next lesson
 
@@ -692,7 +692,7 @@ export default async function LearningPage({
           ) : (
             <Link
               href={`/courses/${course.slug}`}
-              className="inline-flex shrink-0 items-center gap-2 rounded-[20px] bg-[orangered] px-4 py-2.5 text-xs font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(170,35,0,0.45),inset_-3px_-3px_6px_rgba(255,180,160,0.45)]"
+              className="inline-flex shrink-0 items-center gap-2 rounded-[20px] bg-[orangered] px-4 py-2.5 text-xs font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(170,35,0,0.45),inset_-3px_-3px_6px_rgba(255,180,160,0.45)] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]"
             >
               Finish course
 

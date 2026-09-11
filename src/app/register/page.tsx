@@ -56,25 +56,25 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="min-h-screen w-full bg-[#e0e5ec] text-black">
+    <main className="min-h-screen w-full bg-[#e0e5ec] text-black dark:bg-[#1a1d23] dark:text-[#f5f7fa]">
       <div className="grid min-h-screen w-full lg:grid-cols-2">
 
         {/* =========================================================
                     LEFT SIDE
                 ========================================================= */}
-        <div className="relative hidden overflow-hidden bg-[#e0e5ec] p-10 lg:flex lg:flex-col lg:justify-between">
+        <div className="relative hidden overflow-hidden bg-[#e0e5ec] p-10 dark:bg-[#1a1d23] lg:flex lg:flex-col lg:justify-between">
 
           {/* Soft neumorphic decorative shapes */}
-          <div className="pointer-events-none absolute -left-32 top-1/4 h-96 w-96 rounded-full bg-[#e0e5ec] shadow-[inset_12px_12px_24px_rgba(163,177,198,0.35),inset_-12px_-12px_24px_rgba(255,255,255,0.65)]" />
+          <div className="pointer-events-none absolute -left-32 top-1/4 h-96 w-96 rounded-full bg-[#e0e5ec] shadow-[inset_12px_12px_24px_rgba(163,177,198,0.35),inset_-12px_-12px_24px_rgba(255,255,255,0.65)] dark:bg-[#1e2229] dark:shadow-[inset_12px_12px_24px_rgba(5,7,10,0.7),inset_-12px_-12px_24px_rgba(43,48,58,0.7)]" />
 
-          <div className="pointer-events-none absolute -right-32 bottom-10 h-96 w-96 rounded-full bg-[#e0e5ec] shadow-[14px_14px_28px_rgba(163,177,198,0.35),-14px_-14px_28px_rgba(255,255,255,0.75)]" />
+          <div className="pointer-events-none absolute -right-32 bottom-10 h-96 w-96 rounded-full bg-[#e0e5ec] shadow-[14px_14px_28px_rgba(163,177,198,0.35),-14px_-14px_28px_rgba(255,255,255,0.75)] dark:bg-[#1e2229] dark:shadow-[14px_14px_28px_rgba(5,7,10,0.75),-14px_-14px_28px_rgba(43,48,58,0.75)]" />
 
           <div className="relative z-10 flex h-full flex-col gap-15">
 
             {/* Logo */}
             <Link
               href="/"
-              className="flex w-fit items-center gap-3 rounded-[20px] bg-[#e0e5ec] px-4 py-3 shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-300 hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
+              className="flex w-fit items-center gap-3 rounded-[20px] bg-[#e0e5ec] px-4 py-3 shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-300 hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.65),inset_-3px_-3px_6px_rgba(43,48,58,0.65)]"
             >
               <img
                 src="/logo2.png"
@@ -84,7 +84,7 @@ export default function RegisterPage() {
 
               <div>
                 <div className="translate-y-1">
-                  <span className="text-[16px] font-bold leading-none tracking-tight text-black">
+                  <span className="text-[16px] font-bold leading-none tracking-tight text-black dark:text-[#f5f7fa]">
                     Course
                   </span>
 
@@ -103,7 +103,7 @@ export default function RegisterPage() {
             {/* Main content */}
             <div className="max-w-lg">
 
-              <div className="mb-6 inline-flex items-center gap-2 rounded-[50px] bg-[#e0e5ec] px-4 py-2 text-xs font-medium text-[#3f3e3e] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+              <div className="mb-6 inline-flex items-center gap-2 rounded-[50px] bg-[#e0e5ec] px-4 py-2 text-xs font-medium text-[#3f3e3e] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:text-[#a8adb7] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.65),inset_-3px_-3px_6px_rgba(43,48,58,0.65)]">
                 <Sparkles
                   size={14}
                   className="text-[orangered]"
@@ -111,7 +111,7 @@ export default function RegisterPage() {
                 Start your journey
               </div>
 
-              <h1 className="text-5xl font-bold leading-[1.08] tracking-[-0.035em] text-black xl:text-6xl">
+              <h1 className="text-5xl font-bold leading-[1.08] tracking-[-0.035em] text-black dark:text-[#f5f7fa] xl:text-6xl">
                 Your next skill
                 <br />
                 starts
@@ -121,7 +121,7 @@ export default function RegisterPage() {
                 </span>
               </h1>
 
-              <p className="mt-7 max-w-md text-[15px] leading-7 text-[#3f3e3e]">
+              <p className="mt-7 max-w-md text-[15px] leading-7 text-[#3f3e3e] dark:text-[#a8adb7]">
                 Build your learning path, discover quality
                 courses, and improve your skills one lesson
                 at a time.
@@ -131,15 +131,15 @@ export default function RegisterPage() {
               {/* Feature pills */}
               <div className="mt-8 flex flex-wrap gap-3">
 
-                <span className="rounded-[50px] bg-[#e0e5ec] px-4 py-2 text-xs text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]">
+                <span className="rounded-[50px] bg-[#e0e5ec] px-4 py-2 text-xs text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:text-[#a8adb7] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]">
                   Personalized learning
                 </span>
 
-                <span className="rounded-[50px] bg-[#e0e5ec] px-4 py-2 text-xs text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]">
+                <span className="rounded-[50px] bg-[#e0e5ec] px-4 py-2 text-xs text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:text-[#a8adb7] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]">
                   AI-powered
                 </span>
 
-                <span className="rounded-[50px] bg-[#e0e5ec] px-4 py-2 text-xs text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]">
+                <span className="rounded-[50px] bg-[#e0e5ec] px-4 py-2 text-xs text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:text-[#a8adb7] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]">
                   Learn at your pace
                 </span>
 
@@ -149,7 +149,7 @@ export default function RegisterPage() {
 
 
             {/* Footer */}
-            <p className="text-sm text-[#3f3e3e]">
+            <p className="text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
               © 2026 CourseGuide AI
             </p>
 
@@ -160,14 +160,14 @@ export default function RegisterPage() {
         {/* =========================================================
                     RIGHT SIDE
                 ========================================================= */}
-        <div className="flex min-h-screen items-center justify-center bg-[#e0e5ec] px-6 py-12 sm:px-10">
+        <div className="flex min-h-screen items-center justify-center bg-[#e0e5ec] px-6 py-12 dark:bg-[#1a1d23] sm:px-10">
 
           <div className="w-full max-w-md">
 
             {/* Back */}
             <Link
               href="/"
-              className="mb-10 inline-flex items-center gap-2 rounded-[12px] bg-[#e0e5ec] px-3 py-2 text-sm font-medium text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
+              className="mb-10 inline-flex items-center gap-2 rounded-[12px] bg-[#e0e5ec] px-3 py-2 text-sm font-medium text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:text-[#a8adb7] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.65),inset_-3px_-3px_6px_rgba(43,48,58,0.65)]"
             >
               <ArrowLeft size={16} />
               Back to home
@@ -179,14 +179,14 @@ export default function RegisterPage() {
 
               <Link
                 href="/"
-                className="flex w-fit items-center gap-3 rounded-[20px] bg-[#e0e5ec] px-4 py-3 shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]"
+                className="flex w-fit items-center gap-3 rounded-[20px] bg-[#e0e5ec] px-4 py-3 shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]"
               >
-                <div className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-[#e0e5ec] font-bold text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+                <div className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-[#e0e5ec] font-bold text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.65),inset_-3px_-3px_6px_rgba(43,48,58,0.65)]">
                   C
                 </div>
 
                 <div>
-                  <p className="font-bold text-black">
+                  <p className="font-bold text-black dark:text-[#f5f7fa]">
                     CourseGuide
                   </p>
 
@@ -202,11 +202,11 @@ export default function RegisterPage() {
             {/* Heading */}
             <div>
 
-              <h2 className="text-3xl font-bold tracking-tight text-black">
+              <h2 className="text-3xl font-bold tracking-tight text-black dark:text-[#f5f7fa]">
                 Create your account
               </h2>
 
-              <p className="mt-2 text-sm text-[#3f3e3e]">
+              <p className="mt-2 text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
                 Start your personalized learning journey.
               </p>
 
@@ -215,7 +215,7 @@ export default function RegisterPage() {
 
             {/* Error */}
             {error && (
-              <div className="mt-5 rounded-[12px] bg-[#e0e5ec] px-4 py-3 text-sm text-red-600 shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+              <div className="mt-5 rounded-[12px] bg-[#e0e5ec] px-4 py-3 text-sm text-red-600 shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:text-red-400 dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.65),inset_-3px_-3px_6px_rgba(43,48,58,0.65)]">
                 {error}
               </div>
             )}
@@ -223,7 +223,7 @@ export default function RegisterPage() {
 
             {/* Success */}
             {success && (
-              <div className="mt-5 rounded-[12px] bg-[#e0e5ec] px-4 py-3 text-sm text-emerald-600 shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+              <div className="mt-5 rounded-[12px] bg-[#e0e5ec] px-4 py-3 text-sm text-emerald-600 shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:text-emerald-400 dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.65),inset_-3px_-3px_6px_rgba(43,48,58,0.65)]">
                 {success}
               </div>
             )}
@@ -232,7 +232,7 @@ export default function RegisterPage() {
             {/* Form */}
             <form
               onSubmit={handleRegister}
-              className="mt-8 space-y-5 rounded-[30px] bg-[#e0e5ec] p-6 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] sm:p-7"
+              className="mt-8 space-y-5 rounded-[30px] bg-[#e0e5ec] p-6 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] sm:p-7"
             >
 
               {/* Name */}
@@ -240,7 +240,7 @@ export default function RegisterPage() {
 
                 <label
                   htmlFor="name"
-                  className="mb-2 block text-sm font-medium text-black"
+                  className="mb-2 block text-sm font-medium text-black dark:text-[#f5f7fa]"
                 >
                   Full name
                 </label>
@@ -254,7 +254,7 @@ export default function RegisterPage() {
                   }
                   placeholder="Your name"
                   required
-                  className="h-12 w-full rounded-[12px] bg-[#e0e5ec] px-4 text-sm text-black outline-none shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] transition-all duration-200 placeholder:text-[#777] focus:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
+                  className="h-12 w-full rounded-[12px] bg-[#e0e5ec] px-4 text-sm text-black outline-none shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] transition-all duration-200 placeholder:text-[#777] focus:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:text-[#f5f7fa] dark:placeholder:text-[#777] dark:shadow-[inset_6px_6px_10px_rgba(5,7,10,0.75),inset_-6px_-6px_10px_rgba(43,48,58,0.75)] dark:focus:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.65),inset_-3px_-3px_6px_rgba(43,48,58,0.65)]"
                 />
 
               </div>
@@ -265,7 +265,7 @@ export default function RegisterPage() {
 
                 <label
                   htmlFor="email"
-                  className="mb-2 block text-sm font-medium text-black"
+                  className="mb-2 block text-sm font-medium text-black dark:text-[#f5f7fa]"
                 >
                   Email address
                 </label>
@@ -279,7 +279,7 @@ export default function RegisterPage() {
                   }
                   placeholder="you@example.com"
                   required
-                  className="h-12 w-full rounded-[12px] bg-[#e0e5ec] px-4 text-sm text-black outline-none shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] transition-all duration-200 placeholder:text-[#777] focus:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
+                  className="h-12 w-full rounded-[12px] bg-[#e0e5ec] px-4 text-sm text-black outline-none shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] transition-all duration-200 placeholder:text-[#777] focus:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:text-[#f5f7fa] dark:placeholder:text-[#777] dark:shadow-[inset_6px_6px_10px_rgba(5,7,10,0.75),inset_-6px_-6px_10px_rgba(43,48,58,0.75)] dark:focus:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.65),inset_-3px_-3px_6px_rgba(43,48,58,0.65)]"
                 />
 
               </div>
@@ -290,7 +290,7 @@ export default function RegisterPage() {
 
                 <label
                   htmlFor="password"
-                  className="mb-2 block text-sm font-medium text-black"
+                  className="mb-2 block text-sm font-medium text-black dark:text-[#f5f7fa]"
                 >
                   Password
                 </label>
@@ -305,10 +305,10 @@ export default function RegisterPage() {
                   placeholder="Create a password"
                   required
                   minLength={6}
-                  className="h-12 w-full rounded-[12px] bg-[#e0e5ec] px-4 text-sm text-black outline-none shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] transition-all duration-200 placeholder:text-[#777] focus:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
+                  className="h-12 w-full rounded-[12px] bg-[#e0e5ec] px-4 text-sm text-black outline-none shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] transition-all duration-200 placeholder:text-[#777] focus:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:text-[#f5f7fa] dark:placeholder:text-[#777] dark:shadow-[inset_6px_6px_10px_rgba(5,7,10,0.75),inset_-6px_-6px_10px_rgba(43,48,58,0.75)] dark:focus:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.65),inset_-3px_-3px_6px_rgba(43,48,58,0.65)]"
                 />
 
-                <p className="mt-2 text-xs text-[#3f3e3e]">
+                <p className="mt-2 text-xs text-[#3f3e3e] dark:text-[#a8adb7]">
                   Must be at least 6 characters.
                 </p>
 
@@ -319,7 +319,7 @@ export default function RegisterPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex h-12 w-full items-center justify-center gap-2 rounded-[12px] bg-[orangered] text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(120,40,0,0.35),inset_-3px_-3px_6px_rgba(255,255,255,0.3)] disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-[12px] bg-[orangered] text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(120,40,0,0.35),inset_-3px_-3px_6px_rgba(255,255,255,0.3)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] dark:hover:shadow-[inset_3px_3px_6px_rgba(120,40,0,0.45),inset_-3px_-3px_6px_rgba(255,255,255,0.15)] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? (
                   <>
@@ -340,13 +340,13 @@ export default function RegisterPage() {
             {/* Divider */}
             <div className="my-7 flex items-center gap-4">
 
-              <div className="h-px flex-1 bg-[#c8ced7]" />
+              <div className="h-px flex-1 bg-[#c8ced7] dark:bg-[#3a404b]" />
 
-              <span className="text-xs text-[#3f3e3e]">
+              <span className="text-xs text-[#3f3e3e] dark:text-[#a8adb7]">
                 OR
               </span>
 
-              <div className="h-px flex-1 bg-[#c8ced7]" />
+              <div className="h-px flex-1 bg-[#c8ced7] dark:bg-[#3a404b]" />
 
             </div>
 
@@ -354,7 +354,7 @@ export default function RegisterPage() {
             {/* Google */}
             <button
               type="button"
-              className="flex h-12 w-full items-center justify-center gap-3 rounded-[12px] bg-[#e0e5ec] text-sm font-medium text-[#3f3e3e] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-200 hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
+              className="flex h-12 w-full items-center justify-center gap-3 rounded-[12px] bg-[#e0e5ec] text-sm font-medium text-[#3f3e3e] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-200 hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:text-[#a8adb7] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.65),inset_-3px_-3px_6px_rgba(43,48,58,0.65)]"
             >
               <span className="font-bold text-[orangered]">
                 G
@@ -365,7 +365,7 @@ export default function RegisterPage() {
 
 
             {/* Login */}
-            <p className="mt-8 text-center text-sm text-[#3f3e3e]">
+            <p className="mt-8 text-center text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
 
               Already have an account?{" "}
 

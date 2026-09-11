@@ -39,7 +39,7 @@ function renderNotes(text: string) {
                 return (
                     <h3
                         key={key}
-                        className="mt-7 border-b border-[#cdd3dc] pb-2 text-base font-bold text-black first:mt-0"
+                        className="mt-7 border-b border-[#cdd3dc] pb-2 text-base font-bold text-black first:mt-0 dark:border-[#30353e] dark:text-[#f5f7fa]"
                     >
                         {line.slice(3)}
                     </h3>
@@ -54,7 +54,7 @@ function renderNotes(text: string) {
                 return (
                     <h4
                         key={key}
-                        className="mt-5 text-sm font-bold text-black"
+                        className="mt-5 text-sm font-bold text-black dark:text-[#f5f7fa]"
                     >
                         {line.slice(4)}
                     </h4>
@@ -69,9 +69,9 @@ function renderNotes(text: string) {
                 return (
                     <div
                         key={key}
-                        className="mt-2 flex gap-3 text-sm leading-6 text-[#3f3e3e]"
+                        className="mt-2 flex gap-3 text-sm leading-6 text-[#3f3e3e] dark:text-[#a8adb7]"
                     >
-                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#ff4500] shadow-[1px_1px_3px_rgba(163,177,198,0.6)]" />
+                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#ff4500] shadow-[1px_1px_3px_rgba(163,177,198,0.6)] dark:bg-[orangered] dark:shadow-[1px_1px_3px_rgba(5,7,10,0.6)]" />
 
                         <span>
                             {line.replace(
@@ -95,9 +95,9 @@ function renderNotes(text: string) {
                 return (
                     <div
                         key={key}
-                        className="mt-2 flex gap-3 text-sm leading-6 text-[#3f3e3e]"
+                        className="mt-2 flex gap-3 text-sm leading-6 text-[#3f3e3e] dark:text-[#a8adb7]"
                     >
-                        <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#e0e5ec] text-[10px] font-bold text-[#ff4500] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+                        <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#e0e5ec] text-[10px] font-bold text-[#ff4500] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:text-[orangered] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
                             {match?.[1]}
                         </span>
 
@@ -128,7 +128,7 @@ function renderNotes(text: string) {
             return (
                 <p
                     key={key}
-                    className="mt-2 text-sm leading-6 text-[#3f3e3e]"
+                    className="mt-2 text-sm leading-6 text-[#3f3e3e] dark:text-[#a8adb7]"
                 >
                     {line}
                 </p>
@@ -345,19 +345,19 @@ export default function AiNotes({
 
     if (loading) {
         return (
-            <div className="rounded-[30px] bg-[#e0e5ec] p-6 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]">
+            <div className="rounded-[30px] bg-[#e0e5ec] p-6 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
                 <div className="flex items-center gap-3">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#e0e5ec] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#e0e5ec] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
                         <FileText
                             size={18}
-                            className="text-[#ff4500]"
+                            className="text-[#ff4500] dark:text-[orangered]"
                         />
                     </div>
 
                     <div className="space-y-2">
-                        <div className="h-3 w-28 animate-pulse rounded-full bg-[#cdd3dc]" />
+                        <div className="h-3 w-28 animate-pulse rounded-full bg-[#cdd3dc] dark:bg-[#30353e]" />
 
-                        <div className="h-2.5 w-52 animate-pulse rounded-full bg-[#d2d8e1]" />
+                        <div className="h-2.5 w-52 animate-pulse rounded-full bg-[#d2d8e1] dark:bg-[#292e36]" />
                     </div>
                 </div>
             </div>
@@ -365,25 +365,25 @@ export default function AiNotes({
     }
 
     return (
-        <div className="rounded-[30px] bg-[#e0e5ec] p-6 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] sm:p-7">
+        <div className="rounded-[30px] bg-[#e0e5ec] p-6 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] sm:p-7">
 
             {/* =====================================================
                 HEADER
             ===================================================== */}
 
             <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#e0e5ec] text-[#ff4500] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#e0e5ec] text-[#ff4500] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:text-[orangered] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]">
                     <Sparkles size={19} />
                 </div>
 
                 <div>
                     <div className="flex flex-wrap items-center gap-2">
-                        <h2 className="font-bold text-black">
+                        <h2 className="font-bold text-black dark:text-[#f5f7fa]">
                             AI Notes
                         </h2>
 
                         {note && (
-                            <span className="neo-inset inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-bold text-emerald-700">
+                            <span className="neo-inset inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-bold text-emerald-700 dark:text-emerald-400">
                                 <CheckCircle2
                                     size={11}
                                 />
@@ -392,7 +392,7 @@ export default function AiNotes({
                         )}
                     </div>
 
-                    <p className="mt-1 text-xs text-[#3f3e3e]">
+                    <p className="mt-1 text-xs text-[#3f3e3e] dark:text-[#a8adb7]">
                         AI-generated study notes for
                         this lesson.
                     </p>
@@ -404,7 +404,7 @@ export default function AiNotes({
             ===================================================== */}
 
             {error && (
-                <div className="neo-inset mt-5 rounded-[20px] px-4 py-3 text-xs leading-5 text-red-600">
+                <div className="neo-inset mt-5 rounded-[20px] px-4 py-3 text-xs leading-5 text-red-600 dark:text-red-400">
                     {error}
                 </div>
             )}
@@ -437,15 +437,15 @@ export default function AiNotes({
                 <div className="neo-inset mt-6 rounded-[20px] px-5 py-7">
                     <div className="flex items-center gap-4">
                         <div className="neo-surface-sm flex h-11 w-11 shrink-0 items-center justify-center rounded-full">
-                            <span className="h-5 w-5 animate-spin rounded-full border-2 border-[#c9cfd8] border-t-[#ff4500]" />
+                            <span className="h-5 w-5 animate-spin rounded-full border-2 border-[#c9cfd8] border-t-[#ff4500] dark:border-[#39404b] dark:border-t-[orangered]" />
                         </div>
 
                         <div>
-                            <p className="text-sm font-semibold text-black">
+                            <p className="text-sm font-semibold text-black dark:text-[#f5f7fa]">
                                 Generating notes...
                             </p>
 
-                            <p className="mt-1 text-xs text-[#3f3e3e]">
+                            <p className="mt-1 text-xs text-[#3f3e3e] dark:text-[#a8adb7]">
                                 CourseGuide AI is preparing
                                 your study notes.
                             </p>
@@ -457,7 +457,7 @@ export default function AiNotes({
                     ================================================= */}
 
                     <div className="neo-inset mt-5 h-2 overflow-hidden rounded-full">
-                        <div className="h-full w-full origin-left animate-[aiNotesProgress_5s_linear] rounded-full bg-[#ff4500]" />
+                        <div className="h-full w-full origin-left animate-[aiNotesProgress_5s_linear] rounded-full bg-[#ff4500] dark:bg-[orangered]" />
                     </div>
                 </div>
             )}
@@ -467,7 +467,7 @@ export default function AiNotes({
             ===================================================== */}
 
             {note && showNotes && !generating && (
-                <div className="mt-6 border-t border-[#cdd3dc] pt-6">
+                <div className="mt-6 border-t border-[#cdd3dc] pt-6 dark:border-[#30353e]">
                     <div className="neo-inset rounded-[20px] p-5 sm:p-6">
                         {renderNotes(
                             note.content
@@ -478,10 +478,10 @@ export default function AiNotes({
                         READ ONLY NOTICE
                     ================================================= */}
 
-                    <div className="mt-4 flex items-center gap-2 text-[10px] leading-4 text-[#3f3e3e]">
+                    <div className="mt-4 flex items-center gap-2 text-[10px] leading-4 text-[#3f3e3e] dark:text-[#a8adb7]">
                         <CheckCircle2
                             size={12}
-                            className="text-[#ff4500]"
+                            className="text-[#ff4500] dark:text-[orangered]"
                         />
 
                         <span>
