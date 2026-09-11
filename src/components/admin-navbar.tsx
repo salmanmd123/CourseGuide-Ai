@@ -68,36 +68,36 @@ export default function AdminNavbar({
     }
 
     return (
-        <header className="sticky top-0 z-50 border-b border-zinc-200/70 bg-white/95 backdrop-blur dark:border-zinc-800/70 dark:bg-zinc-950/95">
-            <div className="mx-auto flex min-h-[72px] max-w-7xl items-center justify-between px-6">
+        <header className="sticky top-0 z-50 bg-[#e0e5ec]/95 backdrop-blur-md">
+            <div className="mx-auto flex min-h-[72px] max-w-7xl items-center justify-between px-4 sm:px-6">
                 {/* =================================================
                    LOGO + ADMIN BADGE
                 ================================================= */}
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3 sm:gap-4">
                     <Link
                         href="/admin"
-                        className="flex shrink-0 items-center gap-3"
+                        className="neo-surface-sm flex shrink-0 items-center gap-3 rounded-[20px] px-3 py-2 sm:px-4"
                         onClick={closeMobile}
                     >
                         <img
-                            src="/logo1.png"
+                            src="/logo2.png"
                             alt="CourseGuide"
-                            className="h-10 w-10 rounded-xl object-contain"
+                            className="h-9 w-9 rounded-full object-contain sm:h-10 sm:w-10"
                         />
 
                         <div className="hidden sm:block">
                             <div className="translate-y-1">
-                                <span className="text-[16px] font-bold leading-none tracking-tight text-zinc-900 dark:text-white">
+                                <span className="text-[16px] font-bold leading-none tracking-tight text-black">
                                     Course
                                 </span>
 
-                                <span className="text-[16px] font-bold leading-none tracking-tight text-indigo-600 dark:text-indigo-400">
+                                <span className="text-[16px] font-bold leading-none tracking-tight text-[#ff4500]">
                                     Guide
                                 </span>
                             </div>
 
-                            <p className="mb-1 mt-0 text-[10px] font-medium uppercase tracking-[0.18em] text-indigo-600 dark:text-indigo-400">
+                            <p className="mb-1 mt-0 text-[10px] font-bold uppercase tracking-[0.18em] text-[#ff4500]">
                                 AI Learning
                             </p>
                         </div>
@@ -105,11 +105,11 @@ export default function AdminNavbar({
 
                     {/* ADMIN DIVIDER */}
 
-                    <div className="hidden h-8 w-px bg-zinc-200 dark:bg-zinc-800 sm:block" />
+                    <div className="hidden h-8 w-px bg-[#cdd3dc] sm:block" />
 
                     {/* ADMIN BADGE */}
 
-                    <div className="hidden items-center gap-2 rounded-xl bg-indigo-50 px-3 py-2 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-400 sm:flex">
+                    <div className="neo-surface-sm hidden items-center gap-2 rounded-full px-4 py-2 text-[#ff4500] sm:flex">
                         <ShieldCheck size={16} />
 
                         <span className="text-xs font-bold uppercase tracking-wide">
@@ -122,7 +122,7 @@ export default function AdminNavbar({
                    DESKTOP NAVIGATION
                 ================================================= */}
 
-                <nav className="hidden items-center gap-2 md:flex">
+                <nav className="neo-pill-inset hidden items-center gap-1 p-[6px] md:flex">
                     <AdminNavLink
                         href="/admin"
                         icon={
@@ -171,7 +171,7 @@ export default function AdminNavbar({
                             )
                         }
                         aria-label="Toggle dark mode"
-                        className="flex h-10 w-10 items-center justify-center rounded-xl text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white"
+                        className="neo-button flex h-10 w-10 items-center justify-center rounded-full text-[#3f3e3e]"
                     >
                         {mounted ? (
                             theme === "dark" ? (
@@ -203,9 +203,9 @@ export default function AdminNavbar({
                                     !profileOpen
                                 )
                             }
-                            className="flex items-center gap-2 rounded-xl bg-zinc-950 px-3 py-2 text-white transition hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
+                            className="neo-surface-sm flex items-center gap-2 rounded-full px-2 py-1.5 text-[#111111] transition-all duration-200 hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
                         >
-                            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-indigo-600 text-white">
+                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ff4500] text-white shadow-[3px_3px_7px_rgba(163,177,198,0.5)]">
                                 <ShieldCheck size={15} />
                             </div>
 
@@ -224,31 +224,31 @@ export default function AdminNavbar({
                         </button>
 
                         {profileOpen && (
-                            <div className="absolute right-0 top-12 w-64 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-xl dark:border-zinc-800 dark:bg-zinc-900">
-                                <div className="border-b border-zinc-200 px-4 py-4 dark:border-zinc-800">
+                            <div className="neo-surface absolute right-0 top-14 w-64 overflow-hidden rounded-[22px]">
+                                <div className="px-4 py-4">
                                     <div className="flex items-center gap-3">
-                                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400">
+                                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#e0e5ec] text-[#ff4500] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
                                             <ShieldCheck size={19} />
                                         </div>
 
                                         <div className="min-w-0">
-                                            <p className="truncate text-sm font-semibold text-zinc-950 dark:text-white">
+                                            <p className="truncate text-sm font-semibold text-black">
                                                 {name}
                                             </p>
 
-                                            <p className="truncate text-xs text-zinc-400">
+                                            <p className="truncate text-xs text-[#3f3e3e]">
                                                 {email}
                                             </p>
                                         </div>
                                     </div>
 
-                                    <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-indigo-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400">
+                                    <div className="neo-inset mt-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-[#ff4500]">
                                         <ShieldCheck size={11} />
                                         Administrator
                                     </div>
                                 </div>
 
-                                <div className="p-2">
+                                <div className="px-2 pb-2">
                                     <Link
                                         href="/admin"
                                         onClick={() =>
@@ -256,7 +256,7 @@ export default function AdminNavbar({
                                                 false
                                             )
                                         }
-                                        className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-zinc-700 transition hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                        className="neo-button flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-[#3f3e3e]"
                                     >
                                         <LayoutDashboard
                                             size={17}
@@ -265,13 +265,13 @@ export default function AdminNavbar({
                                     </Link>
                                 </div>
 
-                                <div className="border-t border-zinc-200 p-2 dark:border-zinc-800">
+                                <div className="px-2 pb-2 pt-1">
                                     <button
                                         type="button"
                                         onClick={
                                             handleLogout
                                         }
-                                        className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-red-600 transition hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/30"
+                                        className="neo-button flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-red-600"
                                     >
                                         <LogOut size={17} />
                                         Log out
@@ -291,7 +291,7 @@ export default function AdminNavbar({
                             )
                         }
                         aria-label="Toggle admin menu"
-                        className="flex h-10 w-10 items-center justify-center rounded-xl text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white md:hidden"
+                        className="neo-button flex h-10 w-10 items-center justify-center rounded-full text-[#3f3e3e] md:hidden"
                     >
                         {mobileOpen ? (
                             <X size={20} />
@@ -307,24 +307,24 @@ export default function AdminNavbar({
             ================================================= */}
 
             {mobileOpen && (
-                <div className="border-t border-zinc-200 bg-white px-6 py-4 dark:border-zinc-800 dark:bg-zinc-950 md:hidden">
-                    <div className="mb-4 flex items-center gap-3 rounded-xl bg-indigo-50 p-3 dark:bg-indigo-500/10">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400">
+                <div className="bg-[#e0e5ec] px-4 py-4 shadow-[inset_0_4px_8px_rgba(163,177,198,0.35)] md:hidden sm:px-6">
+                    <div className="neo-surface mb-4 flex items-center gap-3 rounded-[20px] p-3">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#ff4500] text-white shadow-[3px_3px_7px_rgba(163,177,198,0.5)]">
                             <ShieldCheck size={17} />
                         </div>
 
                         <div className="min-w-0">
-                            <p className="text-sm font-semibold">
+                            <p className="text-sm font-semibold text-black">
                                 {name}
                             </p>
 
-                            <p className="truncate text-xs text-zinc-400">
+                            <p className="truncate text-xs text-[#3f3e3e]">
                                 Administrator
                             </p>
                         </div>
                     </div>
 
-                    <nav className="space-y-1">
+                    <nav className="space-y-2">
                         <MobileNavLink
                             href="/admin"
                             icon={
@@ -361,7 +361,7 @@ export default function AdminNavbar({
                         <button
                             type="button"
                             onClick={handleLogout}
-                            className="mt-2 flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-red-600 transition hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/30"
+                            className="neo-button mt-2 flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-red-600"
                         >
                             <LogOut size={18} />
                             Log out
@@ -389,10 +389,12 @@ function AdminNavLink({
     return (
         <Link
             href={href}
-            className="flex items-center gap-2 rounded-xl px-3.5 py-2.5 text-sm font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-zinc-950 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white"
+            className="rounded-full px-5 py-3 text-sm font-semibold text-[#222] transition-all duration-200 ease-out hover:bg-[#e0e5ec] hover:text-[#ff4500] hover:shadow-[5px_5px_10px_rgba(163,177,198,0.55),-5px_-5px_10px_rgba(255,255,255,0.9)] active:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
         >
-            {icon}
-            {label}
+            <span className="flex items-center gap-2">
+                {icon}
+                {label}
+            </span>
         </Link>
     );
 }
@@ -416,7 +418,7 @@ function MobileNavLink({
         <Link
             href={href}
             onClick={onClick}
-            className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-700 transition hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            className="neo-button flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-[#3f3e3e]"
         >
             {icon}
             {label}

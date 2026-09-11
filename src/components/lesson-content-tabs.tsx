@@ -69,9 +69,18 @@ export default function LessonContentTabs({
           TAB NAVIGATION
       ===================================================== */}
 
-      <nav className="border-b border-zinc-200 dark:border-zinc-800">
-
-        <div className="flex gap-1 overflow-x-auto">
+      <nav
+        className="
+          rounded-[20px]
+          bg-[#e0e5ec]
+          p-2
+        "
+        style={{
+          boxShadow:
+            "inset 6px 6px 10px rgba(163, 177, 198, 0.7), inset -6px -6px 10px rgba(255, 255, 255, 0.9)",
+        }}
+      >
+        <div className="flex gap-2 overflow-x-auto">
 
           {tabs.map(
             ({
@@ -89,30 +98,45 @@ export default function LessonContentTabs({
                   onClick={() =>
                     setActiveTab(id)
                   }
-                  className={`relative flex shrink-0 items-center gap-2 px-3 py-3.5 text-xs font-medium transition ${
+                  className={`
+                    relative
+                    flex
+                    shrink-0
+                    items-center
+                    gap-2
+                    rounded-[12px]
+                    px-4
+                    py-3
+                    text-xs
+                    font-semibold
+                    transition-all
+                    duration-200
+                    ${
+                      active
+                        ? "bg-[#e0e5ec] text-[#ff4500]"
+                        : "bg-transparent text-[#3f3e3e] hover:text-[#ff4500]"
+                    }
+                  `}
+                  style={
                     active
-                      ? "text-indigo-600 dark:text-indigo-400"
-                      : "text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-200"
-                  }`}
+                      ? {
+                          boxShadow:
+                            "5px 5px 10px rgba(163, 177, 198, 0.5), -5px -5px 10px rgba(255, 255, 255, 0.8)",
+                        }
+                      : undefined
+                  }
                 >
-
                   <Icon size={15} />
 
                   <span>
                     {label}
                   </span>
-
-                  {active && (
-                    <span className="absolute inset-x-2 bottom-0 h-0.5 rounded-full bg-indigo-600 dark:bg-indigo-400" />
-                  )}
-
                 </button>
               );
             }
           )}
 
         </div>
-
       </nav>
 
       {/* =====================================================
@@ -154,26 +178,49 @@ export default function LessonContentTabs({
 
         {activeTab === "quiz" && (
           <section>
-
-            <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 sm:p-7">
-
+            <div
+              className="
+                rounded-[20px]
+                bg-[#e0e5ec]
+                p-6
+                sm:p-7
+              "
+              style={{
+                boxShadow:
+                  "9px 9px 16px rgba(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.8)",
+              }}
+            >
               <div className="flex items-start gap-4">
 
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400">
-
+                <div
+                  className="
+                    flex
+                    h-11
+                    w-11
+                    shrink-0
+                    items-center
+                    justify-center
+                    rounded-[12px]
+                    bg-[#e0e5ec]
+                    text-[#ff4500]
+                  "
+                  style={{
+                    boxShadow:
+                      "5px 5px 10px rgba(163, 177, 198, 0.5), -5px -5px 10px rgba(255, 255, 255, 0.8)",
+                  }}
+                >
                   <Trophy
                     size={19}
                   />
-
                 </div>
 
                 <div className="min-w-0">
 
-                  <h2 className="text-base font-bold text-zinc-950 dark:text-white">
+                  <h2 className="text-base font-bold text-black">
                     Test yourself
                   </h2>
 
-                  <p className="mt-1.5 max-w-xl text-sm leading-6 text-zinc-500 dark:text-zinc-400">
+                  <p className="mt-1.5 max-w-xl text-sm leading-6 text-[#3f3e3e]">
                     Take a short quiz to
                     check your
                     understanding of
@@ -182,22 +229,37 @@ export default function LessonContentTabs({
 
                   <button
                     type="button"
-                    className="mt-5 inline-flex items-center gap-2 rounded-lg bg-zinc-950 px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
+                    className="
+                      mt-5
+                      inline-flex
+                      items-center
+                      gap-2
+                      rounded-[12px]
+                      bg-[#ff4500]
+                      px-4
+                      py-2.5
+                      text-xs
+                      font-semibold
+                      text-white
+                      transition-all
+                      duration-200
+                      hover:bg-red-600
+                    "
+                    style={{
+                      boxShadow:
+                        "5px 5px 12px rgba(79, 70, 229, 0.35), -5px -5px 12px rgba(255, 255, 255, 0.8)",
+                    }}
                   >
                     Start quiz
 
                     <ArrowRight
                       size={14}
                     />
-
                   </button>
 
                 </div>
-
               </div>
-
             </div>
-
           </section>
         )}
 
@@ -207,26 +269,49 @@ export default function LessonContentTabs({
 
         {activeTab === "ai-tutor" && (
           <section>
-
-            <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 sm:p-7">
-
+            <div
+              className="
+                rounded-[20px]
+                bg-[#e0e5ec]
+                p-6
+                sm:p-7
+              "
+              style={{
+                boxShadow:
+                  "9px 9px 16px rgba(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.8)",
+              }}
+            >
               <div className="flex items-start gap-4">
 
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-600 dark:bg-violet-950/40 dark:text-violet-400">
-
+                <div
+                  className="
+                    flex
+                    h-11
+                    w-11
+                    shrink-0
+                    items-center
+                    justify-center
+                    rounded-[12px]
+                    bg-[#e0e5ec]
+                    text-[#ff4500]
+                  "
+                  style={{
+                    boxShadow:
+                      "5px 5px 10px rgba(163, 177, 198, 0.5), -5px -5px 10px rgba(255, 255, 255, 0.8)",
+                  }}
+                >
                   <MessageCircle
                     size={19}
                   />
-
                 </div>
 
                 <div className="min-w-0">
 
-                  <h2 className="text-base font-bold text-zinc-950 dark:text-white">
+                  <h2 className="text-base font-bold text-black">
                     AI Tutor
                   </h2>
 
-                  <p className="mt-1.5 max-w-xl text-sm leading-6 text-zinc-500 dark:text-zinc-400">
+                  <p className="mt-1.5 max-w-xl text-sm leading-6 text-[#3f3e3e]">
                     Ask questions and
                     get help
                     understanding this
@@ -236,27 +321,41 @@ export default function LessonContentTabs({
 
                   <button
                     type="button"
-                    className="mt-5 inline-flex items-center gap-2 rounded-lg bg-zinc-950 px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
+                    className="
+                      mt-5
+                      inline-flex
+                      items-center
+                      gap-2
+                      rounded-[12px]
+                      bg-[#ff4500]
+                      px-4
+                      py-2.5
+                      text-xs
+                      font-semibold
+                      text-white
+                      transition-all
+                      duration-200
+                      hover:bg-red-600
+                    "
+                    style={{
+                      boxShadow:
+                        "5px 5px 12px rgba(79, 70, 229, 0.35), -5px -5px 12px rgba(255, 255, 255, 0.8)",
+                    }}
                   >
                     Ask AI Tutor
 
                     <ArrowRight
                       size={14}
                     />
-
                   </button>
 
                 </div>
-
               </div>
-
             </div>
-
           </section>
         )}
 
       </div>
-
     </div>
   );
 }

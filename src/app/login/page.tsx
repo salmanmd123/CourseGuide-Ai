@@ -38,13 +38,11 @@ export default function LoginPage() {
             }
 
             // Login successful
-            // Login successful
             if (data.user?.role === "ADMIN") {
                 window.location.href = "/admin";
             } else {
                 window.location.href = "/dashboard";
             }
-
         } catch (error) {
             console.error(error);
             setError("Something went wrong. Please try again.");
@@ -54,109 +52,90 @@ export default function LoginPage() {
     }
 
     return (
-        <main className="min-h-screen bg-white text-zinc-950 dark:bg-zinc-950 dark:text-white">
-
+        <main className="min-h-screen bg-[#e0e5ec] text-black">
             <div className="grid min-h-screen lg:grid-cols-2">
 
                 {/* ================= LEFT SIDE ================= */}
 
-                <div
-                    className="
-            relative hidden overflow-hidden p-10 text-white
-            lg:flex lg:flex-col
-            bg-gradient-to-br from-[#17152b] via-[#171827] to-[#101116]
-            dark:from-[#15132a] dark:via-[#11121c] dark:to-[#09090b]
-          "
-                >
+                <div className="relative hidden overflow-hidden bg-[#e0e5ec] p-10 lg:flex lg:flex-col">
+                    {/* Soft decorative shapes */}
+                    <div className="pointer-events-none absolute -left-32 top-1/4 h-96 w-96 rounded-full bg-[#e0e5ec] shadow-[inset_12px_12px_24px_rgba(163,177,198,0.35),inset_-12px_-12px_24px_rgba(255,255,255,0.65)]" />
 
-                    {/* Background glow */}
-                    <div className="pointer-events-none absolute -left-32 top-1/4 h-96 w-96 rounded-full bg-indigo-600/20 blur-3xl" />
-
-                    <div className="pointer-events-none absolute -right-32 bottom-10 h-96 w-96 rounded-full bg-violet-600/10 blur-3xl" />
-
-                    {/* Grid */}
-                    <div
-                        className="pointer-events-none absolute inset-0 opacity-[0.035]"
-                        style={{
-                            backgroundImage:
-                                "linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px)",
-                            backgroundSize: "48px 48px",
-                        }}
-                    />
+                    <div className="pointer-events-none absolute -right-32 bottom-10 h-96 w-96 rounded-full bg-[#e0e5ec] shadow-[14px_14px_28px_rgba(163,177,198,0.35),-14px_-14px_28px_rgba(255,255,255,0.75)]" />
 
                     <div className="relative z-10 flex h-full flex-col justify-between">
 
                         {/* Logo */}
-                        <Link href="/" className="flex items-center gap-3">
-
+                        <Link
+                            href="/"
+                            className="inline-flex w-fit items-center gap-3 rounded-[20px] bg-[#e0e5ec] px-4 py-3 shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-300 hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
+                        >
                             <img
-                                src="/logo1.png"
+                                src="/logo2.png"
                                 alt="CourseGuide"
-                                className="h-10 w-10 rounded-xl object-contain"
+                                className="h-10 w-10 rounded-[12px] object-contain"
                             />
 
                             <div>
                                 <div className="translate-y-1">
-                                    <span className="text-[16px] font-bold tracking-tight text-white">
+                                    <span className="text-[16px] font-bold tracking-tight text-black">
                                         Course
                                     </span>
 
-                                    <span className="text-[16px] font-bold tracking-tight text-indigo-400">
+                                    <span className="text-[16px] font-bold tracking-tight text-[orangered]">
                                         Guide
                                     </span>
                                 </div>
 
-                                <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-indigo-400">
+                                <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-[orangered]">
                                     AI Learning
                                 </p>
                             </div>
-
                         </Link>
 
 
                         {/* Main content */}
                         <div className="max-w-lg">
 
-                            <div className="mb-6 inline-flex items-center rounded-full border border-white/10 bg-white/[0.06] px-3.5 py-2 text-xs font-medium text-zinc-300">
+                            <div className="mb-6 inline-flex items-center rounded-[50px] bg-[#e0e5ec] px-4 py-2 text-xs font-medium text-[#3f3e3e] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
                                 Your learning journey
                             </div>
 
-                            <h1 className="text-5xl font-bold leading-[1.08] tracking-[-0.035em] text-white xl:text-6xl">
+                            <h1 className="text-5xl font-bold leading-[1.08] tracking-[-0.035em] text-black xl:text-6xl">
                                 Learn with a guide
                                 <br />
                                 that understands
                                 <br />
-                                <span className="text-indigo-400">
+                                <span className="text-[orangered]">
                                     you.
                                 </span>
                             </h1>
 
-                            <p className="mt-7 max-w-md text-[15px] leading-7 text-zinc-400">
+                            <p className="mt-7 max-w-md text-[15px] leading-7 text-[#3f3e3e]">
                                 Discover courses, understand difficult concepts, practice with
                                 quizzes, and get help whenever you need it.
                             </p>
 
-                            <div className="mt-8 flex flex-wrap gap-2">
+                            <div className="mt-8 flex flex-wrap gap-3">
 
-                                <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-zinc-400">
+                                <span className="rounded-[50px] bg-[#e0e5ec] px-4 py-2 text-xs text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]">
                                     AI-powered learning
                                 </span>
 
-                                <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-zinc-400">
+                                <span className="rounded-[50px] bg-[#e0e5ec] px-4 py-2 text-xs text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]">
                                     Smart quizzes
                                 </span>
 
-                                <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-zinc-400">
+                                <span className="rounded-[50px] bg-[#e0e5ec] px-4 py-2 text-xs text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]">
                                     Track progress
                                 </span>
 
                             </div>
-
                         </div>
 
 
                         {/* Footer */}
-                        <p className="text-sm text-zinc-500">
+                        <p className="text-sm text-[#3f3e3e]">
                             © 2026 CourseGuide AI
                         </p>
 
@@ -173,7 +152,7 @@ export default function LoginPage() {
                         {/* Back */}
                         <Link
                             href="/"
-                            className="inline-flex items-center gap-2 text-sm text-zinc-500 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
+                            className="inline-flex items-center gap-2 rounded-[12px] bg-[#e0e5ec] px-3 py-2 text-sm text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] hover:text-[orangered]"
                         >
                             <ArrowLeft size={16} />
                             Back to home
@@ -183,11 +162,11 @@ export default function LoginPage() {
                         {/* Heading */}
                         <div className="mt-10">
 
-                            <h1 className="text-3xl font-bold tracking-tight">
+                            <h1 className="text-3xl font-bold tracking-tight text-black">
                                 Welcome back
                             </h1>
 
-                            <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
+                            <p className="mt-2 text-sm text-[#3f3e3e]">
                                 Sign in to continue your learning journey.
                             </p>
 
@@ -197,7 +176,7 @@ export default function LoginPage() {
                         {/* Form */}
                         <form
                             onSubmit={handleLogin}
-                            className="mt-8"
+                            className="mt-8 rounded-[30px] bg-[#e0e5ec] p-6 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] sm:p-7"
                         >
 
                             {/* Email */}
@@ -205,7 +184,7 @@ export default function LoginPage() {
 
                                 <label
                                     htmlFor="email"
-                                    className="text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                                    className="text-sm font-medium text-black"
                                 >
                                     Email address
                                 </label>
@@ -217,20 +196,7 @@ export default function LoginPage() {
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="you@example.com"
                                     required
-                                    className="
-                    mt-2 h-11 w-full rounded-xl
-                    border border-zinc-200
-                    bg-white px-3.5
-                    text-sm text-zinc-900
-                    outline-none
-                    transition
-                    focus:border-indigo-500
-                    focus:ring-2 focus:ring-indigo-500/10
-                    dark:border-zinc-800
-                    dark:bg-zinc-900
-                    dark:text-white
-                    dark:placeholder:text-zinc-600
-                  "
+                                    className="mt-2 h-11 w-full rounded-[12px] bg-[#e0e5ec] px-3.5 text-sm text-black outline-none shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] transition-all duration-200 placeholder:text-[#777] focus:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
                                 />
 
                             </div>
@@ -243,14 +209,14 @@ export default function LoginPage() {
 
                                     <label
                                         htmlFor="password"
-                                        className="text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                                        className="text-sm font-medium text-black"
                                     >
                                         Password
                                     </label>
 
                                     <Link
                                         href="/forgot-password"
-                                        className="text-xs font-medium text-indigo-600 hover:text-indigo-700 dark:text-indigo-400"
+                                        className="text-xs font-medium text-[orangered] transition-colors hover:text-[red]"
                                     >
                                         Forgot password?
                                     </Link>
@@ -266,31 +232,13 @@ export default function LoginPage() {
                                         onChange={(e) => setPassword(e.target.value)}
                                         placeholder="••••••••"
                                         required
-                                        className="
-                      h-11 w-full rounded-xl
-                      border border-zinc-200
-                      bg-white px-3.5 pr-11
-                      text-sm text-zinc-900
-                      outline-none
-                      transition
-                      focus:border-indigo-500
-                      focus:ring-2 focus:ring-indigo-500/10
-                      dark:border-zinc-800
-                      dark:bg-zinc-900
-                      dark:text-white
-                    "
+                                        className="h-11 w-full rounded-[12px] bg-[#e0e5ec] px-3.5 pr-11 text-sm text-black outline-none shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] transition-all duration-200 placeholder:text-[#777] focus:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
                                     />
 
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
-                                        className="
-                      absolute right-3 top-1/2
-                      -translate-y-1/2
-                      text-zinc-400
-                      transition hover:text-zinc-700
-                      dark:hover:text-zinc-200
-                    "
+                                        className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-[#e0e5ec] text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
                                         aria-label="Toggle password visibility"
                                     >
                                         {showPassword ? (
@@ -307,7 +255,7 @@ export default function LoginPage() {
 
                             {/* Error */}
                             {error && (
-                                <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-400">
+                                <div className="mt-4 rounded-[12px] bg-[#e0e5ec] px-4 py-3 text-sm text-red-600 shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
                                     {error}
                                 </div>
                             )}
@@ -317,20 +265,7 @@ export default function LoginPage() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="
-                  mt-6 flex h-11 w-full
-                  items-center justify-center gap-2
-                  rounded-xl
-                  bg-zinc-950
-                  text-sm font-semibold text-white
-                  transition
-                  hover:bg-zinc-800
-                  disabled:cursor-not-allowed
-                  disabled:opacity-60
-                  dark:bg-white
-                  dark:text-zinc-950
-                  dark:hover:bg-zinc-200
-                "
+                                className="mt-6 flex h-11 w-full items-center justify-center gap-2 rounded-[12px] bg-[orangered] text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(120,40,0,0.35),inset_-3px_-3px_6px_rgba(255,255,255,0.3)] disabled:cursor-not-allowed disabled:opacity-60"
                             >
 
                                 {loading ? (
@@ -353,13 +288,13 @@ export default function LoginPage() {
                         {/* Divider */}
                         <div className="my-7 flex items-center gap-4">
 
-                            <div className="h-px flex-1 bg-zinc-200 dark:bg-zinc-800" />
+                            <div className="h-px flex-1 bg-[#c8ced7]" />
 
-                            <span className="text-xs text-zinc-400">
+                            <span className="text-xs text-[#3f3e3e]">
                                 OR
                             </span>
 
-                            <div className="h-px flex-1 bg-zinc-200 dark:bg-zinc-800" />
+                            <div className="h-px flex-1 bg-[#c8ced7]" />
 
                         </div>
 
@@ -367,22 +302,10 @@ export default function LoginPage() {
                         {/* Google */}
                         <button
                             type="button"
-                            className="
-                flex h-11 w-full
-                items-center justify-center gap-3
-                rounded-xl
-                border border-zinc-200
-                bg-white
-                text-sm font-medium text-zinc-700
-                transition hover:bg-zinc-50
-                dark:border-zinc-800
-                dark:bg-zinc-900
-                dark:text-zinc-300
-                dark:hover:bg-zinc-800
-              "
+                            className="flex h-11 w-full items-center justify-center gap-3 rounded-[12px] bg-[#e0e5ec] text-sm font-medium text-[#3f3e3e] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-200 hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
                         >
 
-                            <span className="font-bold">
+                            <span className="font-bold text-[orangered]">
                                 G
                             </span>
 
@@ -392,13 +315,13 @@ export default function LoginPage() {
 
 
                         {/* Register */}
-                        <p className="mt-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
+                        <p className="mt-8 text-center text-sm text-[#3f3e3e]">
 
                             Don't have an account?{" "}
 
                             <Link
                                 href="/register"
-                                className="font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400"
+                                className="font-semibold text-[orangered] transition-colors hover:text-[red]"
                             >
                                 Create one
                             </Link>

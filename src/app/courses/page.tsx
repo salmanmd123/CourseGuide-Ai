@@ -7,6 +7,7 @@ import {
     type FormEvent,
 } from "react";
 import Link from "next/link";
+
 import {
     ArrowRight,
     BookOpen,
@@ -47,7 +48,6 @@ type Course = {
     thumbnailUrl?: string | null;
     youtubeUrl?: string | null;
 
-    // YouTube channel name
     channelName?: string | null;
 
     language?: string | null;
@@ -249,8 +249,6 @@ function getCourseCategory(
         return "Databases";
     }
 
-    /* Programming */
-
     if (
         rawCategory === "python" ||
         rawCategory === "java" ||
@@ -268,8 +266,6 @@ function getCourseCategory(
         return "Programming";
     }
 
-    /* Web */
-
     if (
         rawCategory === "react" ||
         rawCategory === "reactjs" ||
@@ -285,8 +281,6 @@ function getCourseCategory(
         return "Web Development";
     }
 
-    /* Database */
-
     if (
         rawCategory === "sql" ||
         rawCategory === "mysql" ||
@@ -298,8 +292,6 @@ function getCourseCategory(
     ) {
         return "Databases";
     }
-
-    /* AI / ML */
 
     if (
         rawCategory === "ai" ||
@@ -313,8 +305,6 @@ function getCourseCategory(
         return "AI & ML";
     }
 
-    /* Computer Science */
-
     if (
         rawCategory === "dsa" ||
         rawCategory ===
@@ -327,8 +317,6 @@ function getCourseCategory(
     ) {
         return "Computer Science";
     }
-
-    /* Fallback based on title */
 
     const combined =
         ` ${title} ${rawCategory} ${description} `;
@@ -422,9 +410,10 @@ function durationToMinutes(
     }
 
     if (minutesMatch) {
-        totalMinutes += Number(
-            minutesMatch[1]
-        );
+        totalMinutes +=
+            Number(
+                minutesMatch[1]
+            );
     }
 
     if (secondsMatch) {
@@ -479,10 +468,6 @@ function getAdminPriority(
             course.adminRecommended
         );
 
-    /*
-     * Highest:
-     * Featured + Recommended
-     */
     if (
         featured &&
         recommended
@@ -490,25 +475,14 @@ function getAdminPriority(
         return 3;
     }
 
-    /*
-     * Second:
-     * Featured
-     */
     if (featured) {
         return 2;
     }
 
-    /*
-     * Third:
-     * Recommended
-     */
     if (recommended) {
         return 1;
     }
 
-    /*
-     * Normal
-     */
     return 0;
 }
 
@@ -546,9 +520,7 @@ function formatNumber(
             .toFixed(
                 formatted >= 100
                     ? 0
-                    : formatted >= 10
-                        ? 1
-                        : 1
+                    : 1
             )
             .replace(
                 /\.0$/,
@@ -854,8 +826,6 @@ export default function CoursesPage() {
             let result =
                 [...courses];
 
-            /* LANGUAGE */
-
             const selectedLanguage =
                 normalizeLanguage(
                     language
@@ -870,8 +840,6 @@ export default function CoursesPage() {
                         selectedLanguage
                 );
 
-            /* CATEGORY */
-
             if (
                 activeCategory !==
                 "All"
@@ -885,8 +853,6 @@ export default function CoursesPage() {
                             activeCategory
                     );
             }
-
-            /* SEARCH */
 
             const searchTerm =
                 normalizeText(
@@ -935,10 +901,6 @@ export default function CoursesPage() {
                     );
             }
 
-            /* =================================================
-               ADMIN PRIORITY FIRST
-            ================================================= */
-
             result.sort(
                 (a, b) => {
                     const priorityA =
@@ -960,8 +922,6 @@ export default function CoursesPage() {
                             priorityA
                         );
                     }
-
-                    /* Selected sorting */
 
                     if (
                         sortBy ===
@@ -1080,9 +1040,10 @@ export default function CoursesPage() {
         window.history.replaceState(
             null,
             "",
-            `/courses${queryString
-                ? `?${queryString}`
-                : ""
+            `/courses${
+                queryString
+                    ? `?${queryString}`
+                    : ""
             }`
         );
 
@@ -1238,18 +1199,19 @@ export default function CoursesPage() {
         return (
             <article
                 className={`
-                    group overflow-hidden rounded-2xl border
-                    bg-white transition-all duration-300
-                    hover:-translate-y-1 hover:shadow-xl
-                    dark:bg-zinc-900
-                    ${isFeatured &&
+                    group
+                    overflow-hidden
+                    rounded-[24px]
+                    bg-[#e0e5ec]
+                    shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]
+                    transition-all
+                    duration-300
+                    hover:-translate-y-1
+                    ${
+                        isFeatured &&
                         isRecommended
-                        ? "border-amber-300 shadow-md shadow-amber-500/10 dark:border-amber-700"
-                        : isFeatured
-                            ? "border-amber-200 dark:border-amber-800"
-                            : isRecommended
-                                ? "border-indigo-200 dark:border-indigo-800"
-                                : "border-zinc-200 dark:border-zinc-800"
+                            ? "ring-1 ring-[orangered]/40"
+                            : ""
                     }
                 `}
             >
@@ -1258,7 +1220,7 @@ export default function CoursesPage() {
                    THUMBNAIL
                 ================================================= */}
 
-                <div className="relative aspect-video overflow-hidden bg-zinc-100 dark:bg-zinc-800">
+                <div className="relative aspect-video overflow-hidden rounded-t-[24px] bg-[#e0e5ec]">
 
                     {course.thumbnailUrl ? (
                         <img
@@ -1269,11 +1231,37 @@ export default function CoursesPage() {
                                 course.title
                             }
                             loading="lazy"
-                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                            className="
+                                h-full
+                                w-full
+                                object-cover
+                                transition-transform
+                                duration-500
+                                group-hover:scale-[1.04]
+                            "
                         />
                     ) : (
-                        <div className="flex h-full items-center justify-center">
-                            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-indigo-600 shadow-sm dark:bg-zinc-900 dark:text-indigo-400">
+                        <div
+                            className="
+                                flex
+                                h-full
+                                items-center
+                                justify-center
+                            "
+                        >
+                            <div
+                                className="
+                                    flex
+                                    h-14
+                                    w-14
+                                    items-center
+                                    justify-center
+                                    rounded-[18px]
+                                    bg-[#e0e5ec]
+                                    text-[orangered]
+                                    shadow-[inset_4px_4px_8px_rgba(163,177,198,0.65),inset_-4px_-4px_8px_rgba(255,255,255,0.85)]
+                                "
+                            >
                                 <BookOpen
                                     size={26}
                                 />
@@ -1281,48 +1269,92 @@ export default function CoursesPage() {
                         </div>
                     )}
 
-                    {/* Image overlay */}
+                    {/* IMAGE OVERLAY */}
 
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-black/10" />
+                    <div
+                        className="
+                            pointer-events-none
+                            absolute
+                            inset-0
+                            bg-gradient-to-t
+                            from-black/45
+                            via-transparent
+                            to-black/10
+                        "
+                    />
 
-                    {/* =================================================
-                       STATUS BADGE
-                    ================================================= */}
+                    {/* STATUS */}
 
                     {isPriority && (
                         <div className="absolute left-3 top-3">
 
                             {isFeatured ? (
-                                <span className="inline-flex items-center gap-1.5 rounded-full border border-white/70 bg-white/95 px-3 py-1.5 text-xs font-bold text-amber-700 shadow-md backdrop-blur-sm dark:border-zinc-700 dark:bg-zinc-950/95 dark:text-amber-400">
-
+                                <span
+                                    className="
+                                        inline-flex
+                                        items-center
+                                        gap-1.5
+                                        rounded-full
+                                        bg-[#e0e5ec]/95
+                                        px-3
+                                        py-1.5
+                                        text-xs
+                                        font-bold
+                                        text-[orangered]
+                                        shadow-[4px_4px_8px_rgba(0,0,0,0.18),-3px_-3px_8px_rgba(255,255,255,0.55)]
+                                        backdrop-blur-sm
+                                    "
+                                >
                                     <Star
                                         size={12}
                                         fill="currentColor"
                                     />
 
                                     Featured
-
                                 </span>
                             ) : (
-                                <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-indigo-600 px-3 py-1.5 text-xs font-bold text-white shadow-md">
-
+                                <span
+                                    className="
+                                        inline-flex
+                                        items-center
+                                        gap-1.5
+                                        rounded-full
+                                        bg-[orangered]
+                                        px-3
+                                        py-1.5
+                                        text-xs
+                                        font-bold
+                                        text-white
+                                        shadow-[4px_4px_8px_rgba(0,0,0,0.22)]
+                                    "
+                                >
                                     <Sparkles
                                         size={12}
                                     />
 
                                     Recommended
-
                                 </span>
                             )}
 
                         </div>
                     )}
 
-                    {/* Language */}
+                    {/* LANGUAGE */}
 
                     <div className="absolute right-3 top-3">
 
-                        <span className="rounded-full border border-white/30 bg-black/45 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-md">
+                        <span
+                            className="
+                                rounded-full
+                                bg-black/50
+                                px-2.5
+                                py-1
+                                text-[11px]
+                                font-semibold
+                                text-white
+                                backdrop-blur-md
+                            "
+                        >
                             {
                                 course.language ||
                                 "English"
@@ -1331,20 +1363,32 @@ export default function CoursesPage() {
 
                     </div>
 
-                    {/* Both indicator */}
+                    {/* BOTH INDICATOR */}
 
                     {isFeatured &&
                         isRecommended && (
                             <div className="absolute bottom-3 left-3">
 
-                                <span className="inline-flex items-center gap-1 rounded-md bg-black/55 px-2 py-1 text-[10px] font-semibold text-white backdrop-blur-md">
-
+                                <span
+                                    className="
+                                        inline-flex
+                                        items-center
+                                        gap-1
+                                        rounded-full
+                                        bg-black/55
+                                        px-2.5
+                                        py-1
+                                        text-[10px]
+                                        font-semibold
+                                        text-white
+                                        backdrop-blur-md
+                                    "
+                                >
                                     <Sparkles
                                         size={10}
                                     />
 
                                     Recommended
-
                                 </span>
 
                             </div>
@@ -1358,17 +1402,36 @@ export default function CoursesPage() {
 
                 <div className="p-5">
 
-                    {/* Category + Level */}
+                    {/* CATEGORY + LEVEL */}
 
                     <div className="flex items-center justify-between gap-3">
 
-                        <span className="truncate text-xs font-semibold text-indigo-600 dark:text-indigo-400">
+                        <span
+                            className="
+                                truncate
+                                text-xs
+                                font-bold
+                                text-[orangered]
+                            "
+                        >
                             {
                                 displayCategory
                             }
                         </span>
 
-                        <span className="shrink-0 rounded-md bg-zinc-100 px-2 py-1 text-[11px] font-medium text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
+                        <span
+                            className="
+                                shrink-0
+                                rounded-full
+                                bg-[#e0e5ec]
+                                px-3
+                                py-1
+                                text-[10px]
+                                font-semibold
+                                text-[#3f3e3e]
+                                shadow-[inset_2px_2px_5px_rgba(163,177,198,0.55),inset_-2px_-2px_5px_rgba(255,255,255,0.8)]
+                            "
+                        >
                             {
                                 course.level
                             }
@@ -1376,17 +1439,37 @@ export default function CoursesPage() {
 
                     </div>
 
-                    {/* Title */}
+                    {/* TITLE */}
 
-                    <h3 className="mt-3 line-clamp-2 min-h-[48px] text-[17px] font-bold leading-6 tracking-tight text-zinc-950 dark:text-white">
+                    <h3
+                        className="
+                            mt-3
+                            line-clamp-2
+                            min-h-[48px]
+                            text-[17px]
+                            font-extrabold
+                            leading-6
+                            tracking-tight
+                            text-black
+                        "
+                    >
                         {
                             course.title
                         }
                     </h3>
 
-                    {/* Description */}
+                    {/* DESCRIPTION */}
 
-                    <p className="mt-2 line-clamp-2 min-h-[44px] text-sm leading-[22px] text-zinc-500 dark:text-zinc-400">
+                    <p
+                        className="
+                            mt-2
+                            line-clamp-2
+                            min-h-[44px]
+                            text-sm
+                            leading-[22px]
+                            text-[#3f3e3e]
+                        "
+                    >
                         {
                             course.description
                         }
@@ -1396,12 +1479,34 @@ export default function CoursesPage() {
                        YOUTUBE CHANNEL
                     ================================================= */}
 
-                    <div className="mt-4 flex items-center gap-3 rounded-xl bg-zinc-50 px-3 py-2.5 dark:bg-zinc-800/60">
+                    <div
+                        className="
+                            mt-4
+                            flex
+                            items-center
+                            gap-3
+                            rounded-[16px]
+                            bg-[#e0e5ec]
+                            px-3
+                            py-2.5
+                            shadow-[inset_3px_3px_6px_rgba(163,177,198,0.55),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
+                        "
+                    >
 
-                        {/* YouTube icon */}
-
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-red-50 text-red-600 dark:bg-red-950/30 dark:text-red-400">
-
+                        <div
+                            className="
+                                flex
+                                h-9
+                                w-9
+                                shrink-0
+                                items-center
+                                justify-center
+                                rounded-full
+                                bg-[#e0e5ec]
+                                text-red-600
+                                shadow-[3px_3px_6px_rgba(163,177,198,0.45),-3px_-3px_6px_rgba(255,255,255,0.75)]
+                            "
+                        >
                             <svg
                                 viewBox="0 0 24 24"
                                 className="h-[18px] w-[18px] fill-current"
@@ -1409,17 +1514,30 @@ export default function CoursesPage() {
                             >
                                 <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.9V8.1l6.5 3.9-6.5 3.9Z" />
                             </svg>
-
                         </div>
 
                         <div className="min-w-0 flex-1">
 
-                            <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-zinc-400">
+                            <p
+                                className="
+                                    text-[9px]
+                                    font-bold
+                                    uppercase
+                                    tracking-[0.12em]
+                                    text-[#3f3e3e]
+                                    opacity-70
+                                "
+                            >
                                 YouTube Channel
                             </p>
 
                             <p
-                                className="truncate text-sm font-semibold text-zinc-800 dark:text-zinc-200"
+                                className="
+                                    truncate
+                                    text-sm
+                                    font-bold
+                                    text-black
+                                "
                                 title={
                                     course.channelName ||
                                     "YouTube"
@@ -1439,13 +1557,27 @@ export default function CoursesPage() {
                        LESSONS + DURATION
                     ================================================= */}
 
-                    <div className="mt-4 flex items-center justify-between">
+                    <div
+                        className="
+                            mt-4
+                            flex
+                            items-center
+                            justify-between
+                        "
+                    >
 
-                        <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
-
+                        <div
+                            className="
+                                flex
+                                items-center
+                                gap-2
+                                text-xs
+                                text-[#3f3e3e]
+                            "
+                        >
                             <BookOpen
                                 size={14}
-                                className="text-zinc-400"
+                                className="text-[orangered]"
                             />
 
                             <span>
@@ -1454,14 +1586,20 @@ export default function CoursesPage() {
                                 }{" "}
                                 lessons
                             </span>
-
                         </div>
 
-                        <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
-
+                        <div
+                            className="
+                                flex
+                                items-center
+                                gap-2
+                                text-xs
+                                text-[#3f3e3e]
+                            "
+                        >
                             <Clock3
                                 size={14}
-                                className="text-zinc-400"
+                                className="text-[orangered]"
                             />
 
                             <span>
@@ -1469,7 +1607,6 @@ export default function CoursesPage() {
                                     course.duration
                                 }
                             </span>
-
                         </div>
 
                     </div>
@@ -1478,31 +1615,59 @@ export default function CoursesPage() {
                        STATS
                     ================================================= */}
 
-                    <div className="mt-4 border-t border-zinc-100 pt-4 dark:border-zinc-800">
+                    <div
+                        className="
+                            mt-4
+                            border-t
+                            border-white/50
+                            pt-4
+                        "
+                    >
 
                         <div className="flex items-center justify-between">
 
-                            {/* Likes */}
+                            {/* LIKES */}
 
                             <div className="flex items-center gap-2">
 
-                                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-50 text-indigo-500 dark:bg-indigo-950/30 dark:text-indigo-400">
-
+                                <div
+                                    className="
+                                        flex
+                                        h-8
+                                        w-8
+                                        items-center
+                                        justify-center
+                                        rounded-full
+                                        bg-[#e0e5ec]
+                                        text-[orangered]
+                                        shadow-[3px_3px_6px_rgba(163,177,198,0.5),-3px_-3px_6px_rgba(255,255,255,0.8)]
+                                    "
+                                >
                                     <ThumbsUp
                                         size={14}
                                     />
-
                                 </div>
 
-                                <div className="flex flex-row gap-x-[3px]">
+                                <div className="flex flex-row items-baseline gap-x-[3px]">
 
-                                    <p className="text-xs font-bold text-zinc-800 dark:text-zinc-200">
+                                    <p
+                                        className="
+                                            text-xs
+                                            font-extrabold
+                                            text-black
+                                        "
+                                    >
                                         {formatNumber(
                                             course.likes
                                         )}
                                     </p>
 
-                                    <p className="text-[10px] text-zinc-400">
+                                    <p
+                                        className="
+                                            text-[10px]
+                                            text-[#3f3e3e]
+                                        "
+                                    >
                                         likes
                                     </p>
 
@@ -1510,27 +1675,48 @@ export default function CoursesPage() {
 
                             </div>
 
-                            {/* Views */}
+                            {/* VIEWS */}
 
                             <div className="flex items-center gap-2">
 
-                                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
-
+                                <div
+                                    className="
+                                        flex
+                                        h-8
+                                        w-8
+                                        items-center
+                                        justify-center
+                                        rounded-full
+                                        bg-[#e0e5ec]
+                                        text-[#3f3e3e]
+                                        shadow-[3px_3px_6px_rgba(163,177,198,0.5),-3px_-3px_6px_rgba(255,255,255,0.8)]
+                                    "
+                                >
                                     <span className="text-xs font-bold">
                                         ▶
                                     </span>
-
                                 </div>
 
-                                <div className="flex flex-row gap-x-[3px]">
+                                <div className="flex flex-row items-baseline gap-x-[3px]">
 
-                                    <p className="text-xs font-bold text-zinc-800 dark:text-zinc-200">
+                                    <p
+                                        className="
+                                            text-xs
+                                            font-extrabold
+                                            text-black
+                                        "
+                                    >
                                         {formatNumber(
                                             course.views
                                         )}
                                     </p>
 
-                                    <p className="text-[10px] text-zinc-400">
+                                    <p
+                                        className="
+                                            text-[10px]
+                                            text-[#3f3e3e]
+                                        "
+                                    >
                                         views
                                     </p>
 
@@ -1548,29 +1734,39 @@ export default function CoursesPage() {
 
                     <Link
                         href={`/courses/${course.slug}`}
-                        className={`
-                            mt-5 flex h-11 items-center
-                            justify-center gap-2 rounded-xl
-                            text-sm font-semibold
+                        className="
+                            mt-5
+                            flex
+                            h-11
+                            items-center
+                            justify-center
+                            gap-2
+                            rounded-full
+                            bg-[orangered]
+                            text-sm
+                            font-bold
+                            text-white
+                            shadow-[5px_5px_12px_rgba(255,69,0,0.28),-5px_-5px_12px_rgba(255,255,255,0.8)]
                             transition-all
-                            ${isFeatured
-                                ? "bg-zinc-950 text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
-                                : isRecommended
-                                    ? "bg-indigo-600 text-white hover:bg-indigo-700"
-                                    : "bg-zinc-950 text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
-                            }
-                        `}
+                            duration-200
+                            hover:-translate-y-[1px]
+                            hover:bg-[red]
+                            active:translate-y-[1px]
+                        "
                     >
                         View course
 
                         <ArrowRight
                             size={16}
-                            className="transition-transform group-hover:translate-x-0.5"
+                            className="
+                                transition-transform
+                                group-hover:translate-x-0.5
+                            "
                         />
-
                     </Link>
 
                 </div>
+
             </article>
         );
     }
@@ -1580,11 +1776,20 @@ export default function CoursesPage() {
     ========================================================= */
 
     return (
-        <main className="min-h-screen bg-zinc-50 text-zinc-950 dark:bg-zinc-950 dark:text-zinc-50">
+        <main className="min-h-screen bg-[#e0e5ec] text-black">
 
             <Navbar />
 
-            <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
+            <div
+                className="
+                    mx-auto
+                    max-w-7xl
+                    px-5
+                    py-10
+                    sm:px-6
+                    sm:py-12
+                "
+            >
 
                 {/* =================================================
                    HEADER
@@ -1592,15 +1797,41 @@ export default function CoursesPage() {
 
                 <div>
 
-                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-indigo-600 dark:text-indigo-400">
+                    <p
+                        className="
+                            text-[11px]
+                            font-extrabold
+                            uppercase
+                            tracking-[1.6px]
+                            text-[orangered]
+                        "
+                    >
                         Course Discovery
                     </p>
 
-                    <h1 className="mt-2 text-3xl font-bold tracking-tight text-zinc-950 dark:text-white sm:text-4xl">
+                    <h1
+                        className="
+                            mt-2
+                            text-3xl
+                            font-extrabold
+                            tracking-tight
+                            text-black
+                            sm:text-4xl
+                        "
+                    >
                         Find something worth learning.
                     </h1>
 
-                    <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-500 dark:text-zinc-400 sm:text-base">
+                    <p
+                        className="
+                            mt-3
+                            max-w-2xl
+                            text-sm
+                            leading-6
+                            text-[#3f3e3e]
+                            sm:text-base
+                        "
+                    >
                         Explore carefully selected
                         courses and find the right
                         learning path for your goals.
@@ -1616,14 +1847,36 @@ export default function CoursesPage() {
                     onSubmit={
                         handleSearchSubmit
                     }
-                    className="mt-7 flex flex-col gap-3 sm:flex-row"
+                    className="
+                        mt-7
+                        flex
+                        flex-col
+                        gap-3
+                        sm:flex-row
+                    "
                 >
 
-                    <div className="flex h-12 flex-1 items-center rounded-xl border border-zinc-200 bg-white px-4 shadow-sm transition focus-within:border-indigo-500 focus-within:ring-4 focus-within:ring-indigo-500/10 dark:border-zinc-800 dark:bg-zinc-900">
+                    <div
+                        className="
+                            flex
+                            h-12
+                            flex-1
+                            items-center
+                            rounded-full
+                            bg-[#e0e5ec]
+                            px-4
+                            shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)]
+                            transition-all
+                            focus-within:shadow-[inset_7px_7px_12px_rgba(163,177,198,0.75),inset_-7px_-7px_12px_rgba(255,255,255,0.95)]
+                        "
+                    >
 
                         <Search
                             size={18}
-                            className="shrink-0 text-zinc-400"
+                            className="
+                                shrink-0
+                                text-[#3f3e3e]
+                            "
                         />
 
                         <input
@@ -1637,7 +1890,16 @@ export default function CoursesPage() {
                                 )
                             }
                             placeholder="Search Python, Java, C++, React, SQL..."
-                            className="ml-3 w-full bg-transparent text-sm text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-white"
+                            className="
+                                ml-3
+                                w-full
+                                bg-transparent
+                                text-sm
+                                font-medium
+                                text-black
+                                outline-none
+                                placeholder:text-[#3f3e3e]
+                            "
                         />
 
                         {search && (
@@ -1646,7 +1908,18 @@ export default function CoursesPage() {
                                 onClick={
                                     clearSearch
                                 }
-                                className="text-zinc-400 transition hover:text-zinc-900 dark:hover:text-white"
+                                className="
+                                    flex
+                                    h-7
+                                    w-7
+                                    shrink-0
+                                    items-center
+                                    justify-center
+                                    rounded-full
+                                    text-[#3f3e3e]
+                                    transition
+                                    hover:text-[orangered]
+                                "
                                 aria-label="Clear search"
                             >
                                 <X
@@ -1659,15 +1932,31 @@ export default function CoursesPage() {
 
                     <button
                         type="submit"
-                        className="flex h-12 items-center justify-center gap-2 rounded-xl bg-zinc-950 px-6 text-sm font-semibold text-white transition hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
+                        className="
+                            flex
+                            h-12
+                            items-center
+                            justify-center
+                            gap-2
+                            rounded-full
+                            bg-[orangered]
+                            px-7
+                            text-sm
+                            font-bold
+                            text-white
+                            shadow-[5px_5px_12px_rgba(255,69,0,0.3),-5px_-5px_12px_rgba(255,255,255,0.8)]
+                            transition-all
+                            duration-200
+                            hover:-translate-y-[1px]
+                            hover:bg-[red]
+                            active:translate-y-[1px]
+                        "
                     >
-
                         <Search
                             size={17}
                         />
 
                         Search
-
                     </button>
 
                 </form>
@@ -1676,13 +1965,27 @@ export default function CoursesPage() {
                    LANGUAGE
                 ================================================= */}
 
-                <div className="mt-5 flex flex-wrap items-center gap-3">
+                <div
+                    className="
+                        mt-6
+                        flex
+                        flex-wrap
+                        items-center
+                        gap-3
+                    "
+                >
 
-                    <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                    <span
+                        className="
+                            text-sm
+                            font-bold
+                            text-[#3f3e3e]
+                        "
+                    >
                         Preferred language:
                     </span>
 
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-3">
 
                         {languages.map(
                             (item) => (
@@ -1696,11 +1999,21 @@ export default function CoursesPage() {
                                             item.value
                                         )
                                     }
-                                    className={`rounded-full border px-4 py-2 text-sm font-medium transition ${language ===
+                                    className={`
+                                        rounded-full
+                                        px-4
+                                        py-2
+                                        text-sm
+                                        font-semibold
+                                        transition-all
+                                        duration-200
+                                        ${
+                                            language ===
                                             item.value
-                                            ? "border-indigo-600 bg-indigo-600 text-white"
-                                            : "border-zinc-200 bg-white text-zinc-600 hover:border-indigo-300 hover:bg-indigo-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"
-                                        }`}
+                                                ? "bg-[orangered] text-white shadow-[4px_4px_9px_rgba(255,69,0,0.25),-4px_-4px_9px_rgba(255,255,255,0.8)]"
+                                                : "bg-[#e0e5ec] text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
+                                        }
+                                    `}
                                 >
                                     {
                                         item.label
@@ -1720,36 +2033,78 @@ export default function CoursesPage() {
                 {(search.trim() ||
                     activeCategory !==
                     "All") && (
-                        <div className="mt-4 flex flex-wrap items-center gap-2">
+                    <div
+                        className="
+                            mt-5
+                            flex
+                            flex-wrap
+                            items-center
+                            gap-3
+                        "
+                    >
 
-                            {search.trim() && (
-                                <span className="rounded-full bg-zinc-100 px-3 py-1.5 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-                                    Search: "
-                                    {
-                                        search.trim()
-                                    }
-                                    "
-                                </span>
-                            )}
+                        {search.trim() && (
+                            <span
+                                className="
+                                    rounded-full
+                                    bg-[#e0e5ec]
+                                    px-4
+                                    py-2
+                                    text-xs
+                                    font-semibold
+                                    text-[#3f3e3e]
+                                    shadow-[inset_3px_3px_6px_rgba(163,177,198,0.55),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
+                                "
+                            >
+                                Search: "
+                                {
+                                    search.trim()
+                                }
+                                "
+                            </span>
+                        )}
 
-                            {activeCategory !==
-                                "All" && (
-                                    <span className="rounded-full bg-indigo-50 px-3 py-1.5 text-xs font-medium text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400">
-                                        {
-                                            activeCategory
-                                        }
-                                    </span>
-                                )}
+                        {activeCategory !==
+                            "All" && (
+                            <span
+                                className="
+                                    rounded-full
+                                    bg-[#e0e5ec]
+                                    px-4
+                                    py-2
+                                    text-xs
+                                    font-bold
+                                    text-[orangered]
+                                    shadow-[inset_3px_3px_6px_rgba(163,177,198,0.55),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
+                                "
+                            >
+                                {
+                                    activeCategory
+                                }
+                            </span>
+                        )}
 
-                        </div>
-                    )}
+                    </div>
+                )}
 
                 {/* =================================================
                    ERROR
                 ================================================= */}
 
                 {error && (
-                    <div className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-900/40 dark:bg-red-950/20 dark:text-red-400">
+                    <div
+                        className="
+                            mt-5
+                            rounded-[18px]
+                            bg-[#e0e5ec]
+                            px-4
+                            py-3
+                            text-sm
+                            font-medium
+                            text-red-600
+                            shadow-[inset_4px_4px_8px_rgba(163,177,198,0.55),inset_-4px_-4px_8px_rgba(255,255,255,0.8)]
+                        "
+                    >
                         {error}
                     </div>
                 )}
@@ -1766,7 +2121,23 @@ export default function CoursesPage() {
                                 !previous
                         )
                     }
-                    className="mt-5 flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-700 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 lg:hidden"
+                    className="
+                        mt-6
+                        flex
+                        items-center
+                        gap-2
+                        rounded-full
+                        bg-[#e0e5ec]
+                        px-5
+                        py-2.5
+                        text-sm
+                        font-bold
+                        text-[#3f3e3e]
+                        shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]
+                        transition-all
+                        hover:text-[orangered]
+                        lg:hidden
+                    "
                 >
 
                     {showFilters
@@ -1775,10 +2146,24 @@ export default function CoursesPage() {
 
                     {activeCategory !==
                         "All" && (
-                            <span className="rounded-full bg-indigo-600 px-2 py-0.5 text-xs text-white">
-                                1
-                            </span>
-                        )}
+                        <span
+                            className="
+                                flex
+                                h-5
+                                min-w-5
+                                items-center
+                                justify-center
+                                rounded-full
+                                bg-[orangered]
+                                px-1.5
+                                text-[10px]
+                                font-bold
+                                text-white
+                            "
+                        >
+                            1
+                        </span>
+                    )}
 
                 </button>
 
@@ -1786,24 +2171,50 @@ export default function CoursesPage() {
                    MAIN
                 ================================================= */}
 
-                <div className="mt-7 grid gap-7 lg:grid-cols-[220px_1fr]">
+                <div
+                    className="
+                        mt-8
+                        grid
+                        gap-8
+                        lg:grid-cols-[220px_1fr]
+                    "
+                >
 
                     {/* =================================================
                        SIDEBAR
                     ================================================= */}
 
                     <aside
-                        className={`${showFilters
-                                ? "block"
-                                : "hidden"
-                            } lg:block`}
+                        className={`
+                            ${
+                                showFilters
+                                    ? "block"
+                                    : "hidden"
+                            }
+                            lg:block
+                        `}
                     >
 
-                        <div className="sticky top-24 rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
+                        <div
+                            className="
+                                sticky
+                                top-24
+                                rounded-[24px]
+                                bg-[#e0e5ec]
+                                p-5
+                                shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]
+                            "
+                        >
 
                             <div className="flex items-center justify-between">
 
-                                <h2 className="font-semibold">
+                                <h2
+                                    className="
+                                        text-base
+                                        font-extrabold
+                                        text-black
+                                    "
+                                >
                                     Filters
                                 </h2>
 
@@ -1814,7 +2225,16 @@ export default function CoursesPage() {
                                             false
                                         )
                                     }
-                                    className="text-zinc-400 lg:hidden"
+                                    className="
+                                        flex
+                                        h-7
+                                        w-7
+                                        items-center
+                                        justify-center
+                                        rounded-full
+                                        text-[#3f3e3e]
+                                        lg:hidden
+                                    "
                                 >
                                     <X
                                         size={17}
@@ -1823,13 +2243,21 @@ export default function CoursesPage() {
 
                             </div>
 
-                            <div className="mt-6">
+                            <div className="mt-7">
 
-                                <p className="text-[11px] font-bold uppercase tracking-wider text-zinc-400">
+                                <p
+                                    className="
+                                        text-[10px]
+                                        font-extrabold
+                                        uppercase
+                                        tracking-[1.2px]
+                                        text-[#3f3e3e]
+                                    "
+                                >
                                     Category
                                 </p>
 
-                                <div className="mt-3 space-y-1">
+                                <div className="mt-3 space-y-2">
 
                                     {categories.map(
                                         (
@@ -1850,10 +2278,24 @@ export default function CoursesPage() {
                                                             category
                                                         )
                                                     }
-                                                    className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm transition ${active
-                                                            ? "bg-indigo-50 font-semibold text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400"
-                                                            : "text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-800"
-                                                        }`}
+                                                    className={`
+                                                        flex
+                                                        w-full
+                                                        items-center
+                                                        justify-between
+                                                        rounded-full
+                                                        px-4
+                                                        py-2.5
+                                                        text-left
+                                                        text-sm
+                                                        transition-all
+                                                        duration-200
+                                                        ${
+                                                            active
+                                                                ? "bg-[#e0e5ec] font-bold text-[orangered] shadow-[inset_4px_4px_7px_rgba(163,177,198,0.6),inset_-4px_-4px_7px_rgba(255,255,255,0.85)]"
+                                                                : "text-[#3f3e3e] hover:text-[orangered] hover:shadow-[5px_5px_10px_rgba(163,177,198,0.45),-5px_-5px_10px_rgba(255,255,255,0.75)]"
+                                                        }
+                                                    `}
                                                 >
 
                                                     <span className="flex items-center gap-2">
@@ -1862,10 +2304,19 @@ export default function CoursesPage() {
                                                             category
                                                         }
 
-                                                        <span className="text-xs text-zinc-400">
+                                                        <span
+                                                            className={`
+                                                                text-[10px]
+                                                                ${
+                                                                    active
+                                                                        ? "text-[orangered]"
+                                                                        : "text-[#3f3e3e]"
+                                                                }
+                                                            `}
+                                                        >
                                                             {
                                                                 categoryCounts[
-                                                                category
+                                                                    category
                                                                 ]
                                                             }
                                                         </span>
@@ -1892,16 +2343,29 @@ export default function CoursesPage() {
                             {(activeCategory !==
                                 "All" ||
                                 search.trim()) && (
-                                    <button
-                                        type="button"
-                                        onClick={
-                                            resetFilters
-                                        }
-                                        className="mt-5 w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
-                                    >
-                                        Reset filters
-                                    </button>
-                                )}
+                                <button
+                                    type="button"
+                                    onClick={
+                                        resetFilters
+                                    }
+                                    className="
+                                        mt-6
+                                        w-full
+                                        rounded-full
+                                        bg-[#e0e5ec]
+                                        px-4
+                                        py-2.5
+                                        text-sm
+                                        font-semibold
+                                        text-[#3f3e3e]
+                                        shadow-[inset_3px_3px_6px_rgba(163,177,198,0.55),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
+                                        transition-all
+                                        hover:text-[orangered]
+                                    "
+                                >
+                                    Reset filters
+                                </button>
+                            )}
 
                         </div>
 
@@ -1913,72 +2377,135 @@ export default function CoursesPage() {
 
                     <section>
 
-                        {/* Toolbar */}
+                        {/* TOOLBAR */}
 
-                        <div className="flex items-center justify-between gap-4">
+                        <div
+                            className="
+                                flex
+                                items-center
+                                justify-between
+                                gap-4
+                            "
+                        >
 
-                            <p className="text-sm text-zinc-500 dark:text-zinc-400">
-
-                                <span className="font-bold text-zinc-900 dark:text-white">
+                            <p
+                                className="
+                                    text-sm
+                                    text-[#3f3e3e]
+                                "
+                            >
+                                <span
+                                    className="
+                                        font-extrabold
+                                        text-black
+                                    "
+                                >
                                     {
                                         filteredCourses.length
                                     }
                                 </span>{" "}
                                 courses found
-
                             </p>
 
-                            <select
-                                value={
-                                    sortBy
-                                }
-                                onChange={(
-                                    event
-                                ) =>
-                                    setSortBy(
-                                        event.target
-                                            .value
-                                    )
-                                }
-                                className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-600 outline-none focus:border-indigo-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"
-                            >
+                            <div className="relative">
 
-                                <option>
-                                    Recommended
-                                </option>
+                                <select
+                                    value={
+                                        sortBy
+                                    }
+                                    onChange={(
+                                        event
+                                    ) =>
+                                        setSortBy(
+                                            event.target
+                                                .value
+                                        )
+                                    }
+                                    className="
+                                        appearance-none
+                                        rounded-full
+                                        bg-[#e0e5ec]
+                                        px-4
+                                        py-2.5
+                                        pr-9
+                                        text-sm
+                                        font-semibold
+                                        text-[#3f3e3e]
+                                        outline-none
+                                        shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]
+                                    "
+                                >
 
-                                <option>
-                                    Most liked
-                                </option>
+                                    <option>
+                                        Recommended
+                                    </option>
 
-                                <option>
-                                    Most popular
-                                </option>
+                                    <option>
+                                        Most liked
+                                    </option>
 
-                                <option>
-                                    Shortest
-                                </option>
+                                    <option>
+                                        Most popular
+                                    </option>
 
-                            </select>
+                                    <option>
+                                        Shortest
+                                    </option>
+
+                                </select>
+
+                                <div
+                                    className="
+                                        pointer-events-none
+                                        absolute
+                                        right-3
+                                        top-1/2
+                                        -translate-y-1/2
+                                        text-[#3f3e3e]
+                                    "
+                                >
+                                    <svg
+                                        width="12"
+                                        height="12"
+                                        viewBox="0 0 12 12"
+                                        fill="none"
+                                    >
+                                        <path
+                                            d="M3 4.5L6 7.5L9 4.5"
+                                            stroke="currentColor"
+                                            strokeWidth="1.5"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                </div>
+
+                            </div>
 
                         </div>
 
-                        {/* Loading */}
+                        {/* LOADING */}
 
                         {loading && (
-                            <div className="mt-5">
+                            <div className="mt-8">
                                 <LogoLoader />
                             </div>
                         )}
 
-                        {/* =================================================
-                           SINGLE GRID
-                        ================================================= */}
+                        {/* COURSE GRID */}
 
                         {!loading &&
                             filteredCourses.length >
                             0 && (
-                                <div className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                                <div
+                                    className="
+                                        mt-6
+                                        grid
+                                        gap-6
+                                        sm:grid-cols-2
+                                        xl:grid-cols-3
+                                    "
+                                >
 
                                     {filteredCourses.map(
                                         (
@@ -1998,28 +2525,62 @@ export default function CoursesPage() {
                                 </div>
                             )}
 
-                        {/* =================================================
-                           EMPTY
-                        ================================================= */}
+                        {/* EMPTY */}
 
                         {!loading &&
                             filteredCourses.length ===
                             0 && (
-                                <div className="mt-5 rounded-2xl border border-dashed border-zinc-300 bg-white px-6 py-20 text-center dark:border-zinc-700 dark:bg-zinc-900">
+                                <div
+                                    className="
+                                        mt-6
+                                        rounded-[28px]
+                                        bg-[#e0e5ec]
+                                        px-6
+                                        py-20
+                                        text-center
+                                        shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]
+                                    "
+                                >
 
-                                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-100 text-zinc-400 dark:bg-zinc-800">
-
+                                    <div
+                                        className="
+                                            mx-auto
+                                            flex
+                                            h-14
+                                            w-14
+                                            items-center
+                                            justify-center
+                                            rounded-[18px]
+                                            bg-[#e0e5ec]
+                                            text-[#3f3e3e]
+                                            shadow-[inset_5px_5px_9px_rgba(163,177,198,0.65),inset_-5px_-5px_9px_rgba(255,255,255,0.85)]
+                                        "
+                                    >
                                         <Search
                                             size={22}
                                         />
-
                                     </div>
 
-                                    <h3 className="mt-4 font-semibold text-zinc-900 dark:text-white">
+                                    <h3
+                                        className="
+                                            mt-5
+                                            font-extrabold
+                                            text-black
+                                        "
+                                    >
                                         No courses found
                                     </h3>
 
-                                    <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-zinc-500 dark:text-zinc-400">
+                                    <p
+                                        className="
+                                            mx-auto
+                                            mt-2
+                                            max-w-md
+                                            text-sm
+                                            leading-6
+                                            text-[#3f3e3e]
+                                        "
+                                    >
                                         No{" "}
                                         {
                                             language
@@ -2035,7 +2596,21 @@ export default function CoursesPage() {
                                         onClick={
                                             resetFilters
                                         }
-                                        className="mt-5 rounded-xl bg-zinc-950 px-5 py-2.5 text-sm font-semibold text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
+                                        className="
+                                            mt-6
+                                            rounded-full
+                                            bg-[orangered]
+                                            px-6
+                                            py-3
+                                            text-sm
+                                            font-bold
+                                            text-white
+                                            shadow-[5px_5px_12px_rgba(255,69,0,0.28),-5px_-5px_12px_rgba(255,255,255,0.8)]
+                                            transition-all
+                                            duration-200
+                                            hover:-translate-y-[1px]
+                                            hover:bg-[red]
+                                        "
                                     >
                                         Reset filters
                                     </button>

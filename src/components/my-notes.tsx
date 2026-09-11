@@ -473,64 +473,116 @@ export default function MyNotes({
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 sm:p-7">
-
+      <div
+        className="
+          rounded-[20px]
+          bg-[#e0e5ec]
+          p-6
+          sm:p-7
+        "
+        style={{
+          boxShadow:
+            "9px 9px 16px rgba(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.8)",
+        }}
+      >
         <div className="flex items-center gap-3">
-
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-950/40">
-
+          <div
+            className="
+              flex
+              h-11
+              w-11
+              items-center
+              justify-center
+              rounded-[12px]
+              bg-[#e0e5ec]
+            "
+            style={{
+              boxShadow:
+                "5px 5px 10px rgba(163, 177, 198, 0.5), -5px -5px 10px rgba(255, 255, 255, 0.8)",
+            }}
+          >
             <FileText
               size={18}
-              className="text-indigo-400"
+              className="text-[#ff4500]"
             />
-
           </div>
 
           <div className="space-y-2">
+            <div
+              className="
+                h-3
+                w-28
+                animate-pulse
+                rounded-[12px]
+                bg-[#d2d7de]
+              "
+            />
 
-            <div className="h-3 w-28 animate-pulse rounded bg-zinc-200 dark:bg-zinc-800" />
-
-            <div className="h-2.5 w-52 animate-pulse rounded bg-zinc-100 dark:bg-zinc-800" />
-
+            <div
+              className="
+                h-2.5
+                w-52
+                animate-pulse
+                rounded-[12px]
+                bg-[#d7dce3]
+              "
+            />
           </div>
-
         </div>
-
       </div>
     );
   }
 
   return (
-    <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 sm:p-7">
-
+    <div
+      className="
+        rounded-[20px]
+        bg-[#e0e5ec]
+        p-6
+        sm:p-7
+      "
+      style={{
+        boxShadow:
+          "9px 9px 16px rgba(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.8)",
+      }}
+    >
       {/* =====================================================
           HEADER
       ===================================================== */}
 
       <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
-
         <div className="flex min-w-0 items-start gap-3">
-
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400">
-
+          <div
+            className="
+              flex
+              h-11
+              w-11
+              shrink-0
+              items-center
+              justify-center
+              rounded-[12px]
+              bg-[#e0e5ec]
+              text-[#ff4500]
+            "
+            style={{
+              boxShadow:
+                "5px 5px 10px rgba(163, 177, 198, 0.5), -5px -5px 10px rgba(255, 255, 255, 0.8)",
+            }}
+          >
             <FileText
               size={19}
             />
-
           </div>
 
           <div className="min-w-0">
-
-            <h2 className="font-bold text-zinc-950 dark:text-white">
+            <h2 className="font-bold text-black">
               My Notes
             </h2>
 
-            <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+            <p className="mt-1 text-xs text-[#3f3e3e]">
               Write and save your personal notes for this lesson.
             </p>
-
           </div>
-
         </div>
 
         {/* =================================================
@@ -538,7 +590,6 @@ export default function MyNotes({
         ================================================= */}
 
         <div className="flex shrink-0 items-center gap-2">
-
           <input
             ref={fileInputRef}
             type="file"
@@ -554,15 +605,32 @@ export default function MyNotes({
             onClick={
               handleImportClick
             }
-            className="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 text-[11px] font-semibold text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            className="
+              inline-flex
+              h-9
+              items-center
+              justify-center
+              gap-2
+              rounded-[12px]
+              bg-[#e0e5ec]
+              px-3
+              text-[11px]
+              font-semibold
+              text-black
+              transition-all
+              duration-200
+              hover:text-[#ff4500]
+            "
+            style={{
+              boxShadow:
+                "5px 5px 10px rgba(163, 177, 198, 0.5), -5px -5px 10px rgba(255, 255, 255, 0.8)",
+            }}
           >
-
             <Upload
               size={13}
             />
 
             Import
-
           </button>
 
           <button
@@ -573,35 +641,62 @@ export default function MyNotes({
             disabled={
               !content.trim()
             }
-            className="inline-flex h-9 items-center justify-center gap-2 rounded-lg bg-zinc-950 px-3 text-[11px] font-semibold text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
+            className="
+              inline-flex
+              h-9
+              items-center
+              justify-center
+              gap-2
+              rounded-[12px]
+              bg-[#ff4500]
+              px-3
+              text-[11px]
+              font-semibold
+              text-white
+              transition-all
+              duration-200
+              hover:bg-red-600
+              disabled:cursor-not-allowed
+              disabled:opacity-40
+            "
+            style={{
+              boxShadow:
+                "5px 5px 12px rgba(79, 70, 229, 0.35), -5px -5px 12px rgba(255, 255, 255, 0.8)",
+            }}
           >
-
             <Download
               size={13}
             />
 
             Export .md
-
           </button>
-
         </div>
-
       </div>
 
       {/* =====================================================
           LESSON
       ===================================================== */}
 
-      <div className="mt-5 rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 dark:border-zinc-800 dark:bg-zinc-950/50">
-
-        <p className="text-[10px] font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+      <div
+        className="
+          mt-5
+          rounded-[12px]
+          bg-[#e0e5ec]
+          px-4
+          py-3
+        "
+        style={{
+          boxShadow:
+            "inset 3px 3px 6px rgba(163, 177, 198, 0.6), inset -3px -3px 6px rgba(255, 255, 255, 0.8)",
+        }}
+      >
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-[#ff4500]">
           Your notes for
         </p>
 
-        <p className="mt-1 truncate text-sm font-semibold text-zinc-900 dark:text-white">
+        <p className="mt-1 truncate text-sm font-semibold text-black">
           {lessonTitle}
         </p>
-
       </div>
 
       {/* =====================================================
@@ -609,7 +704,22 @@ export default function MyNotes({
       ===================================================== */}
 
       {error && (
-        <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs leading-5 text-red-600 dark:border-red-900/40 dark:bg-red-950/20 dark:text-red-400">
+        <div
+          className="
+            mt-4
+            rounded-[12px]
+            bg-[#e0e5ec]
+            px-4
+            py-3
+            text-xs
+            leading-5
+            text-red-600
+          "
+          style={{
+            boxShadow:
+              "inset 3px 3px 6px rgba(163, 177, 198, 0.6), inset -3px -3px 6px rgba(255, 255, 255, 0.8)",
+          }}
+        >
           {error}
         </div>
       )}
@@ -619,7 +729,6 @@ export default function MyNotes({
       ===================================================== */}
 
       <div className="mt-5">
-
         <textarea
           value={content}
           onChange={(event) =>
@@ -629,9 +738,28 @@ export default function MyNotes({
           }
           placeholder="Start writing your notes..."
           spellCheck
-          className="min-h-[360px] w-full resize-y rounded-xl border border-zinc-200 bg-white p-5 text-sm leading-7 text-zinc-800 outline-none transition placeholder:text-zinc-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-200 dark:placeholder:text-zinc-600"
+          className="
+            min-h-[360px]
+            w-full
+            resize-y
+            rounded-[12px]
+            border-0
+            bg-[#e0e5ec]
+            p-5
+            text-sm
+            leading-7
+            text-black
+            outline-none
+            transition-all
+            duration-200
+            placeholder:text-[#777777]
+            focus:ring-0
+          "
+          style={{
+            boxShadow:
+              "inset 6px 6px 10px rgba(163, 177, 198, 0.7), inset -6px -6px 10px rgba(255, 255, 255, 0.9)",
+          }}
         />
-
       </div>
 
       {/* =====================================================
@@ -639,15 +767,14 @@ export default function MyNotes({
       ===================================================== */}
 
       <div className="mt-3 flex min-h-5 items-center gap-2">
-
         {saving && (
           <>
             <Loader2
               size={12}
-              className="animate-spin text-indigo-500"
+              className="animate-spin text-[#ff4500]"
             />
 
-            <span className="text-[10px] text-zinc-400">
+            <span className="text-[10px] text-[#3f3e3e]">
               Saving...
             </span>
           </>
@@ -657,10 +784,10 @@ export default function MyNotes({
           <>
             <CheckCircle2
               size={12}
-              className="text-emerald-500"
+              className="text-[#ff4500]"
             />
 
-            <span className="text-[10px] text-zinc-400">
+            <span className="text-[10px] text-[#3f3e3e]">
               Saved on this device
             </span>
           </>
@@ -669,25 +796,33 @@ export default function MyNotes({
         {!saving &&
           !saved &&
           content && (
-            <span className="text-[10px] text-zinc-400">
+            <span className="text-[10px] text-[#3f3e3e]">
               Changes will be saved automatically.
             </span>
           )}
-
       </div>
 
       {/* =====================================================
           PRIVACY NOTICE
       ===================================================== */}
 
-      <div className="mt-5 rounded-xl border border-indigo-100 bg-indigo-50/60 px-4 py-3 dark:border-indigo-900/30 dark:bg-indigo-950/20">
-
-        <p className="text-[10px] leading-5 text-indigo-700 dark:text-indigo-300">
+      <div
+        className="
+          mt-5
+          rounded-[12px]
+          bg-[#e0e5ec]
+          px-4
+          py-3
+        "
+        style={{
+          boxShadow:
+            "inset 3px 3px 6px rgba(163, 177, 198, 0.6), inset -3px -3px 6px rgba(255, 255, 255, 0.8)",
+        }}
+      >
+        <p className="text-[10px] leading-5 text-[#3f3e3e]">
           Your personal notes are stored locally in this browser using IndexedDB. They are not saved in the CourseGuide AI database.
         </p>
-
       </div>
-
     </div>
   );
 }

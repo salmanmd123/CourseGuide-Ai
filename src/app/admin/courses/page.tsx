@@ -27,7 +27,6 @@ import {
     Sparkles,
     Star,
     Trash2,
-    Users,
     Video,
     X,
 } from "lucide-react";
@@ -41,84 +40,60 @@ import AdminNavbar from "@/components/admin-navbar";
 
 type Course = {
     id: number;
-
     title: string;
-
     slug: string;
-
     description: string;
-
     category: string;
-
     level: string;
-
     courseType:
         | "VIDEO"
         | "PLAYLIST"
         | string;
-
     language:
         | string
         | null;
-
     youtubeUrl?:
         | string
         | null;
-
     youtubeId?:
         | string
         | null;
-
     youtubePlaylistId?:
         | string
         | null;
-
     channelName?:
         | string
         | null;
-
     thumbnailUrl?:
         | string
         | null;
-
     views?:
         | number
         | null;
-
     likes?:
         | number
         | null;
-
     duration: string;
-
     lessonsCount: number;
-
     rating?:
         | string
         | null;
-
     students?:
         | string
         | null;
-
     source?:
         | string
         | null;
-
     recommendationScore?:
         | number
         | null;
-
     adminRecommended?:
         | boolean
         | null;
-
     featured?:
         | boolean
         | null;
-
     createdAt: string;
-
     updatedAt: string;
 };
 
@@ -435,7 +410,6 @@ export default function AdminCoursesPage() {
                             id
                                 ? {
                                       ...course,
-
                                       [field]:
                                           value,
                                   }
@@ -581,7 +555,7 @@ export default function AdminCoursesPage() {
 
 
     return (
-        <main className="min-h-screen bg-zinc-50 text-zinc-950 transition-colors dark:bg-zinc-950 dark:text-zinc-50">
+        <main className="min-h-screen bg-[#e0e5ec] text-black">
 
             {/* =================================================
                 ADMIN NAVBAR
@@ -599,18 +573,17 @@ export default function AdminCoursesPage() {
                     PAGE HEADER
                 ================================================= */}
 
-                <div className="relative overflow-hidden rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 sm:p-8">
+                <div className="relative overflow-hidden rounded-[30px] bg-[#e0e5ec] p-6 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] sm:p-8">
 
-                    <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-indigo-500/10 blur-3xl" />
+                    <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-[#e0e5ec] shadow-[inset_10px_10px_20px_rgba(163,177,198,0.3),inset_-10px_-10px_20px_rgba(255,255,255,0.7)]" />
 
-                    <div className="pointer-events-none absolute -bottom-24 left-1/3 h-48 w-48 rounded-full bg-violet-500/10 blur-3xl" />
-
+                    <div className="pointer-events-none absolute -bottom-24 left-1/3 h-48 w-48 rounded-full bg-[#e0e5ec] shadow-[9px_9px_18px_rgba(163,177,198,0.35),-9px_-9px_18px_rgba(255,255,255,0.7)]" />
 
                     <div className="relative">
 
                         <Link
                             href="/admin"
-                            className="group inline-flex items-center gap-2 text-sm font-medium text-zinc-500 transition hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400"
+                            className="group inline-flex items-center gap-2 rounded-[12px] bg-[#e0e5ec] px-3 py-2 text-sm font-medium text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
                         >
                             <ArrowLeft
                                 size={16}
@@ -625,30 +598,25 @@ export default function AdminCoursesPage() {
 
                             <div>
 
-                                <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-indigo-600 dark:border-indigo-900/50 dark:bg-indigo-950/30 dark:text-indigo-400">
+                                <div className="mb-3 inline-flex items-center gap-2 rounded-[50px] bg-[#e0e5ec] px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
 
                                     <ShieldCheck
                                         size={13}
                                     />
 
                                     Administration
-
                                 </div>
 
 
-                                <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-
+                                <h1 className="text-3xl font-bold tracking-tight text-black sm:text-4xl">
                                     Course Management
-
                                 </h1>
 
 
-                                <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-500 dark:text-zinc-400 sm:text-base">
-
+                                <p className="mt-3 max-w-2xl text-sm leading-6 text-[#3f3e3e] sm:text-base">
                                     Add, organize and manage
                                     YouTube learning content
                                     across CourseGuide AI.
-
                                 </p>
 
                             </div>
@@ -663,7 +631,7 @@ export default function AdminCoursesPage() {
                                             true
                                         )
                                     }
-                                    className="group inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-zinc-950 px-5 text-sm font-semibold text-white shadow-lg shadow-zinc-950/10 transition-all hover:-translate-y-0.5 hover:bg-indigo-600 hover:shadow-indigo-600/20 dark:bg-white dark:text-zinc-950 dark:hover:bg-indigo-500 dark:hover:text-white"
+                                    className="group inline-flex h-11 items-center justify-center gap-2 rounded-[12px] bg-[orangered] px-5 text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(120,40,0,0.35),inset_-3px_-3px_6px_rgba(255,255,255,0.3)]"
                                 >
 
                                     <Plus
@@ -672,7 +640,6 @@ export default function AdminCoursesPage() {
                                     />
 
                                     Add Course
-
                                 </button>
 
                             </div>
@@ -802,17 +769,17 @@ export default function AdminCoursesPage() {
                     SEARCH + FILTERS
                 ================================================= */}
 
-                <div className="mt-6 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+                <div className="mt-6 rounded-[20px] bg-[#e0e5ec] p-4 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]">
 
                     <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
 
                         {/* SEARCH */}
 
-                        <div className="group flex h-12 w-full items-center rounded-xl border border-zinc-200 bg-zinc-50 px-4 transition-all focus-within:border-indigo-500 focus-within:bg-white focus-within:ring-4 focus-within:ring-indigo-500/10 dark:border-zinc-800 dark:bg-zinc-950 dark:focus-within:bg-zinc-900 xl:max-w-xl">
+                        <div className="group flex h-12 w-full items-center rounded-[12px] bg-[#e0e5ec] px-4 shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] transition-all duration-200 focus-within:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] xl:max-w-xl">
 
                             <Search
                                 size={18}
-                                className="shrink-0 text-zinc-400 transition-colors group-focus-within:text-indigo-500"
+                                className="shrink-0 text-[#3f3e3e] transition-colors group-focus-within:text-[orangered]"
                             />
 
                             <input
@@ -830,7 +797,7 @@ export default function AdminCoursesPage() {
                                     )
                                 }
                                 placeholder="Search courses, categories or channels..."
-                                className="ml-3 w-full bg-transparent text-sm text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-white"
+                                className="ml-3 w-full bg-transparent text-sm text-black outline-none placeholder:text-[#777]"
                             />
 
                             {search && (
@@ -841,7 +808,7 @@ export default function AdminCoursesPage() {
                                             ""
                                         )
                                     }
-                                    className="rounded-lg p-1.5 text-zinc-400 transition hover:bg-zinc-200 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-white"
+                                    className="flex h-8 w-8 items-center justify-center rounded-full bg-[#e0e5ec] text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
                                 >
                                     <X
                                         size={15}
@@ -916,7 +883,7 @@ export default function AdminCoursesPage() {
                             </FilterPill>
 
 
-                            <div className="hidden h-8 w-px bg-zinc-200 sm:block dark:bg-zinc-800" />
+                            <div className="mx-1 hidden h-8 w-px bg-[#c8ced7] sm:block" />
 
 
                             <FilterPill
@@ -977,9 +944,9 @@ export default function AdminCoursesPage() {
 
                 <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
 
-                    <div className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
+                    <div className="flex items-center gap-2 text-sm text-[#3f3e3e]">
 
-                        <span className="font-semibold text-zinc-950 dark:text-white">
+                        <span className="font-semibold text-black">
                             {
                                 filteredCourses.length
                             }
@@ -991,7 +958,7 @@ export default function AdminCoursesPage() {
                             : "courses"}
 
                         {hasFilters && (
-                            <span className="text-zinc-300 dark:text-zinc-700">
+                            <span className="text-[#8a8f98]">
                                 /
                             </span>
                         )}
@@ -1011,7 +978,7 @@ export default function AdminCoursesPage() {
                             onClick={
                                 resetFilters
                             }
-                            className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-indigo-600 transition hover:bg-indigo-50 dark:text-indigo-400 dark:hover:bg-indigo-950/30"
+                            className="inline-flex items-center gap-1.5 rounded-[12px] bg-[#e0e5ec] px-3 py-1.5 text-xs font-semibold text-[orangered] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
                         >
                             <X
                                 size={13}
@@ -1101,9 +1068,9 @@ export default function AdminCoursesPage() {
                 {!loading &&
                     filteredCourses.length ===
                         0 && (
-                        <div className="mt-5 overflow-hidden rounded-3xl border border-dashed border-zinc-300 bg-white px-6 py-20 text-center dark:border-zinc-700 dark:bg-zinc-900">
+                        <div className="mt-5 overflow-hidden rounded-[30px] bg-[#e0e5ec] px-6 py-20 text-center shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]">
 
-                            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-zinc-100 text-zinc-400 dark:bg-zinc-800">
+                            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-[20px] bg-[#e0e5ec] text-[#3f3e3e] shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)]">
 
                                 <Search
                                     size={28}
@@ -1112,12 +1079,12 @@ export default function AdminCoursesPage() {
                             </div>
 
 
-                            <h3 className="mt-5 text-lg font-bold">
+                            <h3 className="mt-5 text-lg font-bold text-black">
                                 No courses found
                             </h3>
 
 
-                            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-zinc-500 dark:text-zinc-400">
+                            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#3f3e3e]">
                                 No courses match
                                 your current
                                 search and
@@ -1130,7 +1097,7 @@ export default function AdminCoursesPage() {
                                 onClick={
                                     resetFilters
                                 }
-                                className="mt-6 inline-flex items-center gap-2 rounded-xl bg-zinc-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-indigo-600 dark:bg-white dark:text-zinc-950 dark:hover:bg-indigo-500 dark:hover:text-white"
+                                className="mt-6 inline-flex items-center gap-2 rounded-[12px] bg-[orangered] px-5 py-2.5 text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(120,40,0,0.35),inset_-3px_-3px_6px_rgba(255,255,255,0.3)]"
                             >
                                 <X
                                     size={15}
@@ -1204,11 +1171,8 @@ function CourseCard({
     onDelete,
 }: {
     course: Course;
-
     updating: boolean;
-
     deleting: boolean;
-
     onUpdate: (
         id: number,
         field:
@@ -1216,19 +1180,18 @@ function CourseCard({
             | "adminRecommended",
         value: boolean
     ) => void;
-
     onDelete: (
         course: Course
     ) => void;
 }) {
     return (
-        <article className="group overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-indigo-200 hover:shadow-2xl hover:shadow-indigo-500/10 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-indigo-900/60 dark:hover:shadow-black/30">
+        <article className="group overflow-hidden rounded-[20px] bg-[#e0e5ec] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-300 hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
 
             {/* =================================================
                 THUMBNAIL
             ================================================= */}
 
-            <div className="relative h-48 overflow-hidden bg-zinc-100 dark:bg-zinc-800">
+            <div className="relative h-48 overflow-hidden rounded-t-[20px] bg-[#e0e5ec]">
 
                 {course.thumbnailUrl ? (
                     <img
@@ -1241,7 +1204,7 @@ function CourseCard({
                         className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     />
                 ) : (
-                    <div className="flex h-full items-center justify-center bg-gradient-to-br from-zinc-100 to-zinc-200 text-zinc-400 dark:from-zinc-800 dark:to-zinc-900">
+                    <div className="flex h-full items-center justify-center bg-[#e0e5ec] text-[#3f3e3e] shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)]">
 
                         {course.courseType ===
                         "PLAYLIST" ? (
@@ -1262,16 +1225,16 @@ function CourseCard({
                 )}
 
 
-                {/* DARK GRADIENT */}
+                {/* IMAGE OVERLAY */}
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/5 to-black/20 opacity-70 transition-opacity duration-300 group-hover:opacity-90" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent opacity-70 transition-opacity duration-300 group-hover:opacity-90" />
 
 
                 {/* TYPE BADGE */}
 
                 <div className="absolute left-3 top-3 flex flex-wrap gap-2">
 
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/50 px-3 py-1.5 text-xs font-bold text-white shadow-lg backdrop-blur-md">
+                    <span className="inline-flex items-center gap-1.5 rounded-[50px] bg-[#e0e5ec] px-3 py-1.5 text-xs font-bold text-black shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]">
 
                         {course.courseType ===
                         "PLAYLIST" ? (
@@ -1298,7 +1261,7 @@ function CourseCard({
 
 
                     {course.featured && (
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-400 px-3 py-1.5 text-xs font-bold text-amber-950 shadow-lg">
+                        <span className="inline-flex items-center gap-1.5 rounded-[50px] bg-[orangered] px-3 py-1.5 text-xs font-bold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]">
 
                             <Star
                                 size={12}
@@ -1317,7 +1280,7 @@ function CourseCard({
 
                 <div className="absolute inset-0 flex items-center justify-center">
 
-                    <div className="flex h-12 w-12 translate-y-2 items-center justify-center rounded-full bg-white/95 text-zinc-950 opacity-0 shadow-2xl backdrop-blur transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 dark:bg-zinc-950/95 dark:text-white">
+                    <div className="flex h-12 w-12 translate-y-2 items-center justify-center rounded-full bg-[#e0e5ec] text-[orangered] opacity-0 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
 
                         {course.courseType ===
                         "PLAYLIST" ? (
@@ -1353,7 +1316,7 @@ function CourseCard({
 
 
                     {course.duration && (
-                        <span className="inline-flex items-center gap-1 rounded-md bg-black/60 px-2 py-1 font-semibold backdrop-blur-sm">
+                        <span className="inline-flex items-center gap-1 rounded-[12px] bg-black/60 px-2 py-1 font-semibold backdrop-blur-sm">
 
                             <Clock3
                                 size={12}
@@ -1381,7 +1344,7 @@ function CourseCard({
 
                 <div className="flex items-center justify-between gap-3">
 
-                    <div className="flex min-w-0 items-center gap-2 text-xs font-bold text-indigo-600 dark:text-indigo-400">
+                    <div className="flex min-w-0 items-center gap-2 text-xs font-bold text-[orangered]">
 
                         <span className="truncate">
                             {
@@ -1389,11 +1352,11 @@ function CourseCard({
                             }
                         </span>
 
-                        <span className="text-zinc-300 dark:text-zinc-700">
+                        <span className="text-[#8a8f98]">
                             •
                         </span>
 
-                        <span className="shrink-0 font-medium text-zinc-500 dark:text-zinc-400">
+                        <span className="shrink-0 font-medium text-[#3f3e3e]">
                             {
                                 course.level
                             }
@@ -1405,7 +1368,7 @@ function CourseCard({
                     {course.adminRecommended && (
                         <span
                             title="Admin recommended"
-                            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400"
+                            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[12px] bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
                         >
                             <Sparkles
                                 size={
@@ -1420,32 +1383,28 @@ function CourseCard({
 
                 {/* TITLE */}
 
-                <h2 className="mt-2 line-clamp-2 min-h-[48px] text-lg font-bold leading-6 tracking-tight text-zinc-950 transition-colors group-hover:text-indigo-600 dark:text-white dark:group-hover:text-indigo-400">
-
+                <h2 className="mt-2 line-clamp-2 min-h-[48px] text-lg font-bold leading-6 tracking-tight text-black transition-colors group-hover:text-[orangered]">
                     {
                         course.title
                     }
-
                 </h2>
 
 
                 {/* DESCRIPTION */}
 
-                <p className="mt-2 line-clamp-2 min-h-[40px] text-sm leading-5 text-zinc-500 dark:text-zinc-400">
-
+                <p className="mt-2 line-clamp-2 min-h-[40px] text-sm leading-5 text-[#3f3e3e]">
                     {
                         course.description ||
                         "No description available."
                     }
-
                 </p>
 
 
                 {/* CHANNEL */}
 
-                <div className="mt-4 flex items-center gap-2 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                <div className="mt-4 flex items-center gap-2 text-xs font-medium text-[#3f3e3e]">
 
-                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
+                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
 
                         <Play
                             size={
@@ -1468,7 +1427,7 @@ function CourseCard({
 
                 {/* METADATA */}
 
-                <div className="mt-4 grid grid-cols-3 gap-2 border-y border-zinc-100 py-3 dark:border-zinc-800">
+                <div className="mt-4 grid grid-cols-3 gap-2 border-y border-[#c8ced7] py-3">
 
                     <MetaItem
                         icon={
@@ -1532,10 +1491,10 @@ function CourseCard({
                                 !course.featured
                             )
                         }
-                        className={`group/button inline-flex items-center justify-center gap-1.5 rounded-xl border px-3 py-2.5 text-xs font-bold transition-all disabled:cursor-not-allowed disabled:opacity-60 ${
+                        className={`group/button inline-flex items-center justify-center gap-1.5 rounded-[12px] px-3 py-2.5 text-xs font-bold transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-60 ${
                             course.featured
-                                ? "border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-400"
-                                : "border-zinc-200 bg-white text-zinc-600 hover:border-amber-200 hover:bg-amber-50 hover:text-amber-700 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:border-amber-900/50 dark:hover:bg-amber-950/20 dark:hover:text-amber-400"
+                                ? "bg-[orangered] text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(120,40,0,0.35),inset_-3px_-3px_6px_rgba(255,255,255,0.3)]"
+                                : "bg-[#e0e5ec] text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
                         }`}
                     >
 
@@ -1581,10 +1540,10 @@ function CourseCard({
                                 !course.adminRecommended
                             )
                         }
-                        className={`group/button inline-flex items-center justify-center gap-1.5 rounded-xl border px-3 py-2.5 text-xs font-bold transition-all disabled:cursor-not-allowed disabled:opacity-60 ${
+                        className={`group/button inline-flex items-center justify-center gap-1.5 rounded-[12px] px-3 py-2.5 text-xs font-bold transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-60 ${
                             course.adminRecommended
-                                ? "border-indigo-200 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 dark:border-indigo-900/50 dark:bg-indigo-950/20 dark:text-indigo-400"
-                                : "border-zinc-200 bg-white text-zinc-600 hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-700 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:border-indigo-900/50 dark:hover:bg-indigo-950/20 dark:hover:text-indigo-400"
+                                ? "bg-[orangered] text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(120,40,0,0.35),inset_-3px_-3px_6px_rgba(255,255,255,0.3)]"
+                                : "bg-[#e0e5ec] text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
                         }`}
                     >
 
@@ -1622,7 +1581,7 @@ function CourseCard({
                     <Link
                         href={`/courses/${course.slug}`}
                         target="_blank"
-                        className="group/view flex flex-1 items-center justify-center gap-2 rounded-xl bg-zinc-950 py-2.5 text-sm font-bold text-white transition-all hover:-translate-y-0.5 hover:bg-indigo-600 hover:shadow-lg hover:shadow-indigo-600/20 dark:bg-white dark:text-zinc-950 dark:hover:bg-indigo-500 dark:hover:text-white"
+                        className="group/view flex flex-1 items-center justify-center gap-2 rounded-[12px] bg-[orangered] py-2.5 text-sm font-bold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(120,40,0,0.35),inset_-3px_-3px_6px_rgba(255,255,255,0.3)]"
                     >
 
                         View Course
@@ -1645,7 +1604,7 @@ function CourseCard({
                             target="_blank"
                             rel="noreferrer"
                             title="Open on YouTube"
-                            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-zinc-200 text-zinc-500 transition-all hover:-translate-y-0.5 hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-zinc-800 dark:hover:border-red-900/50 dark:hover:bg-red-950/20 dark:hover:text-red-400"
+                            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-[#e0e5ec] text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
                         >
                             <ExternalLink
                                 size={
@@ -1667,7 +1626,7 @@ function CourseCard({
                             )
                         }
                         title="Delete course"
-                        className="group/delete flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-red-200 text-red-500 transition-all hover:-translate-y-0.5 hover:bg-red-50 hover:shadow-md hover:shadow-red-500/10 disabled:cursor-not-allowed disabled:opacity-50 dark:border-red-900/50 dark:hover:bg-red-950/20"
+                        className="group/delete flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-[#e0e5ec] text-red-500 shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:text-red-600 hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] disabled:cursor-not-allowed disabled:opacity-50"
                     >
 
                         {deleting ? (
@@ -1706,7 +1665,6 @@ function AddCourseModal({
     onCreated,
 }: {
     onClose: () => void;
-
     onCreated: (
         course: Course
     ) => void;
@@ -1821,21 +1779,13 @@ function AddCourseModal({
                         body:
                             JSON.stringify({
                                 courseType,
-
                                 url,
-
                                 title,
-
                                 description,
-
                                 category,
-
                                 level,
-
                                 language,
-
                                 featured,
-
                                 adminRecommended,
                             }),
                     }
@@ -1873,26 +1823,26 @@ function AddCourseModal({
 
 
     return (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-zinc-950/70 p-4 backdrop-blur-md">
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-[#e0e5ec]/90 p-4 backdrop-blur-md">
 
             <div className="flex min-h-full items-center justify-center py-6 sm:py-10">
 
-                <div className="w-full max-w-2xl overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-2xl shadow-black/20 dark:border-zinc-800 dark:bg-zinc-900">
+                <div className="w-full max-w-2xl overflow-hidden rounded-[30px] bg-[#e0e5ec] shadow-[14px_14px_28px_rgba(163,177,198,0.6),-14px_-14px_28px_rgba(255,255,255,0.8)]">
 
                     {/* =================================================
                         MODAL HEADER
                     ================================================= */}
 
-                    <div className="relative overflow-hidden border-b border-zinc-200 bg-gradient-to-br from-indigo-50 via-white to-white p-6 dark:border-zinc-800 dark:from-indigo-950/30 dark:via-zinc-900 dark:to-zinc-900 sm:p-7">
+                    <div className="relative overflow-hidden border-b border-[#c8ced7] bg-[#e0e5ec] p-6 sm:p-7">
 
-                        <div className="pointer-events-none absolute -right-10 -top-16 h-40 w-40 rounded-full bg-indigo-500/10 blur-3xl" />
+                        <div className="pointer-events-none absolute -right-10 -top-16 h-40 w-40 rounded-full bg-[#e0e5ec] shadow-[inset_8px_8px_16px_rgba(163,177,198,0.35),inset_-8px_-8px_16px_rgba(255,255,255,0.7)]" />
 
 
                         <div className="relative flex items-start justify-between gap-5">
 
                             <div className="flex items-start gap-4">
 
-                                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-lg shadow-indigo-600/20">
+                                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[20px] bg-[orangered] text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]">
 
                                     <Plus
                                         size={
@@ -1905,15 +1855,15 @@ function AddCourseModal({
 
                                 <div>
 
-                                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-indigo-600 dark:text-indigo-400">
+                                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-[orangered]">
                                         Course Management
                                     </p>
 
-                                    <h2 className="mt-1.5 text-2xl font-bold tracking-tight">
+                                    <h2 className="mt-1.5 text-2xl font-bold tracking-tight text-black">
                                         Add New Course
                                     </h2>
 
-                                    <p className="mt-1.5 max-w-lg text-sm leading-5 text-zinc-500 dark:text-zinc-400">
+                                    <p className="mt-1.5 max-w-lg text-sm leading-5 text-[#3f3e3e]">
                                         Import learning
                                         content directly
                                         from YouTube.
@@ -1929,7 +1879,7 @@ function AddCourseModal({
                                 onClick={
                                     onClose
                                 }
-                                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-zinc-400 transition hover:bg-zinc-200 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-white"
+                                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#e0e5ec] text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
                             >
                                 <X
                                     size={
@@ -1975,7 +1925,7 @@ function AddCourseModal({
 
                         <div>
 
-                            <label className="mb-2.5 block text-sm font-bold">
+                            <label className="mb-2.5 block text-sm font-bold text-black">
                                 Course Type
                             </label>
 
@@ -2037,7 +1987,7 @@ function AddCourseModal({
 
                         <div>
 
-                            <label className="mb-2 block text-sm font-bold">
+                            <label className="mb-2 block text-sm font-bold text-black">
 
                                 {courseType ===
                                 "VIDEO"
@@ -2053,7 +2003,7 @@ function AddCourseModal({
 
                             <div className="group relative">
 
-                                <div className="pointer-events-none absolute left-3.5 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-lg bg-red-50 text-red-600 dark:bg-red-950/30 dark:text-red-400">
+                                <div className="pointer-events-none absolute left-3.5 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-[12px] bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
 
                                     <Play
                                         size={
@@ -2086,19 +2036,19 @@ function AddCourseModal({
                                             ? "https://www.youtube.com/watch?v=..."
                                             : "https://www.youtube.com/playlist?list=..."
                                     }
-                                    className="h-12 w-full rounded-xl border border-zinc-200 bg-zinc-50 pl-14 pr-4 text-sm outline-none transition-all placeholder:text-zinc-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 dark:border-zinc-700 dark:bg-zinc-950 dark:focus:bg-zinc-900"
+                                    className="h-12 w-full rounded-[12px] bg-[#e0e5ec] pl-14 pr-4 text-sm text-black outline-none shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] transition-all duration-200 placeholder:text-[#777] focus:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
                                 />
 
                             </div>
 
 
-                            <div className="mt-2 flex items-start gap-2 text-xs leading-5 text-zinc-400">
+                            <div className="mt-2 flex items-start gap-2 text-xs leading-5 text-[#3f3e3e]">
 
                                 <CheckCircle2
                                     size={
                                         14
                                     }
-                                    className="mt-0.5 shrink-0 text-emerald-500"
+                                    className="mt-0.5 shrink-0 text-[orangered]"
                                 />
 
                                 <span>
@@ -2139,7 +2089,7 @@ function AddCourseModal({
                                         )
                                     }
                                     placeholder="Auto-filled from YouTube"
-                                    className="form-input"
+                                    className="form-input h-12 w-full rounded-[12px] bg-[#e0e5ec] px-4 text-sm text-black outline-none shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] transition-all duration-200 placeholder:text-[#777] focus:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
                                 />
 
                             </FormField>
@@ -2163,7 +2113,7 @@ function AddCourseModal({
                                                 .value
                                         )
                                     }
-                                    className="form-input"
+                                    className="form-input h-12 w-full rounded-[12px] bg-[#e0e5ec] px-4 text-sm text-black outline-none shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] transition-all duration-200 focus:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
                                 >
 
                                     {categories.map(
@@ -2208,7 +2158,7 @@ function AddCourseModal({
                                                 .value
                                         )
                                     }
-                                    className="form-input"
+                                    className="form-input h-12 w-full rounded-[12px] bg-[#e0e5ec] px-4 text-sm text-black outline-none shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] transition-all duration-200 focus:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
                                 >
 
                                     {levels.map(
@@ -2253,7 +2203,7 @@ function AddCourseModal({
                                                 .value
                                         )
                                     }
-                                    className="form-input"
+                                    className="form-input h-12 w-full rounded-[12px] bg-[#e0e5ec] px-4 text-sm text-black outline-none shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] transition-all duration-200 focus:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
                                 >
 
                                     {languages.map(
@@ -2305,7 +2255,7 @@ function AddCourseModal({
                                 }
                                 rows={3}
                                 placeholder="Auto-filled from YouTube if left empty"
-                                className="form-input h-auto resize-none py-3"
+                                className="form-input h-auto w-full resize-none rounded-[12px] bg-[#e0e5ec] px-4 py-3 text-sm text-black outline-none shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] transition-all duration-200 placeholder:text-[#777] focus:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
                             />
 
                         </FormField>
@@ -2317,7 +2267,7 @@ function AddCourseModal({
 
                         <div>
 
-                            <label className="mb-2.5 block text-sm font-bold">
+                            <label className="mb-2.5 block text-sm font-bold text-black">
                                 Course Visibility
                             </label>
 
@@ -2375,7 +2325,7 @@ function AddCourseModal({
                             ACTIONS
                         ================================================= */}
 
-                        <div className="flex flex-col-reverse gap-3 border-t border-zinc-200 pt-5 dark:border-zinc-800 sm:flex-row sm:justify-end">
+                        <div className="flex flex-col-reverse gap-3 border-t border-[#c8ced7] pt-5 sm:flex-row sm:justify-end">
 
                             <button
                                 type="button"
@@ -2385,7 +2335,7 @@ function AddCourseModal({
                                 disabled={
                                     submitting
                                 }
-                                className="h-11 rounded-xl border border-zinc-200 px-5 text-sm font-bold text-zinc-700 transition hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                className="h-11 rounded-[12px] bg-[#e0e5ec] px-5 text-sm font-bold text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] disabled:opacity-50"
                             >
                                 Cancel
                             </button>
@@ -2396,7 +2346,7 @@ function AddCourseModal({
                                 disabled={
                                     submitting
                                 }
-                                className="group inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-zinc-950 px-6 text-sm font-bold text-white shadow-lg shadow-zinc-950/10 transition-all hover:-translate-y-0.5 hover:bg-indigo-600 hover:shadow-indigo-600/20 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-white dark:text-zinc-950 dark:hover:bg-indigo-500 dark:hover:text-white"
+                                className="group inline-flex h-11 items-center justify-center gap-2 rounded-[12px] bg-[orangered] px-6 text-sm font-bold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(120,40,0,0.35),inset_-3px_-3px_6px_rgba(255,255,255,0.3)] disabled:cursor-not-allowed disabled:opacity-60"
                             >
 
                                 {submitting ? (
@@ -2452,11 +2402,8 @@ function StatCard({
     accent,
 }: {
     label: string;
-
     value: number;
-
     icon: ReactNode;
-
     accent:
         | "indigo"
         | "blue"
@@ -2466,32 +2413,32 @@ function StatCard({
 }) {
     const accentClasses = {
         indigo:
-            "bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400",
+            "text-[orangered]",
         blue:
-            "bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400",
+            "text-[orangered]",
         violet:
-            "bg-violet-50 text-violet-600 dark:bg-violet-950/40 dark:text-violet-400",
+            "text-[orangered]",
         amber:
-            "bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400",
+            "text-[orangered]",
         emerald:
-            "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400",
+            "text-[orangered]",
     };
 
 
     return (
-        <div className="group rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="group rounded-[20px] bg-[#e0e5ec] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-300 hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
 
             <div className="flex items-center justify-between">
 
                 <div>
 
-                    <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-[#777]">
                         {
                             label
                         }
                     </p>
 
-                    <p className="mt-2 text-2xl font-bold tracking-tight">
+                    <p className="mt-2 text-2xl font-bold tracking-tight text-black">
                         {
                             value.toLocaleString()
                         }
@@ -2501,7 +2448,7 @@ function StatCard({
 
 
                 <div
-                    className={`flex h-11 w-11 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110 ${accentClasses[accent]}`}
+                    className={`flex h-11 w-11 items-center justify-center rounded-[12px] bg-[#e0e5ec] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] transition-transform duration-300 group-hover:scale-110 ${accentClasses[accent]}`}
                 >
                     {
                         icon
@@ -2526,11 +2473,8 @@ function FilterPill({
     children,
 }: {
     active: boolean;
-
     onClick: () => void;
-
     icon: ReactNode;
-
     children: ReactNode;
 }) {
     return (
@@ -2539,10 +2483,10 @@ function FilterPill({
             onClick={
                 onClick
             }
-            className={`group inline-flex items-center gap-1.5 rounded-full border px-3.5 py-2 text-xs font-bold transition-all duration-200 sm:text-sm ${
+            className={`group inline-flex items-center gap-1.5 rounded-[50px] px-3.5 py-2 text-xs font-bold transition-all duration-200 sm:text-sm ${
                 active
-                    ? "border-indigo-600 bg-indigo-600 text-white shadow-md shadow-indigo-600/20"
-                    : "border-zinc-200 bg-white text-zinc-600 hover:-translate-y-0.5 hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-700 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-indigo-900/60 dark:hover:bg-indigo-950/30 dark:hover:text-indigo-400"
+                    ? "bg-[orangered] text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] hover:bg-[red]"
+                    : "bg-[#e0e5ec] text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
             }`}
         >
 
@@ -2571,15 +2515,13 @@ function MetaItem({
     label,
 }: {
     icon: ReactNode;
-
     value: string;
-
     label: string;
 }) {
     return (
         <div className="flex min-w-0 items-center gap-1.5">
 
-            <span className="shrink-0 text-zinc-400">
+            <span className="shrink-0 text-[orangered]">
                 {
                     icon
                 }
@@ -2587,13 +2529,13 @@ function MetaItem({
 
             <div className="min-w-0">
 
-                <p className="truncate text-xs font-bold text-zinc-700 dark:text-zinc-200">
+                <p className="truncate text-xs font-bold text-black">
                     {
                         value
                     }
                 </p>
 
-                <p className="text-[10px] text-zinc-400">
+                <p className="text-[10px] text-[#777]">
                     {
                         label
                     }
@@ -2618,13 +2560,9 @@ function TypeCard({
     onClick,
 }: {
     active: boolean;
-
     icon: ReactNode;
-
     title: string;
-
     description: string;
-
     onClick: () => void;
 }) {
     return (
@@ -2633,15 +2571,15 @@ function TypeCard({
             onClick={
                 onClick
             }
-            className={`group relative overflow-hidden rounded-2xl border p-4 text-left transition-all duration-200 ${
+            className={`group relative overflow-hidden rounded-[20px] p-4 text-left transition-all duration-200 ${
                 active
-                    ? "border-indigo-500 bg-indigo-50 ring-4 ring-indigo-500/10 dark:border-indigo-700 dark:bg-indigo-950/30"
-                    : "border-zinc-200 bg-white hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md dark:border-zinc-700 dark:bg-zinc-950 dark:hover:border-indigo-900"
+                    ? "bg-[#e0e5ec] text-black shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)]"
+                    : "bg-[#e0e5ec] text-black shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
             }`}
         >
 
             {active && (
-                <div className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-indigo-600 text-white">
+                <div className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[orangered] text-white shadow-[3px_3px_6px_rgba(163,177,198,0.5),-3px_-3px_6px_rgba(255,255,255,0.7)]">
 
                     <Check
                         size={
@@ -2654,10 +2592,10 @@ function TypeCard({
 
 
             <div
-                className={`flex h-10 w-10 items-center justify-center rounded-xl transition-transform group-hover:scale-105 ${
+                className={`flex h-10 w-10 items-center justify-center rounded-[12px] transition-transform group-hover:scale-105 ${
                     active
-                        ? "bg-indigo-600 text-white"
-                        : "bg-zinc-100 text-zinc-500 dark:bg-zinc-800"
+                        ? "bg-[orangered] text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]"
+                        : "bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
                 }`}
             >
                 {
@@ -2673,7 +2611,7 @@ function TypeCard({
             </p>
 
 
-            <p className="mt-1 pr-5 text-xs leading-5 text-zinc-500 dark:text-zinc-400">
+            <p className="mt-1 pr-5 text-xs leading-5 text-[#3f3e3e]">
                 {
                     description
                 }
@@ -2694,15 +2632,13 @@ function FormField({
     children,
 }: {
     label: string;
-
     required?: boolean;
-
     children: ReactNode;
 }) {
     return (
         <div>
 
-            <label className="mb-2 block text-sm font-bold">
+            <label className="mb-2 block text-sm font-bold text-black">
 
                 {
                     label
@@ -2737,15 +2673,11 @@ function ToggleOption({
     description,
 }: {
     checked: boolean;
-
     onChange: (
         value: boolean
     ) => void;
-
     icon: ReactNode;
-
     title: string;
-
     description: string;
 }) {
     return (
@@ -2756,18 +2688,18 @@ function ToggleOption({
                     !checked
                 )
             }
-            className={`group flex items-center gap-3 rounded-2xl border p-3.5 text-left transition-all ${
+            className={`group flex items-center gap-3 rounded-[20px] p-3.5 text-left transition-all ${
                 checked
-                    ? "border-indigo-200 bg-indigo-50 dark:border-indigo-900/50 dark:bg-indigo-950/20"
-                    : "border-zinc-200 bg-white hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-900"
+                    ? "bg-[#e0e5ec] shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)]"
+                    : "bg-[#e0e5ec] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
             }`}
         >
 
             <div
-                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-transform group-hover:scale-105 ${
+                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[12px] transition-transform group-hover:scale-105 ${
                     checked
-                        ? "bg-indigo-600 text-white"
-                        : "bg-zinc-100 text-zinc-500 dark:bg-zinc-800"
+                        ? "bg-[orangered] text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]"
+                        : "bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
                 }`}
             >
                 {
@@ -2778,13 +2710,13 @@ function ToggleOption({
 
             <div className="min-w-0 flex-1">
 
-                <p className="text-sm font-bold">
+                <p className="text-sm font-bold text-black">
                     {
                         title
                     }
                 </p>
 
-                <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+                <p className="mt-0.5 text-xs text-[#3f3e3e]">
                     {
                         description
                     }
@@ -2796,13 +2728,13 @@ function ToggleOption({
             <div
                 className={`h-5 w-9 rounded-full p-0.5 transition-colors ${
                     checked
-                        ? "bg-indigo-600"
-                        : "bg-zinc-200 dark:bg-zinc-700"
+                        ? "bg-[orangered]"
+                        : "bg-[#c8ced7]"
                 }`}
             >
 
                 <div
-                    className={`h-4 w-4 rounded-full bg-white shadow-sm transition-transform ${
+                    className={`h-4 w-4 rounded-full bg-[#e0e5ec] shadow-[2px_2px_4px_rgba(163,177,198,0.5),-2px_-2px_4px_rgba(255,255,255,0.8)] transition-transform ${
                         checked
                             ? "translate-x-4"
                             : "translate-x-0"
@@ -2828,9 +2760,7 @@ function Alert({
     type:
         | "error"
         | "success";
-
     message: string;
-
     onClose: () => void;
 }) {
     const isSuccess =
@@ -2840,10 +2770,10 @@ function Alert({
 
     return (
         <div
-            className={`flex items-start gap-3 rounded-2xl border px-4 py-3.5 text-sm shadow-sm ${
+            className={`flex items-start gap-3 rounded-[20px] bg-[#e0e5ec] px-4 py-3.5 text-sm shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] ${
                 isSuccess
-                    ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-300"
-                    : "border-red-200 bg-red-50 text-red-700 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-300"
+                    ? "text-emerald-600"
+                    : "text-red-600"
             }`}
         >
 
@@ -2878,7 +2808,7 @@ function Alert({
                 onClick={
                     onClose
                 }
-                className="rounded-lg p-1 transition hover:bg-black/5 dark:hover:bg-white/5"
+                className="flex h-7 w-7 items-center justify-center rounded-full bg-[#e0e5ec] transition-all hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
             >
                 <X
                     size={
@@ -2898,25 +2828,25 @@ function Alert({
 
 function CourseSkeleton() {
     return (
-        <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="overflow-hidden rounded-[20px] bg-[#e0e5ec] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]">
 
-            <div className="h-48 animate-pulse bg-zinc-200 dark:bg-zinc-800" />
+            <div className="h-48 animate-pulse bg-[#d4dae3]" />
 
             <div className="space-y-4 p-5">
 
-                <div className="h-3 w-24 animate-pulse rounded bg-zinc-200 dark:bg-zinc-800" />
+                <div className="h-3 w-24 animate-pulse rounded-[12px] bg-[#d4dae3]" />
 
                 <div className="space-y-2">
 
-                    <div className="h-5 w-full animate-pulse rounded bg-zinc-200 dark:bg-zinc-800" />
+                    <div className="h-5 w-full animate-pulse rounded-[12px] bg-[#d4dae3]" />
 
-                    <div className="h-5 w-3/4 animate-pulse rounded bg-zinc-200 dark:bg-zinc-800" />
+                    <div className="h-5 w-3/4 animate-pulse rounded-[12px] bg-[#d4dae3]" />
 
                 </div>
 
-                <div className="h-10 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-800" />
+                <div className="h-10 animate-pulse rounded-[12px] bg-[#d4dae3]" />
 
-                <div className="h-10 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-800" />
+                <div className="h-10 animate-pulse rounded-[12px] bg-[#d4dae3]" />
 
             </div>
 

@@ -349,7 +349,7 @@ export default async function MyLearningPage() {
   // =========================================================
 
   return (
-    <main className="min-h-screen bg-zinc-50 text-zinc-950 dark:bg-zinc-950 dark:text-zinc-50">
+    <main className="min-h-screen bg-[#e0e5ec] text-black">
 
       {/* =====================================================
           AUTO REFRESH
@@ -359,17 +359,17 @@ export default async function MyLearningPage() {
 
       <Navbar />
 
-      <div className="mx-auto max-w-7xl px-6 py-10">
+      <div className="mx-auto max-w-7xl px-5 py-8 sm:px-6 sm:py-10">
 
         {/* =================================================
             HEADER
         ================================================= */}
 
-        <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+        <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
 
           <div>
 
-            <p className="text-sm font-medium text-indigo-600 dark:text-indigo-400">
+            <p className="text-sm font-semibold tracking-wide text-[orangered]">
               YOUR LEARNING
             </p>
 
@@ -377,7 +377,7 @@ export default async function MyLearningPage() {
               My Learning
             </h1>
 
-            <p className="mt-2 text-zinc-500 dark:text-zinc-400">
+            <p className="mt-2 max-w-xl text-sm text-[#3f3e3e] sm:text-base">
               Continue your courses and track your progress.
             </p>
 
@@ -385,7 +385,7 @@ export default async function MyLearningPage() {
 
           <Link
             href="/courses"
-            className="flex w-fit items-center gap-2 rounded-xl bg-zinc-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
+            className="flex w-fit items-center gap-2 rounded-[12px] bg-[orangered] px-5 py-3 text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.3)]"
           >
             <BookOpen size={17} />
             Browse courses
@@ -397,19 +397,19 @@ export default async function MyLearningPage() {
             SUMMARY
         ================================================= */}
 
-        <div className="mt-8 grid gap-4 sm:grid-cols-3">
+        <div className="mt-8 grid gap-5 sm:grid-cols-3">
 
           {/* =================================================
               COURSES STARTED
           ================================================= */}
 
-          <div className="rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
+          <div className="rounded-[20px] bg-[#e0e5ec] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]">
 
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400">
+            <div className="flex h-11 w-11 items-center justify-center rounded-[12px] bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
               <BookOpen size={19} />
             </div>
 
-            <p className="mt-4 text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="mt-4 text-sm text-[#3f3e3e]">
               Courses started
             </p>
 
@@ -423,13 +423,13 @@ export default async function MyLearningPage() {
               COMPLETED LESSONS
           ================================================= */}
 
-          <div className="rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
+          <div className="rounded-[20px] bg-[#e0e5ec] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]">
 
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400">
+            <div className="flex h-11 w-11 items-center justify-center rounded-[12px] bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
               <CheckCircle2 size={19} />
             </div>
 
-            <p className="mt-4 text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="mt-4 text-sm text-[#3f3e3e]">
               Lessons completed
             </p>
 
@@ -443,13 +443,13 @@ export default async function MyLearningPage() {
               AVERAGE PROGRESS
           ================================================= */}
 
-          <div className="rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
+          <div className="rounded-[20px] bg-[#e0e5ec] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]">
 
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400">
+            <div className="flex h-11 w-11 items-center justify-center rounded-[12px] bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
               <Clock3 size={19} />
             </div>
 
-            <p className="mt-4 text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="mt-4 text-sm text-[#3f3e3e]">
               Average progress
             </p>
 
@@ -473,7 +473,7 @@ export default async function MyLearningPage() {
               Your courses
             </h2>
 
-            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="mt-1 text-sm text-[#3f3e3e]">
               Courses you've started appear here.
             </p>
 
@@ -485,9 +485,9 @@ export default async function MyLearningPage() {
 
           {courseProgress.length === 0 ? (
 
-            <div className="mt-6 rounded-2xl border border-dashed border-zinc-300 bg-white p-12 text-center dark:border-zinc-700 dark:bg-zinc-900">
+            <div className="mt-6 rounded-[20px] bg-[#e0e5ec] p-10 text-center shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] sm:p-12">
 
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-[20px] bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
                 <BookOpen size={24} />
               </div>
 
@@ -495,13 +495,13 @@ export default async function MyLearningPage() {
                 No courses started yet
               </h3>
 
-              <p className="mx-auto mt-2 max-w-md text-sm text-zinc-500 dark:text-zinc-400">
+              <p className="mx-auto mt-2 max-w-md text-sm text-[#3f3e3e]">
                 Start watching a course and it will appear here automatically.
               </p>
 
               <Link
                 href="/courses"
-                className="mt-5 inline-flex items-center gap-2 rounded-xl bg-zinc-950 px-5 py-2.5 text-sm font-semibold text-white dark:bg-white dark:text-zinc-950"
+                className="mt-5 inline-flex items-center gap-2 rounded-[12px] bg-[orangered] px-5 py-2.5 text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.3)]"
               >
                 Explore courses
                 <ArrowRight size={15} />
@@ -511,7 +511,7 @@ export default async function MyLearningPage() {
 
           ) : (
 
-            <div className="mt-6 space-y-4">
+            <div className="mt-6 space-y-5">
 
               {courseProgress.map(
                 (course) => (
@@ -520,7 +520,7 @@ export default async function MyLearningPage() {
                     key={
                       course.courseId
                     }
-                    className="overflow-hidden rounded-2xl border border-zinc-200 bg-white transition hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900"
+                    className="overflow-hidden rounded-[20px] bg-[#e0e5ec] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-300"
                   >
 
                     <div className="grid md:grid-cols-[190px_1fr]">
@@ -529,19 +529,19 @@ export default async function MyLearningPage() {
                           COURSE VISUAL
                       =================================== */}
 
-                      <div className="flex min-h-[190px] items-center justify-center bg-zinc-950 dark:bg-black">
+                      <div className="flex min-h-[190px] items-center justify-center bg-[#e0e5ec] p-6 shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)]">
 
                         <div className="text-center">
 
-                          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-600 text-white">
+                          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-[20px] bg-[orangered] text-white shadow-[5px_5px_12px_rgba(79,70,229,0.25),-5px_-5px_12px_rgba(255,255,255,0.8)]">
                             <BookOpen size={25} />
                           </div>
 
-                          <p className="mt-4 text-[10px] font-medium uppercase tracking-wider text-zinc-500">
+                          <p className="mt-4 text-[10px] font-medium uppercase tracking-wider text-[#3f3e3e]">
                             {course.category}
                           </p>
 
-                          <p className="mt-1 text-sm font-semibold text-white">
+                          <p className="mt-1 text-sm font-semibold text-black">
                             {course.level}
                           </p>
 
@@ -553,27 +553,27 @@ export default async function MyLearningPage() {
                           COURSE INFORMATION
                       =================================== */}
 
-                      <div className="p-6">
+                      <div className="p-6 sm:p-7">
 
                         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
 
-                          <div>
+                          <div className="min-w-0">
 
-                            <span className="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-medium text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400">
+                            <span className="inline-flex rounded-full bg-[#e0e5ec] px-3 py-1 text-xs font-semibold text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
                               {course.category}
                             </span>
 
-                            <h3 className="mt-3 text-xl font-bold">
+                            <h3 className="mt-3 text-xl font-bold leading-tight sm:text-2xl">
                               {course.title}
                             </h3>
 
-                            <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
+                            <p className="mt-2 max-w-3xl text-sm leading-6 text-[#3f3e3e]">
                               {course.description}
                             </p>
 
                           </div>
 
-                          <span className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">
+                          <span className="shrink-0 text-sm font-bold text-[orangered]">
                             {course.percentage}%
                           </span>
 
@@ -583,10 +583,10 @@ export default async function MyLearningPage() {
                             PROGRESS BAR
                         ================================= */}
 
-                        <div className="mt-6 h-2 overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
+                        <div className="mt-6 h-3 overflow-hidden rounded-full bg-[#e0e5ec] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
 
                           <div
-                            className="h-full rounded-full bg-indigo-600 transition-all"
+                            className="h-full rounded-full bg-[orangered] transition-all duration-300"
                             style={{
                               width: `${course.percentage}%`,
                             }}
@@ -600,7 +600,7 @@ export default async function MyLearningPage() {
 
                         <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
 
-                          <div className="flex items-center gap-4 text-xs text-zinc-400">
+                          <div className="flex items-center gap-4 text-xs text-[#3f3e3e]">
 
                             <span>
                               {course.completed}{" "}
@@ -617,7 +617,7 @@ export default async function MyLearningPage() {
 
                           <Link
                             href={`/learn/${course.slug}`}
-                            className="flex items-center gap-2 rounded-xl bg-zinc-950 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
+                            className="flex items-center gap-2 rounded-[12px] bg-[orangered] px-4 py-2.5 text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.3)]"
                           >
 
                             <Play

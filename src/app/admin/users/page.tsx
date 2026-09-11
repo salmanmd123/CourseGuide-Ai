@@ -5,7 +5,6 @@ import Link from "next/link";
 import {
     ArrowLeft,
     Check,
-    ChevronDown,
     Loader2,
     Search,
     Shield,
@@ -161,9 +160,7 @@ export default function AdminUsersPage() {
        CHANGE ROLE
     ===================================================== */
 
-    async function changeRole(
-        user: User
-    ) {
+    async function changeRole(user: User) {
         const newRole =
             user.role === "ADMIN"
                 ? "USER"
@@ -230,7 +227,11 @@ export default function AdminUsersPage() {
             );
 
             setSuccess(
-                `${user.name} is now ${newRole === "ADMIN" ? "an admin" : "a learner"}.`
+                `${user.name} is now ${
+                    newRole === "ADMIN"
+                        ? "an admin"
+                        : "a learner"
+                }.`
             );
         } catch (err) {
             console.error(err);
@@ -249,9 +250,7 @@ export default function AdminUsersPage() {
        DELETE USER
     ===================================================== */
 
-    async function deleteUser(
-        user: User
-    ) {
+    async function deleteUser(user: User) {
         if (user.id === currentUser?.id) {
             setError(
                 "You cannot delete your own account."
@@ -324,9 +323,7 @@ export default function AdminUsersPage() {
        DATE FORMAT
     ===================================================== */
 
-    function formatDate(
-        date: string
-    ) {
+    function formatDate(date: string) {
         try {
             return new Date(
                 date
@@ -347,9 +344,7 @@ export default function AdminUsersPage() {
        INITIALS
     ===================================================== */
 
-    function getInitials(
-        name: string
-    ) {
+    function getInitials(name: string) {
         return name
             .split(" ")
             .filter(Boolean)
@@ -361,7 +356,7 @@ export default function AdminUsersPage() {
     }
 
     return (
-        <main className="min-h-screen bg-zinc-50 text-zinc-950 transition-colors dark:bg-zinc-950 dark:text-zinc-50">
+        <main className="min-h-screen bg-[#e0e5ec] text-black transition-colors">
             {/* =================================================
                 NAVBAR
             ================================================= */}
@@ -380,13 +375,13 @@ export default function AdminUsersPage() {
                 MAIN
             ================================================= */}
 
-            <div className="mx-auto max-w-7xl px-6 py-10">
+            <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
                 {/* HEADER */}
 
                 <div className="mb-8">
                     <Link
                         href="/admin"
-                        className="mb-5 inline-flex items-center gap-2 text-sm font-medium text-zinc-500 transition hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white"
+                        className="mb-5 inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:text-orangered hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
                     >
                         <ArrowLeft className="h-4 w-4" />
                         Back to Admin Dashboard
@@ -394,7 +389,7 @@ export default function AdminUsersPage() {
 
                     <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
                         <div>
-                            <p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-indigo-600 dark:text-indigo-400">
+                            <p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[orangered]">
                                 ADMINISTRATION
                             </p>
 
@@ -402,15 +397,15 @@ export default function AdminUsersPage() {
                                 Manage Users
                             </h1>
 
-                            <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-500 dark:text-zinc-400">
+                            <p className="mt-2 max-w-2xl text-sm leading-6 text-[#3f3e3e]">
                                 Manage learner accounts,
                                 administrator access,
                                 and user permissions.
                             </p>
                         </div>
 
-                        <div className="flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-600 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300">
-                            <Users className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                        <div className="inline-flex items-center gap-2 self-start rounded-full bg-[#e0e5ec] px-5 py-3 text-sm font-medium text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] lg:self-auto">
+                            <Users className="h-4 w-4 text-[orangered]" />
 
                             <span>
                                 {totalUsers} total users
@@ -424,7 +419,7 @@ export default function AdminUsersPage() {
                 ================================================= */}
 
                 {error && (
-                    <div className="mb-6 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-300">
+                    <div className="mb-6 flex items-start gap-3 rounded-[20px] bg-[#e0e5ec] px-4 py-3 text-sm text-red-600 shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
                         <X className="mt-0.5 h-4 w-4 shrink-0" />
 
                         <span className="flex-1">
@@ -436,7 +431,7 @@ export default function AdminUsersPage() {
                             onClick={() =>
                                 setError(null)
                             }
-                            className="rounded-md p-1 transition hover:bg-red-100 dark:hover:bg-red-900/40"
+                            className="rounded-full p-1 text-red-600 transition-all duration-200 hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
                         >
                             <X className="h-4 w-4" />
                         </button>
@@ -444,7 +439,7 @@ export default function AdminUsersPage() {
                 )}
 
                 {success && (
-                    <div className="mb-6 flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-300">
+                    <div className="mb-6 flex items-start gap-3 rounded-[20px] bg-[#e0e5ec] px-4 py-3 text-sm text-emerald-700 shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
                         <Check className="mt-0.5 h-4 w-4 shrink-0" />
 
                         <span className="flex-1">
@@ -456,7 +451,7 @@ export default function AdminUsersPage() {
                             onClick={() =>
                                 setSuccess(null)
                             }
-                            className="rounded-md p-1 transition hover:bg-emerald-100 dark:hover:bg-emerald-900/40"
+                            className="rounded-full p-1 text-emerald-700 transition-all duration-200 hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
                         >
                             <X className="h-4 w-4" />
                         </button>
@@ -467,7 +462,7 @@ export default function AdminUsersPage() {
                     STATS
                 ================================================= */}
 
-                <div className="mb-8 grid gap-4 sm:grid-cols-3">
+                <div className="mb-8 grid gap-5 sm:grid-cols-3">
                     <StatCard
                         label="Total Users"
                         value={totalUsers}
@@ -497,23 +492,22 @@ export default function AdminUsersPage() {
                     CONTROLS
                 ================================================= */}
 
-                <div className="mb-6 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+                <div className="mb-6 rounded-[30px] bg-[#e0e5ec] p-4 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] sm:p-5">
                     <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                         {/* SEARCH */}
 
                         <div className="relative w-full lg:max-w-md">
-                            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+                            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#3f3e3e]" />
 
                             <input
                                 value={search}
                                 onChange={(event) =>
                                     setSearch(
-                                        event.target
-                                            .value
+                                        event.target.value
                                     )
                                 }
                                 placeholder="Search by name or email..."
-                                className="h-11 w-full rounded-xl border border-zinc-200 bg-zinc-50 pl-11 pr-4 text-sm outline-none transition placeholder:text-zinc-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10 dark:border-zinc-700 dark:bg-zinc-950"
+                                className="h-11 w-full rounded-[20px] border-0 bg-[#e0e5ec] pl-11 pr-4 text-sm text-black outline-none transition-all duration-200 placeholder:text-[#3f3e3e] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] focus:shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)]"
                             />
                         </div>
 
@@ -522,13 +516,10 @@ export default function AdminUsersPage() {
                         <div className="flex flex-wrap gap-2">
                             <FilterButton
                                 active={
-                                    filter ===
-                                    "ALL"
+                                    filter === "ALL"
                                 }
                                 onClick={() =>
-                                    setFilter(
-                                        "ALL"
-                                    )
+                                    setFilter("ALL")
                                 }
                             >
                                 All
@@ -536,13 +527,10 @@ export default function AdminUsersPage() {
 
                             <FilterButton
                                 active={
-                                    filter ===
-                                    "USER"
+                                    filter === "USER"
                                 }
                                 onClick={() =>
-                                    setFilter(
-                                        "USER"
-                                    )
+                                    setFilter("USER")
                                 }
                             >
                                 Learners
@@ -550,13 +538,10 @@ export default function AdminUsersPage() {
 
                             <FilterButton
                                 active={
-                                    filter ===
-                                    "ADMIN"
+                                    filter === "ADMIN"
                                 }
                                 onClick={() =>
-                                    setFilter(
-                                        "ADMIN"
-                                    )
+                                    setFilter("ADMIN")
                                 }
                             >
                                 Admins
@@ -570,9 +555,9 @@ export default function AdminUsersPage() {
                 ================================================= */}
 
                 <div className="mb-4 flex items-center justify-between">
-                    <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                    <p className="text-sm text-[#3f3e3e]">
                         Showing{" "}
-                        <span className="font-semibold text-zinc-900 dark:text-white">
+                        <span className="font-semibold text-black">
                             {filteredUsers.length}
                         </span>{" "}
                         {filteredUsers.length === 1
@@ -586,36 +571,36 @@ export default function AdminUsersPage() {
                 ================================================= */}
 
                 {loading ? (
-                    <div className="flex min-h-[300px] items-center justify-center rounded-2xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-                        <div className="flex items-center gap-3 text-sm text-zinc-500 dark:text-zinc-400">
-                            <Loader2 className="h-5 w-5 animate-spin" />
+                    <div className="flex min-h-[300px] items-center justify-center rounded-[30px] bg-[#e0e5ec] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]">
+                        <div className="flex items-center gap-3 text-sm text-[#3f3e3e]">
+                            <Loader2 className="h-5 w-5 animate-spin text-[orangered]" />
 
                             Loading users...
                         </div>
                     </div>
                 ) : filteredUsers.length === 0 ? (
-                    <div className="rounded-2xl border border-zinc-200 bg-white px-6 py-16 text-center dark:border-zinc-800 dark:bg-zinc-900">
-                        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-100 dark:bg-zinc-800">
-                            <Users className="h-6 w-6 text-zinc-400" />
+                    <div className="rounded-[30px] bg-[#e0e5ec] px-6 py-16 text-center shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]">
+                        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#e0e5ec] text-[#3f3e3e] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+                            <Users className="h-6 w-6" />
                         </div>
 
                         <h2 className="text-lg font-semibold">
                             No users found
                         </h2>
 
-                        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+                        <p className="mt-1 text-sm text-[#3f3e3e]">
                             Try changing your search
                             or filter.
                         </p>
                     </div>
                 ) : (
-                    <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+                    <div className="overflow-hidden rounded-[30px] bg-[#e0e5ec] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]">
                         {/* DESKTOP TABLE */}
 
                         <div className="hidden overflow-x-auto md:block">
                             <table className="w-full text-left">
                                 <thead>
-                                    <tr className="border-b border-zinc-200 bg-zinc-50 text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-400">
+                                    <tr className="bg-[#e0e5ec] text-xs font-semibold uppercase tracking-wider text-[#3f3e3e] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
                                         <th className="px-6 py-4">
                                             User
                                         </th>
@@ -638,16 +623,14 @@ export default function AdminUsersPage() {
                                     {filteredUsers.map(
                                         (user) => (
                                             <tr
-                                                key={
-                                                    user.id
-                                                }
-                                                className="border-b border-zinc-100 last:border-0 hover:bg-zinc-50/70 dark:border-zinc-800/70 dark:hover:bg-zinc-800/30"
+                                                key={user.id}
+                                                className="border-b border-[#d2d8e1] last:border-0 transition-all duration-200 hover:bg-[#dce1e8]"
                                             >
                                                 {/* USER */}
 
                                                 <td className="px-6 py-5">
                                                     <div className="flex items-center gap-3">
-                                                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-sm font-bold text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400">
+                                                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#e0e5ec] text-sm font-bold text-[orangered] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]">
                                                             {getInitials(
                                                                 user.name
                                                             )}
@@ -655,7 +638,7 @@ export default function AdminUsersPage() {
 
                                                         <div className="min-w-0">
                                                             <div className="flex items-center gap-2">
-                                                                <p className="truncate font-semibold text-zinc-900 dark:text-white">
+                                                                <p className="truncate font-semibold text-black">
                                                                     {
                                                                         user.name
                                                                     }
@@ -663,13 +646,13 @@ export default function AdminUsersPage() {
 
                                                                 {user.id ===
                                                                     currentUser?.id && (
-                                                                    <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-semibold text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
+                                                                    <span className="rounded-full bg-[#e0e5ec] px-2 py-0.5 text-[10px] font-semibold text-[#3f3e3e] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
                                                                         YOU
                                                                     </span>
                                                                 )}
                                                             </div>
 
-                                                            <p className="mt-0.5 truncate text-sm text-zinc-500 dark:text-zinc-400">
+                                                            <p className="mt-0.5 truncate text-sm text-[#3f3e3e]">
                                                                 {
                                                                     user.email
                                                                 }
@@ -690,7 +673,7 @@ export default function AdminUsersPage() {
 
                                                 {/* DATE */}
 
-                                                <td className="px-6 py-5 text-sm text-zinc-500 dark:text-zinc-400">
+                                                <td className="px-6 py-5 text-sm text-[#3f3e3e]">
                                                     {formatDate(
                                                         user.createdAt
                                                     )}
@@ -713,7 +696,7 @@ export default function AdminUsersPage() {
                                                                     user
                                                                 )
                                                             }
-                                                            className="inline-flex h-9 items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-700 transition hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-700 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-indigo-800 dark:hover:bg-indigo-950/40 dark:hover:text-indigo-300"
+                                                            className="inline-flex h-9 items-center gap-2 rounded-full bg-[#e0e5ec] px-3 text-xs font-semibold text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] disabled:cursor-not-allowed disabled:opacity-50"
                                                         >
                                                             {updatingId ===
                                                             user.id ? (
@@ -744,7 +727,7 @@ export default function AdminUsersPage() {
                                                                     user
                                                                 )
                                                             }
-                                                            className="inline-flex h-9 items-center gap-2 rounded-lg border border-red-200 bg-white px-3 text-xs font-semibold text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-red-900/60 dark:bg-zinc-900 dark:text-red-400 dark:hover:bg-red-950/30"
+                                                            className="inline-flex h-9 items-center gap-2 rounded-full bg-[#e0e5ec] px-3 text-xs font-semibold text-red-600 shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] disabled:cursor-not-allowed disabled:opacity-50"
                                                         >
                                                             {deletingId ===
                                                             user.id ? (
@@ -766,17 +749,15 @@ export default function AdminUsersPage() {
 
                         {/* MOBILE CARDS */}
 
-                        <div className="divide-y divide-zinc-100 md:hidden dark:divide-zinc-800">
+                        <div className="divide-y divide-[#d2d8e1] md:hidden">
                             {filteredUsers.map(
                                 (user) => (
                                     <div
-                                        key={
-                                            user.id
-                                        }
+                                        key={user.id}
                                         className="p-5"
                                     >
                                         <div className="flex items-start gap-3">
-                                            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-sm font-bold text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400">
+                                            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#e0e5ec] text-sm font-bold text-[orangered] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]">
                                                 {getInitials(
                                                     user.name
                                                 )}
@@ -792,13 +773,13 @@ export default function AdminUsersPage() {
 
                                                     {user.id ===
                                                         currentUser?.id && (
-                                                        <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-semibold text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
+                                                        <span className="rounded-full bg-[#e0e5ec] px-2 py-0.5 text-[10px] font-semibold text-[#3f3e3e] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
                                                             YOU
                                                         </span>
                                                     )}
                                                 </div>
 
-                                                <p className="mt-0.5 break-all text-sm text-zinc-500 dark:text-zinc-400">
+                                                <p className="mt-0.5 break-all text-sm text-[#3f3e3e]">
                                                     {
                                                         user.email
                                                     }
@@ -811,7 +792,7 @@ export default function AdminUsersPage() {
                                                         }
                                                     />
 
-                                                    <span className="text-xs text-zinc-400">
+                                                    <span className="text-xs text-[#3f3e3e]">
                                                         Joined{" "}
                                                         {formatDate(
                                                             user.createdAt
@@ -821,7 +802,7 @@ export default function AdminUsersPage() {
                                             </div>
                                         </div>
 
-                                        <div className="mt-4 grid grid-cols-2 gap-2">
+                                        <div className="mt-4 grid grid-cols-2 gap-3">
                                             <button
                                                 type="button"
                                                 disabled={
@@ -835,7 +816,7 @@ export default function AdminUsersPage() {
                                                         user
                                                     )
                                                 }
-                                                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-zinc-200 bg-white text-xs font-semibold text-zinc-700 transition hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                                className="inline-flex h-10 items-center justify-center gap-2 rounded-full bg-[#e0e5ec] text-xs font-semibold text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] disabled:cursor-not-allowed disabled:opacity-50"
                                             >
                                                 {updatingId ===
                                                 user.id ? (
@@ -863,7 +844,7 @@ export default function AdminUsersPage() {
                                                         user
                                                     )
                                                 }
-                                                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-red-200 bg-white text-xs font-semibold text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-red-900/60 dark:bg-zinc-900 dark:text-red-400 dark:hover:bg-red-950/30"
+                                                className="inline-flex h-10 items-center justify-center gap-2 rounded-full bg-[#e0e5ec] text-xs font-semibold text-red-600 shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] disabled:cursor-not-allowed disabled:opacity-50"
                                             >
                                                 {deletingId ===
                                                 user.id ? (
@@ -900,19 +881,19 @@ function StatCard({
     icon: React.ReactNode;
 }) {
     return (
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="rounded-[30px] bg-[#e0e5ec] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-300">
             <div className="flex items-center justify-between">
                 <div>
-                    <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                    <p className="text-sm text-[#3f3e3e]">
                         {label}
                     </p>
 
-                    <p className="mt-2 text-3xl font-bold tracking-tight">
+                    <p className="mt-2 text-3xl font-bold tracking-tight text-black">
                         {value}
                     </p>
                 </div>
 
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400">
+                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#e0e5ec] text-[orangered] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]">
                     {icon}
                 </div>
             </div>
@@ -937,10 +918,10 @@ function FilterButton({
         <button
             type="button"
             onClick={onClick}
-            className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
+            className={`rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ${
                 active
-                    ? "border-indigo-600 bg-indigo-600 text-white"
-                    : "border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                    ? "bg-[orangered] text-white shadow-[inset_3px_3px_6px_rgba(180,45,0,0.35),inset_-3px_-3px_6px_rgba(255,165,120,0.45)] hover:bg-[red]"
+                    : "bg-[#e0e5ec] text-[#3f3e3e] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
             }`}
         >
             {children}
@@ -959,7 +940,7 @@ function RoleBadge({
 }) {
     if (role === "ADMIN") {
         return (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e0e5ec] px-3 py-1.5 text-xs font-semibold text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
                 <ShieldCheck className="h-3.5 w-3.5" />
                 Admin
             </span>
@@ -967,7 +948,7 @@ function RoleBadge({
     }
 
     return (
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 px-3 py-1.5 text-xs font-semibold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e0e5ec] px-3 py-1.5 text-xs font-semibold text-[#3f3e3e] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
             <Users className="h-3.5 w-3.5" />
             Learner
         </span>

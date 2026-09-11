@@ -27,28 +27,21 @@ type UserData = {
 export default function Navbar() {
     const { theme, setTheme } = useTheme();
 
-    const [mounted, setMounted] =
-        useState(false);
+    const [mounted, setMounted] = useState(false);
 
-    const [user, setUser] =
-        useState<UserData | null>(null);
+    const [user, setUser] = useState<UserData | null>(null);
 
-    const [loading, setLoading] =
-        useState(true);
+    const [loading, setLoading] = useState(true);
 
-    const [profileOpen, setProfileOpen] =
-        useState(false);
+    const [profileOpen, setProfileOpen] = useState(false);
 
     /* =========================================================
        SEARCH
     ========================================================= */
 
-    const [searchOpen, setSearchOpen] =
-        useState(false);
+    const [searchOpen, setSearchOpen] = useState(false);
 
-    const [search, setSearch] =
-        useState("");
-
+    const [search, setSearch] = useState("");
 
     /* =========================================================
        MOUNT
@@ -59,32 +52,21 @@ export default function Navbar() {
 
         async function checkUser() {
             try {
-                const response =
-                    await fetch(
-                        "/api/auth/me",
-                        {
-                            cache: "no-store",
-                        }
-                    );
+                const response = await fetch("/api/auth/me", {
+                    cache: "no-store",
+                });
 
-                const data =
-                    await response.json();
+                const data = await response.json();
 
-                setUser(
-                    data.user ?? null
-                );
-
+                setUser(data.user ?? null);
             } catch (error) {
-
                 console.error(
                     "Failed to get current user:",
                     error
                 );
 
                 setUser(null);
-
             } finally {
-
                 setLoading(false);
             }
         }
@@ -92,42 +74,33 @@ export default function Navbar() {
         checkUser();
     }, []);
 
-
     /* =========================================================
        LOGOUT
     ========================================================= */
 
     async function handleLogout() {
         try {
-
-            const response =
-                await fetch(
-                    "/api/auth/logout",
-                    {
-                        method: "POST",
-                    }
-                );
-
+            const response = await fetch(
+                "/api/auth/logout",
+                {
+                    method: "POST",
+                }
+            );
 
             if (response.ok) {
-
                 setUser(null);
 
                 setProfileOpen(false);
 
-                window.location.href =
-                    "/login";
+                window.location.href = "/login";
             }
-
         } catch (error) {
-
             console.error(
                 "Logout failed:",
                 error
             );
         }
     }
-
 
     /* =========================================================
        SEARCH SUBMIT
@@ -136,67 +109,48 @@ export default function Navbar() {
     function handleSearchSubmit(
         event: FormEvent<HTMLFormElement>
     ) {
-
         event.preventDefault();
 
-        const query =
-            search.trim();
-
+        const query = search.trim();
 
         if (!query) {
             return;
         }
 
-
         window.location.href =
-            `/courses?q=${encodeURIComponent(
-                query
-            )}`;
+            `/courses?q=${encodeURIComponent(query)}`;
     }
-
 
     /* =========================================================
        OPEN SEARCH
     ========================================================= */
 
     function openSearch() {
-
         setSearchOpen(true);
 
-        /*
-         * Small delay allows the input to render
-         * before focusing it.
-         */
-
         setTimeout(() => {
-
-            const input =
-                document.getElementById(
-                    "navbar-search"
-                ) as HTMLInputElement | null;
+            const input = document.getElementById(
+                "navbar-search"
+            ) as HTMLInputElement | null;
 
             input?.focus();
-
         }, 50);
     }
-
 
     /* =========================================================
        CLOSE SEARCH
     ========================================================= */
 
     function closeSearch() {
-
         setSearchOpen(false);
 
         setSearch("");
     }
 
-
     return (
-        <header className="sticky top-0 z-50 border-b border-zinc-200/70 bg-white/90 backdrop-blur dark:border-zinc-800/70 dark:bg-zinc-950/90">
+        <header className="sticky top-0 z-50 bg-[#e0e5ec]/95 backdrop-blur-md dark:bg-zinc-950/95">
 
-            <div className="mx-auto flex min-h-[72px] max-w-7xl items-center justify-between px-6">
+            <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
 
                 {/* =================================================
                    LOGO
@@ -204,69 +158,116 @@ export default function Navbar() {
 
                 <Link
                     href="/"
-                    className="flex shrink-0 items-center gap-3"
+                    className="neo-surface-sm flex shrink-0 items-center gap-3 rounded-[20px] px-5 py-2"
                     onClick={() =>
                         setProfileOpen(false)
                     }
                 >
 
                     <img
-                        src="/logo1.png"
+                        src="/logo2.png"
                         alt="CourseGuide"
-                        className="h-10 w-10 rounded-xl object-contain"
+                        className="h-9 w-9 rounded-full object-contain"
                     />
 
                     <div>
 
                         <div className="translate-y-1">
 
-                            <span className="text-[16px] font-bold leading-none tracking-tight text-zinc-900 dark:text-white">
+                            <span className="text-[16px] font-bold leading-none tracking-tight text-black dark:text-white">
                                 Course
                             </span>
 
-                            <span className="text-[16px] font-bold leading-none tracking-tight text-indigo-600 dark:text-indigo-400">
+                            <span className="text-[16px] font-bold leading-none tracking-tight text-[#ff4500] dark:text-white">
                                 Guide
                             </span>
 
                         </div>
 
-                        <p className="mt-0 mb-1 text-[10px] font-medium uppercase tracking-[0.18em] text-indigo-600 dark:text-indigo-400">
+                        <p className="mb-1 mt-0 text-[10px] font-bold uppercase tracking-[0.18em] text-[#ff4500]">
                             AI Learning
                         </p>
 
                     </div>
-                </Link>
 
+                </Link>
 
                 {/* =================================================
                    NAVIGATION
                 ================================================= */}
 
-                <nav className="hidden items-center gap-9 md:flex">
+                <nav className="neo-pill-inset hidden items-center gap-2 p-[6px] md:flex">
 
                     <Link
                         href="/courses"
-                        className="text-sm font-medium text-zinc-600 transition hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white"
+                        className="
+                            rounded-full
+                            px-6
+                            py-3
+                            text-sm
+                            font-semibold
+                            text-[#222]
+                            transition-all
+                            duration-200
+                            ease-out
+
+                            hover:bg-[#e0e5ec]
+                            hover:text-[#ff4500]
+                            hover:shadow-[5px_5px_10px_rgba(163,177,198,0.55),-5px_-5px_10px_rgba(255,255,255,0.9)]
+
+                            active:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
+                        "
                     >
                         Courses
                     </Link>
 
                     <Link
                         href="/how-it-works"
-                        className="text-sm font-medium text-zinc-600 transition hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white"
+                        className="
+                            rounded-full
+                            px-6
+                            py-3
+                            text-sm
+                            font-semibold
+                            text-[#222]
+                            transition-all
+                            duration-200
+                            ease-out
+
+                            hover:bg-[#e0e5ec]
+                            hover:text-[#ff4500]
+                            hover:shadow-[5px_5px_10px_rgba(163,177,198,0.55),-5px_-5px_10px_rgba(255,255,255,0.9)]
+
+                            active:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
+                        "
                     >
                         How it works
                     </Link>
 
                     <Link
                         href="/features"
-                        className="text-sm font-medium text-zinc-600 transition hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white"
+                        className="
+                            rounded-full
+                            px-6
+                            py-3
+                            text-sm
+                            font-semibold
+                            text-[#222]
+                            transition-all
+                            duration-200
+                            ease-out
+
+                            hover:bg-[#e0e5ec]
+                            hover:text-[#ff4500]
+                            hover:shadow-[5px_5px_10px_rgba(163,177,198,0.55),-5px_-5px_10px_rgba(255,255,255,0.9)]
+
+                            active:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
+                        "
                     >
                         Features
                     </Link>
 
                 </nav>
-
 
                 {/* =================================================
                    ACTIONS
@@ -281,15 +282,13 @@ export default function Navbar() {
                     {searchOpen ? (
 
                         <form
-                            onSubmit={
-                                handleSearchSubmit
-                            }
-                            className="flex h-10 w-[240px] items-center rounded-xl border border-zinc-200 bg-white px-2 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 sm:w-[280px]"
+                            onSubmit={handleSearchSubmit}
+                            className="neo-inset flex h-10 w-[240px] items-center rounded-full px-2 sm:w-[280px]"
                         >
 
                             <Search
                                 size={17}
-                                className="ml-2 shrink-0 text-zinc-400"
+                                className="ml-2 shrink-0 text-zinc-500"
                             />
 
                             <input
@@ -302,16 +301,14 @@ export default function Navbar() {
                                     )
                                 }
                                 placeholder="Search courses..."
-                                className="min-w-0 flex-1 bg-transparent px-2 text-sm text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-white"
+                                className="min-w-0 flex-1 bg-transparent px-2 text-sm text-zinc-900 outline-none placeholder:text-zinc-500 dark:text-white"
                             />
 
                             <button
                                 type="button"
-                                onClick={
-                                    closeSearch
-                                }
+                                onClick={closeSearch}
                                 aria-label="Close search"
-                                className="flex h-7 w-7 items-center justify-center rounded-lg text-zinc-400 transition hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-white"
+                                className="neo-button flex h-7 w-7 items-center justify-center rounded-full text-[#3f3e3e]"
                             >
                                 <X size={16} />
                             </button>
@@ -323,10 +320,8 @@ export default function Navbar() {
                         <button
                             type="button"
                             aria-label="Search courses"
-                            onClick={
-                                openSearch
-                            }
-                            className="flex h-10 w-10 items-center justify-center rounded-xl text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white"
+                            onClick={openSearch}
+                            className="neo-button flex h-10 w-10 items-center justify-center rounded-full text-[#3f3e3e]"
                         >
                             <Search
                                 size={19}
@@ -336,10 +331,9 @@ export default function Navbar() {
 
                     )}
 
-
                     {/* =================================================
                        THEME
-                    ================================================= */}
+                    ========================================================= */}
 
                     {mounted && (
 
@@ -347,18 +341,16 @@ export default function Navbar() {
                             type="button"
                             onClick={() =>
                                 setTheme(
-                                    theme ===
-                                        "dark"
+                                    theme === "dark"
                                         ? "light"
                                         : "dark"
                                 )
                             }
                             aria-label="Toggle dark mode"
-                            className="flex h-10 w-10 items-center justify-center rounded-xl text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white"
+                            className="neo-button flex h-10 w-10 items-center justify-center rounded-full text-[#3f3e3e]"
                         >
 
-                            {theme ===
-                                "dark" ? (
+                            {theme === "dark" ? (
 
                                 <Sun
                                     size={19}
@@ -378,14 +370,13 @@ export default function Navbar() {
 
                     )}
 
-
                     {/* =================================================
                        LOADING
-                    ================================================= */}
+                    ========================================================= */}
 
                     {loading ? (
 
-                        <div className="h-10 w-24 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-800" />
+                        <div className="neo-surface-sm h-10 w-24 animate-pulse rounded-full" />
 
                     ) : user ? (
 
@@ -402,12 +393,24 @@ export default function Navbar() {
                                         !profileOpen
                                     )
                                 }
-                                className="flex items-center gap-2 rounded-xl bg-zinc-950 px-3 py-2 text-white transition hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
+                                className="
+                                    neo-surface-sm
+                                    flex
+                                    items-center
+                                    gap-2
+                                    rounded-full
+                                    px-2
+                                    py-1.5
+                                    text-[#111111]
+                                    transition-all
+                                    duration-200
+                                    hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
+                                "
                             >
 
                                 {/* Avatar */}
 
-                                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-indigo-600 text-xs font-bold text-white">
+                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ff4500] text-xs font-bold text-white shadow-[3px_3px_7px_rgba(163,177,198,0.5)]">
 
                                     {user.name
                                         .charAt(0)
@@ -415,26 +418,24 @@ export default function Navbar() {
 
                                 </div>
 
-
                                 {/* Name */}
 
                                 <span className="hidden max-w-[120px] truncate text-sm font-semibold sm:block">
                                     {user.name}
                                 </span>
 
-
                                 {/* Arrow */}
 
                                 <ChevronDown
                                     size={15}
-                                    className={`transition-transform ${profileOpen
+                                    className={`transition-transform ${
+                                        profileOpen
                                             ? "rotate-180"
                                             : ""
-                                        }`}
+                                    }`}
                                 />
 
                             </button>
-
 
                             {/* =================================================
                                PROFILE DROPDOWN
@@ -442,26 +443,25 @@ export default function Navbar() {
 
                             {profileOpen && (
 
-                                <div className="absolute right-0 top-12 w-64 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-xl dark:border-zinc-800 dark:bg-zinc-900">
+                                <div className="neo-surface absolute right-0 top-14 w-64 overflow-hidden rounded-[22px] border-0">
 
                                     {/* User info */}
 
-                                    <div className="border-b border-zinc-200 px-4 py-4 dark:border-zinc-800">
+                                    <div className="px-4 py-4">
 
                                         <p className="text-sm font-semibold text-zinc-950 dark:text-white">
                                             {user.name}
                                         </p>
 
-                                        <p className="mt-1 truncate text-xs text-zinc-400">
+                                        <p className="mt-1 truncate text-xs text-zinc-500">
                                             {user.email}
                                         </p>
 
                                     </div>
 
-
                                     {/* Menu */}
 
-                                    <div className="p-2">
+                                    <div className="space-y-2 px-2 pb-2">
 
                                         <Link
                                             href="/profile"
@@ -470,17 +470,14 @@ export default function Navbar() {
                                                     false
                                                 )
                                             }
-                                            className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-zinc-700 transition hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                            className="neo-button flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-[#3f3e3e]"
                                         >
 
-                                            <User
-                                                size={17}
-                                            />
+                                            <User size={17} />
 
                                             Profile
 
                                         </Link>
-
 
                                         <Link
                                             href="/my-learning"
@@ -489,17 +486,14 @@ export default function Navbar() {
                                                     false
                                                 )
                                             }
-                                            className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-zinc-700 transition hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                            className="neo-button flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-[#3f3e3e]"
                                         >
 
-                                            <BookOpen
-                                                size={17}
-                                            />
+                                            <BookOpen size={17} />
 
                                             My Learning
 
                                         </Link>
-
 
                                         <Link
                                             href="/settings"
@@ -508,12 +502,10 @@ export default function Navbar() {
                                                     false
                                                 )
                                             }
-                                            className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-zinc-700 transition hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                            className="neo-button flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-[#3f3e3e]"
                                         >
 
-                                            <Settings
-                                                size={17}
-                                            />
+                                            <Settings size={17} />
 
                                             Settings
 
@@ -521,22 +513,17 @@ export default function Navbar() {
 
                                     </div>
 
-
                                     {/* Logout */}
 
-                                    <div className="border-t border-zinc-200 p-2 dark:border-zinc-800">
+                                    <div className="px-2 pb-2 pt-1">
 
                                         <button
                                             type="button"
-                                            onClick={
-                                                handleLogout
-                                            }
-                                            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-red-600 transition hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/30"
+                                            onClick={handleLogout}
+                                            className="neo-button flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-red-600"
                                         >
 
-                                            <LogOut
-                                                size={17}
-                                            />
+                                            <LogOut size={17} />
 
                                             Log out
 
@@ -557,19 +544,21 @@ export default function Navbar() {
                         ================================================= */
 
                         <>
+
                             <Link
                                 href="/login"
-                                className="hidden px-3 py-2 text-sm font-medium text-zinc-700 transition hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white sm:block"
+                                className="hidden px-3 py-2 text-sm font-semibold text-[#3f3e3e] transition hover:text-[#ff4500] sm:block"
                             >
                                 Log in
                             </Link>
 
                             <Link
                                 href="/register"
-                                className="rounded-xl bg-zinc-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
+                                className="neo-accent-button rounded-full px-5 py-2.5 text-sm font-bold"
                             >
                                 Get started
                             </Link>
+
                         </>
 
                     )}

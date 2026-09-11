@@ -398,11 +398,37 @@ export default function YouTubePlayer({
   // =========================================================
 
   return (
-    <div className="aspect-video w-full bg-black">
+    <div
+      className="
+        aspect-video
+        w-full
+        rounded-[20px]
+        bg-[#e0e5ec]
+        p-2
+      "
+      style={{
+        boxShadow:
+          "9px 9px 16px rgba(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.8)",
+      }}
+    >
       <div
-        id="youtube-player"
-        className="h-full w-full"
-      />
+        className="
+          h-full
+          w-full
+          overflow-hidden
+          rounded-[12px]
+          bg-black
+        "
+        style={{
+          boxShadow:
+            "inset 3px 3px 6px rgba(0, 0, 0, 0.35), inset -3px -3px 6px rgba(255, 255, 255, 0.08)",
+        }}
+      >
+        <div
+          id="youtube-player"
+          className="h-full w-full"
+        />
+      </div>
     </div>
   );
 }

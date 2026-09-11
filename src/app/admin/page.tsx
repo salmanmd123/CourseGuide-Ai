@@ -13,7 +13,6 @@ import {
     CheckCircle2,
     Film,
     GraduationCap,
-    LayoutDashboard,
     ListVideo,
     ShieldCheck,
     Users,
@@ -191,65 +190,80 @@ export default async function AdminDashboardPage() {
     ========================================================= */
 
     return (
-        <main className="min-h-screen bg-zinc-50 text-zinc-950 transition-colors dark:bg-zinc-950 dark:text-zinc-50">
+        <main className="min-h-screen bg-[#e0e5ec] text-black transition-colors">
+
             <AdminNavbar
                 name={admin.name}
                 email={admin.email}
             />
 
-            <div className="mx-auto max-w-7xl px-6 py-10">
+            <div className="mx-auto max-w-7xl px-5 py-8 sm:px-6 sm:py-10">
+
                 {/* =================================================
                    HEADER
                 ================================================= */}
 
-                <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+                <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+
                     <div>
-                        <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400">
+
+                        <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#e0e5ec] px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+
                             <ShieldCheck
                                 size={14}
                             />
 
                             Administrator
+
                         </div>
 
-                        <h1 className="text-3xl font-bold tracking-tight text-zinc-950 dark:text-white sm:text-4xl">
+                        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
                             Admin Dashboard
                         </h1>
 
-                        <p className="mt-3 max-w-2xl text-zinc-500 dark:text-zinc-400">
+                        <p className="mt-3 max-w-2xl text-sm leading-6 text-[#3f3e3e] sm:text-base">
                             Manage CourseGuide
                             AI and monitor
                             platform activity
                             from one place.
                         </p>
+
                     </div>
 
                     {/* ADMIN PROFILE */}
 
-                    <div className="flex items-center gap-3 rounded-2xl border border-zinc-200 bg-white px-4 py-3 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-                        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400">
+                    <div className="flex items-center gap-3 rounded-[20px] bg-[#e0e5ec] px-4 py-3 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]">
+
+                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+
                             <ShieldCheck
                                 size={21}
                             />
+
                         </div>
 
                         <div className="min-w-0">
+
                             <p className="truncate text-sm font-semibold">
                                 {admin.name}
                             </p>
 
-                            <p className="truncate text-xs text-zinc-400">
+                            <p className="truncate text-xs text-[#3f3e3e]">
                                 {admin.email}
                             </p>
+
                         </div>
+
                     </div>
+
                 </div>
 
                 {/* =================================================
                    STATISTICS
                 ================================================= */}
 
-                <section className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <section className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+
                     <StatCard
                         title="Total Users"
                         value={
@@ -315,6 +329,7 @@ export default async function AdminDashboardPage() {
                         }
                         description="Total completed lessons"
                     />
+
                 </section>
 
                 {/* =================================================
@@ -322,8 +337,10 @@ export default async function AdminDashboardPage() {
                 ================================================= */}
 
                 <section className="mt-10">
+
                     <div className="mb-5">
-                        <p className="text-xs font-bold uppercase tracking-[0.15em] text-indigo-600 dark:text-indigo-400">
+
+                        <p className="text-xs font-bold uppercase tracking-[0.15em] text-[orangered]">
                             Management
                         </p>
 
@@ -331,14 +348,16 @@ export default async function AdminDashboardPage() {
                             Quick Actions
                         </h2>
 
-                        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+                        <p className="mt-1 text-sm text-[#3f3e3e]">
                             Manage important
                             parts of the
                             platform.
                         </p>
+
                     </div>
 
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+
                         <AdminActionCard
                             href="/admin/courses"
                             icon={
@@ -356,7 +375,9 @@ export default async function AdminDashboardPage() {
                             title="Manage Users"
                             description="View registered users and manage platform accounts."
                         />
+
                     </div>
+
                 </section>
 
                 {/* =================================================
@@ -364,162 +385,203 @@ export default async function AdminDashboardPage() {
                 ================================================= */}
 
                 <section className="mt-10">
+
                     <div className="mb-5">
-                        <p className="text-xs font-bold uppercase tracking-[0.15em] text-indigo-600 dark:text-indigo-400">
+
+                        <p className="text-xs font-bold uppercase tracking-[0.15em] text-[orangered]">
                             Activity
                         </p>
 
                         <h2 className="mt-1 text-xl font-bold">
                             Recent Activity
                         </h2>
+
                     </div>
 
                     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+
                         {/* =================================================
                            RECENT USERS
                         ================================================= */}
 
-                        <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-                            <div className="flex items-center justify-between border-b border-zinc-200 px-5 py-4 dark:border-zinc-800">
+                        <div className="overflow-hidden rounded-[20px] bg-[#e0e5ec] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]">
+
+                            <div className="flex items-center justify-between px-5 py-4 shadow-[inset_0_-3px_6px_rgba(163,177,198,0.25)]">
+
                                 <div>
+
                                     <h2 className="font-semibold">
                                         Recent Users
                                     </h2>
 
-                                    <p className="mt-1 text-xs text-zinc-400">
+                                    <p className="mt-1 text-xs text-[#3f3e3e]">
                                         Latest registered
                                         users
                                     </p>
+
                                 </div>
 
                                 <Link
                                     href="/admin/users"
-                                    className="flex items-center gap-1 text-sm font-semibold text-indigo-600 transition hover:text-indigo-500 dark:text-indigo-400"
+                                    className="flex items-center gap-1 rounded-[12px] px-3 py-2 text-sm font-semibold text-[orangered] transition-all duration-200 hover:bg-[#e0e5ec] hover:text-[red] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
                                 >
                                     View all
 
                                     <ArrowRight
                                         className="h-4 w-4"
                                     />
+
                                 </Link>
+
                             </div>
 
-                            <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
+                            <div>
+
                                 {recentUsers.length ===
                                 0 ? (
-                                    <div className="px-5 py-10 text-center text-sm text-zinc-500">
+
+                                    <div className="px-5 py-10 text-center text-sm text-[#3f3e3e]">
                                         No users
                                         found.
                                     </div>
+
                                 ) : (
+
                                     recentUsers.map(
                                         (
                                             user
                                         ) => (
+
                                             <div
                                                 key={
                                                     user.id
                                                 }
-                                                className="flex items-center justify-between gap-4 px-5 py-4 transition hover:bg-zinc-50 dark:hover:bg-zinc-800/40"
+                                                className="flex items-center justify-between gap-4 px-5 py-4 transition-all duration-200 hover:bg-[#e0e5ec] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.35),inset_-3px_-3px_6px_rgba(255,255,255,0.5)]"
                                             >
+
                                                 <div className="flex min-w-0 items-center gap-3">
-                                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400">
+
+                                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#e0e5ec] text-sm font-bold text-[orangered] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]">
+
                                                         {user.name
                                                             .charAt(
                                                                 0
                                                             )
                                                             .toUpperCase()}
+
                                                     </div>
 
                                                     <div className="min-w-0">
+
                                                         <p className="truncate text-sm font-semibold">
                                                             {
                                                                 user.name
                                                             }
                                                         </p>
 
-                                                        <p className="truncate text-xs text-zinc-400">
+                                                        <p className="truncate text-xs text-[#3f3e3e]">
                                                             {
                                                                 user.email
                                                             }
                                                         </p>
+
                                                     </div>
+
                                                 </div>
 
                                                 <span
-                                                    className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide ${
+                                                    className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide shadow-[inset_3px_3px_6px_rgba(163,177,198,0.45),inset_-3px_-3px_6px_rgba(255,255,255,0.7)] ${
                                                         user.role ===
                                                         "ADMIN"
-                                                            ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400"
-                                                            : "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"
+                                                            ? "text-[orangered]"
+                                                            : "text-[#3f3e3e]"
                                                     }`}
                                                 >
                                                     {
                                                         user.role
                                                     }
                                                 </span>
+
                                             </div>
+
                                         )
                                     )
+
                                 )}
+
                             </div>
+
                         </div>
 
                         {/* =================================================
                            RECENT COURSES
                         ================================================= */}
 
-                        <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-                            <div className="flex items-center justify-between border-b border-zinc-200 px-5 py-4 dark:border-zinc-800">
+                        <div className="overflow-hidden rounded-[20px] bg-[#e0e5ec] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]">
+
+                            <div className="flex items-center justify-between px-5 py-4 shadow-[inset_0_-3px_6px_rgba(163,177,198,0.25)]">
+
                                 <div>
+
                                     <h2 className="font-semibold">
                                         Recent Courses
                                     </h2>
 
-                                    <p className="mt-1 text-xs text-zinc-400">
+                                    <p className="mt-1 text-xs text-[#3f3e3e]">
                                         Recently added
                                         courses
                                     </p>
+
                                 </div>
 
                                 <Link
                                     href="/admin/courses"
-                                    className="flex items-center gap-1 text-sm font-semibold text-indigo-600 transition hover:text-indigo-500 dark:text-indigo-400"
+                                    className="flex items-center gap-1 rounded-[12px] px-3 py-2 text-sm font-semibold text-[orangered] transition-all duration-200 hover:bg-[#e0e5ec] hover:text-[red] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
                                 >
                                     View all
 
                                     <ArrowRight
                                         className="h-4 w-4"
                                     />
+
                                 </Link>
+
                             </div>
 
-                            <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
+                            <div>
+
                                 {recentCourses.length ===
                                 0 ? (
-                                    <div className="px-5 py-10 text-center text-sm text-zinc-500">
+
+                                    <div className="px-5 py-10 text-center text-sm text-[#3f3e3e]">
                                         No courses
                                         found.
                                     </div>
+
                                 ) : (
+
                                     recentCourses.map(
                                         (
                                             course
                                         ) => (
+
                                             <div
                                                 key={
                                                     course.id
                                                 }
-                                                className="flex items-center justify-between gap-4 px-5 py-4 transition hover:bg-zinc-50 dark:hover:bg-zinc-800/40"
+                                                className="flex items-center justify-between gap-4 px-5 py-4 transition-all duration-200 hover:bg-[#e0e5ec] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.35),inset_-3px_-3px_6px_rgba(255,255,255,0.5)]"
                                             >
+
                                                 <div className="min-w-0">
+
                                                     <p className="truncate text-sm font-semibold">
                                                         {
                                                             course.title
                                                         }
                                                     </p>
 
-                                                    <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-zinc-400">
+                                                    <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-[#3f3e3e]">
+
                                                         <span>
                                                             {course.courseType ===
                                                             "PLAYLIST"
@@ -536,44 +598,57 @@ export default async function AdminDashboardPage() {
                                                                 course.language
                                                             }
                                                         </span>
+
                                                     </div>
+
                                                 </div>
 
                                                 <Link
                                                     href={`/courses/${course.slug}`}
                                                     target="_blank"
-                                                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-zinc-400 transition hover:bg-indigo-50 hover:text-indigo-600 dark:hover:bg-indigo-500/10 dark:hover:text-indigo-400"
+                                                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#e0e5ec] text-[orangered] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:text-[red] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]"
                                                     aria-label={`View ${course.title}`}
                                                 >
                                                     <ArrowRight className="h-4 w-4" />
                                                 </Link>
+
                                             </div>
+
                                         )
                                     )
+
                                 )}
+
                             </div>
+
                         </div>
+
                     </div>
+
                 </section>
 
                 {/* =================================================
                    ADMIN STATUS
                 ================================================= */}
 
-                <div className="mt-10 flex items-start gap-3 rounded-2xl border border-indigo-200 bg-indigo-50 px-5 py-4 dark:border-indigo-500/20 dark:bg-indigo-500/5">
-                    <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-indigo-600 shadow-sm dark:bg-zinc-900 dark:text-indigo-400">
+                <div className="mt-10 flex items-start gap-3 rounded-[20px] bg-[#e0e5ec] px-5 py-4 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]">
+
+                    <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-[12px] bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+
                         <ShieldCheck
                             size={18}
                         />
+
                     </div>
 
                     <div>
-                        <p className="text-sm font-semibold text-indigo-900 dark:text-indigo-200">
+
+                        <p className="text-sm font-semibold text-[orangered]">
                             Admin access
                             enabled
                         </p>
 
-                        <p className="mt-1 text-xs leading-5 text-indigo-700 dark:text-indigo-300">
+                        <p className="mt-1 text-xs leading-5 text-[#3f3e3e]">
                             You are signed in
                             as an administrator.
                             Administrative
@@ -581,9 +656,13 @@ export default async function AdminDashboardPage() {
                             protected on the
                             server.
                         </p>
+
                     </div>
+
                 </div>
+
             </div>
+
         </main>
     );
 }
@@ -604,10 +683,13 @@ function StatCard({
     description: string;
 }) {
     return (
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 dark:shadow-none">
+        <div className="rounded-[20px] bg-[#e0e5ec] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-300">
+
             <div className="flex items-start justify-between gap-4">
+
                 <div>
-                    <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+
+                    <p className="text-sm font-medium text-[#3f3e3e]">
                         {title}
                     </p>
 
@@ -615,15 +697,20 @@ function StatCard({
                         {value.toLocaleString()}
                     </p>
 
-                    <p className="mt-1 text-xs text-zinc-400">
+                    <p className="mt-1 text-xs text-[#3f3e3e]">
                         {description}
                     </p>
+
                 </div>
 
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]">
+
                     {icon}
+
                 </div>
+
             </div>
+
         </div>
     );
 }
@@ -646,27 +733,37 @@ function AdminActionCard({
     return (
         <Link
             href={href}
-            className="group rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-indigo-500/40"
+            className="group rounded-[20px] bg-[#e0e5ec] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-300 hover:shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)]"
         >
+
             <div className="flex items-start gap-4">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400">
+
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[12px] bg-[orangered] text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 group-hover:bg-[red]">
+
                     {icon}
+
                 </div>
 
                 <div className="min-w-0 flex-1">
+
                     <div className="flex items-center justify-between gap-3">
+
                         <h3 className="font-semibold">
                             {title}
                         </h3>
 
-                        <ArrowRight className="h-4 w-4 text-zinc-400 transition group-hover:translate-x-1 group-hover:text-indigo-500" />
+                        <ArrowRight className="h-4 w-4 text-[orangered] transition-all duration-200 group-hover:translate-x-1 group-hover:text-[red]" />
+
                     </div>
 
-                    <p className="mt-1 text-sm leading-6 text-zinc-500 dark:text-zinc-400">
+                    <p className="mt-1 text-sm leading-6 text-[#3f3e3e]">
                         {description}
                     </p>
+
                 </div>
+
             </div>
+
         </Link>
     );
 }

@@ -27,7 +27,7 @@ export default function LessonDescription({
   return (
     <div className="mt-3">
       <div
-        className={`text-sm leading-7 text-zinc-500 dark:text-zinc-400 ${
+        className={`text-sm leading-7 text-[#3f3e3e] ${
           expanded
             ? ""
             : "line-clamp-4"
@@ -43,7 +43,26 @@ export default function LessonDescription({
             (value) => !value
           )
         }
-        className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 transition hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
+        className="
+          mt-2
+          inline-flex
+          items-center
+          gap-1
+          rounded-[12px]
+          bg-[#e0e5ec]
+          px-3
+          py-1.5
+          text-xs
+          font-semibold
+          text-[#ff4500]
+          transition-all
+          duration-200
+          hover:text-red-600
+        "
+        style={{
+          boxShadow:
+            "5px 5px 10px rgba(163, 177, 198, 0.5), -5px -5px 10px rgba(255, 255, 255, 0.8)",
+        }}
       >
         {expanded ? (
           <>
