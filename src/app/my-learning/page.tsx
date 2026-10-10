@@ -120,12 +120,24 @@ export default async function MyLearningPage() {
   // =========================================================
 
   const allLessons =
-    await db
-      .select()
-      .from(lessons)
-      .orderBy(
-        lessons.order
-      );
+  await db
+    .select({
+      id:
+        lessons.id,
+
+      courseId:
+        lessons.courseId,
+
+      duration:
+        lessons.duration,
+
+      order:
+        lessons.order,
+    })
+    .from(lessons)
+    .orderBy(
+      lessons.order
+    );
 
   // =========================================================
   // GET USER PROGRESS
