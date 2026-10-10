@@ -71,7 +71,18 @@ export default async function DashboardPage() {
   // GET ALL COURSES
   // =========================================================
 
-  const allCourses = await db.select().from(courses);
+  const allCourses = await db
+    .select({
+      id: courses.id,
+      title: courses.title,
+      slug: courses.slug,
+      category: courses.category,
+      level: courses.level,
+      duration: courses.duration,
+      lessonsCount: courses.lessonsCount,
+      thumbnailUrl: courses.thumbnailUrl,
+    })
+    .from(courses);
 
   // =========================================================
   // GET USER PROGRESS
@@ -105,7 +116,10 @@ export default async function DashboardPage() {
   // =========================================================
 
   const userQuizAttempts = await db
-    .select()
+    .select({
+      score: quizAttempts.score,
+      totalQuestions: quizAttempts.totalQuestions,
+    })
     .from(quizAttempts)
     .where(eq(quizAttempts.userId, user.id));
 
@@ -141,9 +155,14 @@ export default async function DashboardPage() {
   // =========================================================
 
   const allLessons = await db
-    .select()
-    .from(lessons)
-    .orderBy(lessons.order);
+  .select({
+    id: lessons.id,
+    courseId: lessons.courseId,
+    duration: lessons.duration,
+    order: lessons.order,
+  })
+  .from(lessons)
+  .orderBy(lessons.order);
 
   // =========================================================
   // CALCULATE COURSE PROGRESS
@@ -182,15 +201,15 @@ export default async function DashboardPage() {
     const percentage =
       totalCourseSeconds > 0
         ? Math.min(
-            100,
-            Math.max(
-              0,
-              Math.round(
-                (totalWatchedSeconds / totalCourseSeconds) *
-                  100
-              )
+          100,
+          Math.max(
+            0,
+            Math.round(
+              (totalWatchedSeconds / totalCourseSeconds) *
+              100
             )
           )
+        )
         : 0;
 
     const completed = courseLessons.filter((lesson) =>
@@ -278,7 +297,7 @@ export default async function DashboardPage() {
     } else {
       currentLesson =
         currentCourseLessons[
-          currentCourseLessons.length - 1
+        currentCourseLessons.length - 1
         ] ?? null;
     }
   }
@@ -717,7 +736,7 @@ export default async function DashboardPage() {
                     <div className="flex h-full items-center justify-center">
                       <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#e0e5ec] dark:bg-[#1e2229] text-[orangered] dark:bg-[#1e2229] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]">
                         {course.category ===
-                        "Programming" ? (
+                          "Programming" ? (
                           <BookOpen size={23} />
                         ) : course.category ===
                           "Computer Science" ? (
