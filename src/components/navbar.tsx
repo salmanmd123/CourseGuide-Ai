@@ -52,9 +52,22 @@ export default function Navbar() {
                     cache: "no-store",
                 });
 
+                if (!response.ok) {
+                    setUser(null);
+                    return;
+                }
+
+                const contentType = response.headers.get("content-type");
+
+                if (!contentType?.includes("application/json")) {
+                    throw new Error("Current-user API did not return JSON.");
+                }
+
                 const data = await response.json();
+                setUser(data.user ?? null);
 
                 setUser(data.user ?? null);
+                
             } catch (error) {
                 console.error(
                     "Failed to get current user:",
@@ -456,11 +469,10 @@ export default function Navbar() {
 
                                 <ChevronDown
                                     size={15}
-                                    className={`transition-transform ${
-                                        profileOpen
+                                    className={`transition-transform ${profileOpen
                                             ? "rotate-180"
                                             : ""
-                                    }`}
+                                        }`}
                                 />
 
                             </button>
