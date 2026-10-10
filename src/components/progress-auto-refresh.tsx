@@ -1,53 +1,25 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+/*
+ * =========================================================
+ * PROGRESS AUTO REFRESH
+ * =========================================================
+ *
+ * Progress is now updated locally while watching a lesson
+ * and saved to the database periodically.
+ *
+ * We intentionally DO NOT call router.refresh() every few
+ * seconds because that causes unnecessary server/database
+ * requests and increases Neon network usage.
+ *
+ * The component is kept so existing imports in:
+ *
+ * - Dashboard
+ * - My Learning
+ *
+ * continue to work without changing those pages.
+ */
 
 export default function ProgressAutoRefresh() {
-  const router = useRouter();
-
-  useEffect(() => {
-    // Refresh server data every 5 seconds
-    const interval = setInterval(() => {
-      router.refresh();
-    }, 5000);
-
-    // Refresh immediately when user returns to the tab
-    function handleVisibilityChange() {
-      if (document.visibilityState === "visible") {
-        router.refresh();
-      }
-    }
-
-    // Refresh when window gets focus
-    function handleFocus() {
-      router.refresh();
-    }
-
-    document.addEventListener(
-      "visibilitychange",
-      handleVisibilityChange
-    );
-
-    window.addEventListener(
-      "focus",
-      handleFocus
-    );
-
-    return () => {
-      clearInterval(interval);
-
-      document.removeEventListener(
-        "visibilitychange",
-        handleVisibilityChange
-      );
-
-      window.removeEventListener(
-        "focus",
-        handleFocus
-      );
-    };
-  }, [router]);
-
   return null;
 }

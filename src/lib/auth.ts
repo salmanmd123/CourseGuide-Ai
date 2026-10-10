@@ -69,6 +69,38 @@ export async function getCurrentUser() {
   }
 }
 
+export async function getCurrentUserId() {
+  try {
+    const cookieStore = await cookies();
+
+    const token =
+      cookieStore.get("session")?.value;
+
+    if (!token) {
+      return null;
+    }
+
+    const { payload } =
+      await jwtVerify(
+        token,
+        secretKey
+      );
+
+    const userId =
+      payload.userId;
+
+    if (
+      typeof userId !== "number"
+    ) {
+      return null;
+    }
+
+    return userId;
+  } catch {
+    return null;
+  }
+}
+
 export async function requireAdmin() {
   const user = await getCurrentUser();
 
