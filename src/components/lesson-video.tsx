@@ -1,318 +1,167 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import YouTubePlayer from "@/components/youtube-player";
+
+type WatchInterval = [number, number];
 
 type LessonVideoProps = {
   lessonId: number;
   videoUrl: string;
   startSeconds?: number;
-
-  onWatchProgress?: (
-    watchedSeconds: number,
-    durationSeconds: number
-  ) => void;
+  initialWatchedIntervals?: WatchInterval[];
+  onWatchProgress?: (watchedSeconds: number, durationSeconds: number) => void;
 };
 
-/*
- * =========================================================
- * PROGRESS SAVE SETTINGS
- * =========================================================
- *
- * The player can still report progress every second so the
- * UI feels live.
- *
- * But we only save progress to the database every 20 seconds.
- *
- * This dramatically reduces Neon database/network usage.
- */
+type ProgressSnapshot = {
+  positionSeconds: number;
+  durationSeconds: number;
+  watchedIntervals: WatchInterval[];
+  watchedSeconds: number;
+  watchPercentage: number;
+};
+
 const SAVE_INTERVAL_MS = 20_000;
+const MAX_CONTIGUOUS_JUMP_SECONDS = 2.5;
+
+function mergeIntervals(intervals: WatchInterval[]): WatchInterval[] {
+  const sorted = intervals
+    .filter(([start, end]) =>
+      Number.isFinite(start) && Number.isFinite(end) && start >= 0 && end > start
+    )
+    .map(([start, end]) => [start, end] as WatchInterval)
+    .sort((a, b) => a[0] - b[0]);
+
+  const merged: WatchInterval[] = [];
+  for (const [start, end] of sorted) {
+    const last = merged[merged.length - 1];
+    if (!last || start > last[1]) merged.push([start, end]);
+    else last[1] = Math.max(last[1], end);
+  }
+  return merged;
+}
+
+function getWatchedSeconds(intervals: WatchInterval[]): number {
+  return Math.floor(mergeIntervals(intervals).reduce(
+    (total, [start, end]) => total + end - start, 0
+  ));
+}
 
 export default function LessonVideo({
   lessonId,
   videoUrl,
   startSeconds = 0,
+  initialWatchedIntervals = [],
   onWatchProgress,
 }: LessonVideoProps) {
-  /*
-   * =========================================================
-   * REFS
-   * =========================================================
-   */
-
-  const latestProgressRef = useRef({
-    watchedSeconds: Math.max(
-      0,
-      Math.floor(startSeconds || 0)
-    ),
-
+  const intervalsRef = useRef<WatchInterval[]>(mergeIntervals(initialWatchedIntervals));
+  const previousPositionRef = useRef<number | null>(null);
+  const latestProgressRef = useRef<ProgressSnapshot>({
+    positionSeconds: Math.max(0, startSeconds),
     durationSeconds: 0,
-
+    watchedIntervals: mergeIntervals(initialWatchedIntervals),
+    watchedSeconds: getWatchedSeconds(initialWatchedIntervals),
     watchPercentage: 0,
   });
-
   const lastSavedAtRef = useRef(0);
-
-  const saveInProgressRef = useRef(false);
-
+  const savingRef = useRef(false);
+  const pendingSaveRef = useRef(false);
   const mountedRef = useRef(true);
 
-  /*
-   * =========================================================
-   * COMPONENT MOUNT / UNMOUNT
-   * =========================================================
-   */
+  const saveProgress = useCallback(async (keepalive = false): Promise<void> => {
+    if (savingRef.current) {
+      pendingSaveRef.current = true;
+      return;
+    }
+
+    if (latestProgressRef.current.durationSeconds <= 0) return;
+    savingRef.current = true;
+
+    try {
+      do {
+        pendingSaveRef.current = false;
+        const current = latestProgressRef.current;
+        const response = await fetch("/api/progress", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            lessonId,
+            positionSeconds: Math.floor(current.positionSeconds),
+            durationSeconds: Math.floor(current.durationSeconds),
+            watchedIntervals: current.watchedIntervals,
+            watchedSeconds: current.watchedSeconds,
+            watchPercentage: current.watchPercentage,
+          }),
+          keepalive,
+        });
+
+        if (!response.ok && mountedRef.current) {
+          console.error("Failed to save video progress:", response.status);
+        } else if (response.ok) {
+          lastSavedAtRef.current = Date.now();
+        }
+      } while (pendingSaveRef.current && !keepalive);
+    } catch (error) {
+      if (mountedRef.current) console.error("Failed to save video progress:", error);
+    } finally {
+      savingRef.current = false;
+    }
+  }, [lessonId]);
 
   useEffect(() => {
     mountedRef.current = true;
-
     return () => {
       mountedRef.current = false;
-
-      /*
-       * Save the latest known progress when the user leaves
-       * the lesson/page.
-       *
-       * keepalive allows the browser to continue the request
-       * even while the page is being unloaded.
-       */
-      const latest =
-        latestProgressRef.current;
-
-      if (
-        latest.durationSeconds > 0 &&
-        latest.watchedSeconds >= 0
-      ) {
-        void saveProgress(
-          latest.watchedSeconds,
-          latest.durationSeconds,
-          latest.watchPercentage,
-          false,
-          true
-        );
-      }
+      // Best effort: preserve the latest known position and watched intervals on navigation.
+      void saveProgress(true);
     };
-  }, []);
+  }, [saveProgress]);
 
-  /*
-   * =========================================================
-   * SAVE PROGRESS TO DATABASE
-   * =========================================================
-   */
+  function handleProgress(currentTime: number, duration: number) {
+    if (!Number.isFinite(currentTime) || !Number.isFinite(duration) || duration <= 0) return;
 
-  async function saveProgress(
-    watchedSeconds: number,
-    durationSeconds: number,
-    watchPercentage: number,
-    completed = false,
-    keepalive = false
-  ) {
-    /*
-     * Prevent multiple database requests from running at
-     * the same time.
-     */
-    if (saveInProgressRef.current) {
-      return;
-    }
+    const position = Math.max(0, Math.min(currentTime, duration));
+    const previous = previousPositionRef.current;
 
-    if (
-      !Number.isFinite(watchedSeconds) ||
-      !Number.isFinite(durationSeconds) ||
-      durationSeconds <= 0
-    ) {
-      return;
-    }
-
-    saveInProgressRef.current = true;
-
-    try {
-      const response = await fetch(
-        "/api/progress",
-        {
-          method: "POST",
-
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
-
-          body: JSON.stringify({
-            lessonId,
-
-            watchedSeconds:
-              Math.max(
-                0,
-                Math.floor(
-                  watchedSeconds
-                )
-              ),
-
-            watchPercentage:
-              Math.min(
-                100,
-                Math.max(
-                  0,
-                  Math.floor(
-                    watchPercentage
-                  )
-                )
-              ),
-
-            completed,
-          }),
-
-          /*
-           * keepalive is useful when the user leaves
-           * the lesson/page.
-           */
-          keepalive,
-        }
-      );
-
-      if (!response.ok) {
-        console.error(
-          "Failed to save video progress:",
-          response.status
-        );
-
-        return;
+    // Only count small forward movements. A seek produces a large delta and adds no interval.
+    if (previous !== null) {
+      const delta = position - previous;
+      if (delta > 0 && delta <= MAX_CONTIGUOUS_JUMP_SECONDS) {
+        intervalsRef.current = mergeIntervals([
+          ...intervalsRef.current,
+          [previous, position],
+        ]);
       }
-
-      lastSavedAtRef.current =
-        Date.now();
-    } catch (error) {
-      /*
-       * Ignore errors caused by page navigation/unload.
-       */
-      if (mountedRef.current) {
-        console.error(
-          "Failed to save video progress:",
-          error
-        );
-      }
-    } finally {
-      saveInProgressRef.current =
-        false;
     }
-  }
+    previousPositionRef.current = position;
 
-  /*
-   * =========================================================
-   * HANDLE LIVE PROGRESS
-   * =========================================================
-   */
+    const watchedIntervals = mergeIntervals(intervalsRef.current);
+    const watchedSeconds = Math.min(Math.floor(duration), getWatchedSeconds(watchedIntervals));
+    const watchPercentage = Math.min(100, Math.floor((watchedSeconds / duration) * 100));
 
-  function handleProgress(
-    currentTime: number,
-    duration: number
-  ) {
-    if (
-      !Number.isFinite(currentTime) ||
-      !Number.isFinite(duration) ||
-      duration <= 0
-    ) {
-      return;
-    }
-
-    const watchedSeconds =
-      Math.max(
-        0,
-        Math.floor(currentTime)
-      );
-
-    const watchPercentage =
-      Math.min(
-        100,
-        Math.max(
-          0,
-          Math.floor(
-            (currentTime / duration) *
-              100
-          )
-        )
-      );
-
-    /*
-     * Always keep the latest progress locally.
-     */
     latestProgressRef.current = {
-      watchedSeconds,
-
+      positionSeconds: position,
       durationSeconds: duration,
-
+      watchedIntervals,
+      watchedSeconds,
       watchPercentage,
     };
 
-    /*
-     * =====================================================
-     * UPDATE UI IMMEDIATELY
-     * =====================================================
-     */
-
-    onWatchProgress?.(
-      watchedSeconds,
-      duration
-    );
-
-    /*
-     * =====================================================
-     * DATABASE SAVE
-     * =====================================================
-     *
-     * Only save every 20 seconds.
-     */
+    onWatchProgress?.(watchedSeconds, duration);
 
     const now = Date.now();
-
-    const shouldSave =
-      lastSavedAtRef.current === 0 ||
-      now -
-        lastSavedAtRef.current >=
-        SAVE_INTERVAL_MS;
-
-    if (shouldSave) {
-      void saveProgress(
-        watchedSeconds,
-        duration,
-        watchPercentage
-      );
+    if (lastSavedAtRef.current === 0 || now - lastSavedAtRef.current >= SAVE_INTERVAL_MS) {
+      void saveProgress();
     }
   }
 
-  /*
-   * =========================================================
-   * HANDLE COMPLETION
-   * =========================================================
-   */
-
   async function handleComplete() {
-    const latest =
-      latestProgressRef.current;
-
-    /*
-     * Completion is saved immediately.
-     *
-     * This is NOT throttled.
-     */
-    await saveProgress(
-      latest.watchedSeconds,
-      latest.durationSeconds,
-      Math.max(
-        90,
-        latest.watchPercentage
-      ),
-      true
-    );
+    await saveProgress();
   }
-
-  /*
-   * =========================================================
-   * RENDER
-   * =========================================================
-   */
 
   return (
     <YouTubePlayer
+      key={`${lessonId}-${videoUrl}`}
       lessonId={lessonId}
       videoId={videoUrl}
       startSeconds={startSeconds}
