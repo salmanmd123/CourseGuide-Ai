@@ -331,12 +331,22 @@ export default async function LearningPage({
     currentLessonIndex + 1;
 
   // =========================================================
-  // INITIAL WATCHED VALUE
+  // INITIAL WATCHED VALUE AND RESUME POSITION
   // =========================================================
 
-  const currentLessonInitialSeconds =
+  // Resume position is separate from the amount of unique content watched.
+  const currentLessonPositionSeconds =
+    currentLessonProgress?.positionSeconds ??
     currentLessonProgress?.watchedSeconds ??
     0;
+
+  const currentLessonInitialSeconds =
+    currentLessonProgress?.watchedSeconds ?? 0;
+
+  const currentLessonInitialIntervals =
+    (currentLessonProgress?.watchedIntervals as
+      | [number, number][]
+      | null) ?? [];
 
   return (
     <main className="min-h-screen w-full min-w-0 overflow-x-hidden bg-[#e0e5ec] dark:bg-[#1a1d23] text-black dark:text-[#f5f7fa]">
@@ -411,7 +421,7 @@ export default async function LearningPage({
           VIDEO + COURSE SIDEBAR
       ===================================================== */}
 
-      <div className="grid w-full min-w-0 max-w-full gap-4 px-3 pb-4 sm:px-5 lg:grid-cols-[minmax(0,1fr)_330px]">
+      <div className="grid w-full min-w-0 max-w-full gap-4 px-3 pb-4 mt-5 sm:px-5 lg:grid-cols-[minmax(0,1fr)_330px]">
         {/* ===================================================
             VIDEO AREA
         =================================================== */}
@@ -420,24 +430,13 @@ export default async function LearningPage({
           <div className="w-full max-w-full overflow-hidden rounded-[24px] bg-[#e0e5ec] dark:bg-[#1e2229] shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] dark:shadow-[inset_6px_6px_10px_rgba(5,7,10,0.75),inset_-6px_-6px_10px_rgba(43,48,58,0.75)]">
             {currentLesson.videoUrl ? (
               <LearningClient
-                lessonId={
-                  currentLesson.id
-                }
-                videoUrl={
-                  currentLesson.videoUrl
-                }
-                startSeconds={
-                  currentLessonInitialSeconds
-                }
-                totalCourseSeconds={
-                  totalCourseSeconds
-                }
-                initialTotalWatchedSeconds={
-                  totalWatchedSeconds
-                }
-                currentLessonInitialSeconds={
-                  currentLessonInitialSeconds
-                }
+                lessonId={currentLesson.id}
+                videoUrl={currentLesson.videoUrl}
+                startSeconds={currentLessonPositionSeconds}
+                totalCourseSeconds={totalCourseSeconds}
+                initialTotalWatchedSeconds={totalWatchedSeconds}
+                currentLessonInitialSeconds={currentLessonInitialSeconds}
+                initialWatchedIntervals={currentLessonInitialIntervals}
               />
             ) : (
               <div className="flex aspect-video w-full items-center justify-center rounded-[24px] bg-[#e0e5ec] dark:bg-[#1e2229]">
