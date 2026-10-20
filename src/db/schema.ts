@@ -1,3 +1,4 @@
+
 import {
   pgTable,
   serial,
@@ -7,6 +8,7 @@ import {
   timestamp,
   boolean,
   unique,
+  jsonb,
 } from "drizzle-orm/pg-core";
 
 /* =========================
@@ -30,7 +32,6 @@ export const users = pgTable("users", {
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
-
 
 /* =========================
    COURSES
@@ -153,7 +154,6 @@ export const courses = pgTable("courses", {
     .notNull(),
 });
 
-
 /* =========================
    LESSONS
 ========================= */
@@ -184,9 +184,18 @@ export const lessons = pgTable("lessons", {
     .notNull(),
 });
 
-
 /* =========================
    USER PROGRESS
+
+   watchedSeconds:
+   Total unique content watched.
+
+   positionSeconds:
+   Last playback position for resuming.
+
+   watchedIntervals:
+   Previously watched video sections,
+   stored as [startSeconds, endSeconds].
 ========================= */
 
 export const progress = pgTable(
@@ -206,17 +215,28 @@ export const progress = pgTable(
         onDelete: "cascade",
       }),
 
-    // Last watched position in seconds
+    // Total unique content watched, in seconds.
     watchedSeconds: integer("watched_seconds")
       .default(0)
       .notNull(),
 
-    // Video watch percentage: 0–100
+    // Percentage based on unique watched content: 0–100.
     watchPercentage: integer("watch_percentage")
       .default(0)
       .notNull(),
 
-    // Automatically becomes true at 90%
+    // Previously watched intervals: [[start, end], ...].
+    watchedIntervals: jsonb("watched_intervals")
+      .$type<[number, number][]>()
+      .notNull()
+      .default([]),
+
+    // Last playback position, in seconds.
+    positionSeconds: integer("position_seconds")
+      .default(0)
+      .notNull(),
+
+    // Automatically becomes true at 90% unique watched content.
     completed: boolean("completed")
       .default(false)
       .notNull(),
@@ -227,11 +247,10 @@ export const progress = pgTable(
   (table) => ({
     userLessonUnique: unique().on(
       table.userId,
-      table.lessonId,
+      table.lessonId
     ),
-  }),
+  })
 );
-
 
 /* =========================
    QUIZZES
@@ -254,7 +273,6 @@ export const quizzes = pgTable("quizzes", {
     .defaultNow()
     .notNull(),
 });
-
 
 /* =========================
    QUIZ QUESTIONS
@@ -284,7 +302,6 @@ export const quizQuestions = pgTable("quiz_questions", {
   }).notNull(),
 });
 
-
 /* =========================
    QUIZ ATTEMPTS
 ========================= */
@@ -313,7 +330,6 @@ export const quizAttempts = pgTable("quiz_attempts", {
     .defaultNow()
     .notNull(),
 });
-
 
 /* =========================
    AI NOTES
@@ -361,11 +377,10 @@ export const aiNotes = pgTable(
 
   (table) => ({
     lessonUnique: unique().on(
-      table.lessonId,
+      table.lessonId
     ),
-  }),
+  })
 );
-
 
 /* =========================
    AI TUTOR CONVERSATIONS
@@ -396,5 +411,5 @@ export const aiTutorMessages = pgTable(
     createdAt: timestamp("created_at")
       .defaultNow()
       .notNull(),
-  },
+  }
 );
