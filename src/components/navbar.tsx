@@ -65,8 +65,6 @@ export default function Navbar() {
 
                 const data = await response.json();
                 setUser(data.user ?? null);
-
-                setUser(data.user ?? null);
                 
             } catch (error) {
                 console.error(
@@ -239,7 +237,7 @@ export default function Navbar() {
                     </Link>
 
                     <Link
-                        href="/how-it-works"
+                        href="/quizzes"
                         className="
                             rounded-full
                             px-6
@@ -268,11 +266,11 @@ export default function Navbar() {
                             dark:active:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]
                         "
                     >
-                        How it works
+                        Quizzes
                     </Link>
 
                     <Link
-                        href="/features"
+                        href="/interviews"
                         className="
                             rounded-full
                             px-6
@@ -301,7 +299,7 @@ export default function Navbar() {
                             dark:active:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]
                         "
                     >
-                        Features
+                        Interviews
                     </Link>
 
                 </nav>
@@ -609,4 +607,4 @@ export default function Navbar() {
 
         </header>
     );
-}
+} 
