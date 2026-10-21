@@ -103,6 +103,211 @@ function optionText(question: Question, key: string) {
   }
 }
 
+
+const CODE_LANGUAGE_PATTERN = /^(python|py|javascript|js|typescript|ts|tsx|jsx|java|c\+\+|cpp|csharp|c#|c|sql|html|css|bash|json|php|ruby|go|rust)$/i;
+
+type ContentSegment =
+  | { type: "text"; value: string }
+  | { type: "inline"; value: string }
+  | { type: "block"; value: string; language: string };
+
+function normalizeLanguage(value: string): string {
+  const raw = value.trim().toLowerCase();
+  const aliases: Record<string, string> = {
+    py: "python",
+    js: "javascript",
+    ts: "typescript",
+    "c++": "cpp",
+    "c#": "csharp",
+  };
+  return aliases[raw] ?? (raw || "code");
+}
+
+function detectCodeLanguage(code: string): string {
+  if (/^\s*#\s*include\s*[<"]/.test(code) || /\bprintf\s*\(/.test(code)) return "c";
+  if (/\bstd::|#\s*include\s*<iostream>/.test(code)) return "cpp";
+  if (/\bpublic\s+static\s+void\s+main\b|System\.out\./.test(code)) return "java";
+  if (/\bdef\s+\w+\s*\(|\bprint\s*\(/.test(code)) return "python";
+  if (/\bconsole\.log\s*\(|\b(const|let|var)\s+\w+\s*=/.test(code)) return "javascript";
+  return "code";
+}
+
+function looksLikeCodeLine(line: string): boolean {
+  const text = line.trim();
+  if (!text) return true;
+  return (
+    /^#\s*(include|define|pragma|import)\b/.test(text) ||
+    /^(?:public|private|protected|static|final|class|interface|enum|def|function|async|export|import|from|return|if|else|elif|for|while|switch|case|break|continue|try|catch|finally|throw|const|let|var|int|float|double|char|bool|boolean|void|String|auto|using|namespace|struct)\b/.test(text) ||
+    /^[{}()[\];]/.test(text) ||
+    /[=;{}()]\s*$/.test(text) ||
+    /(?:\+\+|--|=>|->|::|\+=|-=|\*=|\/=|\bprintf\s*\(|\bscanf\s*\(|\bconsole\.log\s*\(|\bprint\s*\(|\bSystem\.out\.)/.test(text) ||
+    /^[A-Za-z_$][\w$.[\]()>]*\s*(?:=|\+=|-=|\+\+|--|\()/.test(text)
+  );
+}
+
+function parseLanguageLabelledCode(value: string): ContentSegment[] | null {
+  const lines = value.split("\n");
+  const segments: ContentSegment[] = [];
+  let cursor = 0;
+  let found = false;
+
+  while (cursor < lines.length) {
+    const languageMatch = lines[cursor].trim().match(CODE_LANGUAGE_PATTERN);
+    if (!languageMatch || cursor + 1 >= lines.length) {
+      cursor++;
+      continue;
+    }
+
+    let end = cursor + 1;
+    let sawCode = false;
+    let lastNonEmpty = end;
+
+    while (end < lines.length) {
+      const line = lines[end];
+      if (!line.trim()) {
+        end++;
+        continue;
+      }
+      if (!looksLikeCodeLine(line)) break;
+      sawCode = true;
+      lastNonEmpty = end;
+      end++;
+    }
+
+    if (!sawCode) {
+      cursor++;
+      continue;
+    }
+
+    const codeLines = lines.slice(cursor + 1, lastNonEmpty + 1);
+    const before = lines.slice(0, cursor).join("\n").trimEnd();
+    const after = lines.slice(lastNonEmpty + 1).join("\n").trimStart();
+
+    if (before) segments.push({ type: "text", value: before });
+    segments.push({
+      type: "block",
+      language: normalizeLanguage(languageMatch[1]),
+      value: codeLines.join("\n").trim(),
+    });
+    if (after) segments.push(...parseFencedAndInline(after));
+    found = true;
+    break;
+  }
+
+  return found ? segments : null;
+}
+
+function parseFencedAndInline(value: string): ContentSegment[] {
+  const segments: ContentSegment[] = [];
+  const fencedPattern = /```([\w+#.-]*)[ \t]*\n?([\s\S]*?)```/g;
+  let cursor = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = fencedPattern.exec(value)) !== null) {
+    if (match.index > cursor) {
+      segments.push(...parseInline(value.slice(cursor, match.index)));
+    }
+    const code = match[2].replace(/^\n|\n$/g, "");
+    segments.push({
+      type: "block",
+      language: normalizeLanguage(match[1] || detectCodeLanguage(code)),
+      value: code,
+    });
+    cursor = match.index + match[0].length;
+  }
+
+  if (cursor < value.length) segments.push(...parseInline(value.slice(cursor)));
+  return segments.length ? segments : [{ type: "text", value }];
+}
+
+function parseInline(value: string): ContentSegment[] {
+  const segments: ContentSegment[] = [];
+  const inlinePattern = /`([^`\n]+)`/g;
+  let cursor = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = inlinePattern.exec(value)) !== null) {
+    if (match.index > cursor) {
+      segments.push({ type: "text", value: value.slice(cursor, match.index) });
+    }
+    segments.push({ type: "inline", value: match[1] });
+    cursor = match.index + match[0].length;
+  }
+
+  if (cursor < value.length) segments.push({ type: "text", value: value.slice(cursor) });
+  return segments.length ? segments : [{ type: "text", value }];
+}
+
+function parseFormattedContent(value: string): ContentSegment[] {
+  const labelled = parseLanguageLabelledCode(value);
+  if (labelled) return labelled;
+
+  const fenced = parseFencedAndInline(value);
+  if (fenced.some((segment) => segment.type === "block")) return fenced;
+
+  // If a stored question has code but no explicit language label, format only
+  // when there are strong programming-language markers to avoid false positives.
+  if (looksLikeCodeLine(value) && detectCodeLanguage(value) !== "code") {
+    return [{ type: "block", language: detectCodeLanguage(value), value: value.trim() }];
+  }
+
+  return fenced;
+}
+
+function FormattedContent({
+  value,
+  className = "",
+}: {
+  value: string | null | undefined;
+  className?: string;
+}) {
+  if (!value) return null;
+  const segments = parseFormattedContent(value);
+
+  return (
+    <div className={className}>
+      {segments.map((segment, index) => {
+        if (segment.type === "block") {
+          return (
+            <div
+              key={index}
+              className="my-4 block min-w-0 max-w-full overflow-hidden rounded-xl border border-black/10 bg-[#151922] text-left text-slate-100 shadow-inner dark:border-white/10"
+            >
+              <div className="flex items-center justify-between border-b border-white/10 px-4 py-2">
+                <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">
+                  {segment.language}
+                </span>
+                <span className="text-[10px] text-slate-500">Code snippet</span>
+              </div>
+              <pre className="max-w-full overflow-x-auto whitespace-pre p-4 font-mono text-[13px] leading-6 [tab-size:4]">
+                <code>{segment.value}</code>
+              </pre>
+            </div>
+          );
+        }
+
+        if (segment.type === "inline") {
+          return (
+            <code
+              key={index}
+              className="rounded-md bg-black/10 px-1.5 py-0.5 font-mono text-[0.92em] dark:bg-white/10"
+            >
+              {segment.value}
+            </code>
+          );
+        }
+
+        return (
+          <span key={index} className="whitespace-pre-wrap">
+            {segment.value}
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
+
 function formatTime(seconds: number) {
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
@@ -446,9 +651,9 @@ export default function QuizAttemptPage() {
                         )}
                       </div>
 
-                      <h3 className="mt-3 text-base font-semibold leading-7">
-                        {item.question}
-                      </h3>
+                      <div className="mt-3 text-base font-semibold leading-7">
+                        <FormattedContent value={item.question} />
+                      </div>
 
                       <div className="mt-4 space-y-2">
                         {OPTION_KEYS.map((key) => {
@@ -475,8 +680,8 @@ export default function QuizAttemptPage() {
                               >
                                 {key}
                               </span>
-                              <span className="flex-1 pt-1 text-sm leading-6">
-                                {item.options[key]}
+                              <span className="min-w-0 flex-1 pt-1 text-sm leading-6">
+                                <FormattedContent value={item.options[key]} />
                               </span>
                               {isCorrect && (
                                 <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
@@ -494,9 +699,9 @@ export default function QuizAttemptPage() {
                           <p className="text-sm font-semibold">
                             Explanation
                           </p>
-                          <p className="mt-2 text-sm leading-6 opacity-75">
-                            {item.explanation}
-                          </p>
+                          <div className="mt-2 text-sm leading-6 opacity-75">
+                            <FormattedContent value={item.explanation} />
+                          </div>
                         </div>
                       )}
                     </div>
@@ -594,9 +799,9 @@ export default function QuizAttemptPage() {
               </p>
             </div>
 
-            <h2 className="mt-5 text-lg font-semibold leading-8 sm:text-xl">
-              {currentQuestion.question}
-            </h2>
+            <div className="mt-5 text-lg font-semibold leading-8 sm:text-xl">
+              <FormattedContent value={currentQuestion.question} />
+            </div>
 
             <div className="mt-6 space-y-3">
               {OPTION_KEYS.map((key) => {
@@ -627,8 +832,8 @@ export default function QuizAttemptPage() {
                     >
                       {key}
                     </span>
-                    <span className="flex-1 pt-1.5 text-sm leading-6">
-                      {optionText(currentQuestion, key)}
+                    <span className="min-w-0 flex-1 pt-1.5 text-sm leading-6">
+                      <FormattedContent value={optionText(currentQuestion, key)} />
                     </span>
                     {selected && (
                       <CheckCircle2 className="mt-2 h-5 w-5 shrink-0 text-[#ff4500]" />
