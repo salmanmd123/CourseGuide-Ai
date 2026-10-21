@@ -321,7 +321,7 @@ export default function QuizzesPage() {
             </div>
           </div>
 
-          <div className="flex gap-2 overflow-x-auto pb-3">
+          <div className="flex gap-2 overflow-x-auto pt-3 pb-3">
             {CATEGORIES.map((item) => {
               const Icon = item.icon;
               const active = category === item.id;
