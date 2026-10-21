@@ -485,7 +485,7 @@ export default function QuizzesPage() {
                     setGenerateSubject(event.target.value);
                     setGenerateTopic("");
                   }}
-                  className="w-full rounded-xl border border-slate-200 bg-[var(--neo-bg)] px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#ff4500]/20 dark:border-slate-700 dark:bg-[var(--neo-bg)]"
+                  className="w-full appearance-auto rounded-xl border border-slate-300/80 bg-[var(--neo-bg)] px-4 py-3 text-sm text-[var(--foreground)] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.35),inset_-3px_-3px_6px_rgba(255,255,255,0.55)] outline-none transition-all duration-200 hover:border-slate-400 focus:border-[#ff4500] focus:ring-2 focus:ring-[#ff4500]/20 dark:border-slate-600/80 dark:shadow-[inset_3px_3px_6px_rgba(0,0,0,0.25),inset_-3px_-3px_6px_rgba(255,255,255,0.03)] dark:hover:border-slate-500"
                 >
                   {subjects.map((subject) => (
                     <option key={subject.id} value={subject.id}>
@@ -506,7 +506,7 @@ export default function QuizzesPage() {
                   id="generate-topic"
                   value={generateTopic}
                   onChange={(event) => setGenerateTopic(event.target.value)}
-                  className="w-full rounded-xl border border-slate-200 bg-[var(--neo-bg)] px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#ff4500]/20 dark:border-slate-700 dark:bg-[var(--neo-bg)]"
+                  className="w-full appearance-auto rounded-xl border border-slate-300/80 bg-[var(--neo-bg)] px-4 py-3 text-sm text-[var(--foreground)] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.35),inset_-3px_-3px_6px_rgba(255,255,255,0.55)] outline-none transition-all duration-200 hover:border-slate-400 focus:border-[#ff4500] focus:ring-2 focus:ring-[#ff4500]/20 dark:border-slate-600/80 dark:shadow-[inset_3px_3px_6px_rgba(0,0,0,0.25),inset_-3px_-3px_6px_rgba(255,255,255,0.03)] dark:hover:border-slate-500"
                 >
                   <option value="">All topics in this subject</option>
                   {generatorTopics.map((topic) => (
@@ -529,7 +529,7 @@ export default function QuizzesPage() {
                     id="generate-difficulty"
                     value={generateDifficulty}
                     onChange={(event) => setGenerateDifficulty(event.target.value)}
-                    className="w-full rounded-xl border border-slate-200 bg-[var(--neo-bg)] px-4 py-3 text-sm outline-none focus:border-[#ff4500] dark:border-slate-700 dark:bg-[var(--neo-bg)]"
+                    className="w-full appearance-auto rounded-xl border border-slate-300/80 bg-[var(--neo-bg)] px-4 py-3 text-sm text-[var(--foreground)] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.35),inset_-3px_-3px_6px_rgba(255,255,255,0.55)] outline-none transition-all duration-200 hover:border-slate-400 focus:border-[#ff4500] focus:ring-2 focus:ring-[#ff4500]/20 dark:border-slate-600/80 dark:shadow-[inset_3px_3px_6px_rgba(0,0,0,0.25),inset_-3px_-3px_6px_rgba(255,255,255,0.03)] dark:hover:border-slate-500"
                   >
                     <option value="EASY">Easy</option>
                     <option value="MEDIUM">Medium</option>
@@ -548,7 +548,7 @@ export default function QuizzesPage() {
                     id="generate-count"
                     value={questionCount}
                     onChange={(event) => setQuestionCount(event.target.value)}
-                    className="w-full rounded-xl border border-slate-200 bg-[var(--neo-bg)] px-4 py-3 text-sm outline-none focus:border-[#ff4500] dark:border-slate-700 dark:bg-[var(--neo-bg)]"
+                    className="w-full appearance-auto rounded-xl border border-slate-300/80 bg-[var(--neo-bg)] px-4 py-3 text-sm text-[var(--foreground)] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.35),inset_-3px_-3px_6px_rgba(255,255,255,0.55)] outline-none transition-all duration-200 hover:border-slate-400 focus:border-[#ff4500] focus:ring-2 focus:ring-[#ff4500]/20 dark:border-slate-600/80 dark:shadow-[inset_3px_3px_6px_rgba(0,0,0,0.25),inset_-3px_-3px_6px_rgba(255,255,255,0.03)] dark:hover:border-slate-500"
                   >
                     <option value="5">5 questions</option>
                     <option value="10">10 questions</option>
