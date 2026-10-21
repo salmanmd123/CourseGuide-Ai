@@ -4,6 +4,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import { getQuizLocally } from "@/lib/quiz-storage";
+import Navbar from "@/components/navbar";
 import {
   ArrowLeft,
   ArrowRight,
@@ -117,6 +119,7 @@ export default function QuizAttemptPage() {
 
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [quizToken, setQuizToken] = useState("");
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -141,12 +144,30 @@ export default function QuizAttemptPage() {
         throw new Error(data.error ?? "Unable to load this quiz.");
       }
 
-      if (!data.quiz || !data.questions?.length) {
-        throw new Error("This quiz has no available questions.");
+      if (!data.quiz) {
+        throw new Error("This quiz could not be found.");
+      }
+
+      let loadedQuestions: Question[] = data.questions ?? [];
+      let loadedToken = "";
+
+      if (!loadedQuestions.length) {
+        const localQuiz = await getQuizLocally(Number(quizId));
+        if (!localQuiz || !localQuiz.questions.length || !localQuiz.quizToken) {
+          throw new Error(
+            "This quiz is not saved on this browser. Please generate a new quiz on this device."
+          );
+        }
+        loadedQuestions = localQuiz.questions;
+        loadedToken = localQuiz.quizToken;
+      } else {
+        const localQuiz = await getQuizLocally(Number(quizId)).catch(() => null);
+        loadedToken = localQuiz?.quizToken ?? "";
       }
 
       setQuiz(data.quiz);
-      setQuestions(data.questions);
+      setQuestions(loadedQuestions);
+      setQuizToken(loadedToken);
     } catch (err) {
       setError(
         err instanceof Error
@@ -220,7 +241,7 @@ export default function QuizAttemptPage() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ answers }),
+          body: JSON.stringify({ answers, quizToken }),
         }
       );
 
@@ -253,7 +274,9 @@ export default function QuizAttemptPage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[var(--background)] px-4 py-16 text-[var(--foreground)]">
+      <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+        <Navbar />
+        <div className="px-4 py-16">
         <div className="neo-surface mx-auto flex max-w-xl flex-col items-center rounded-3xl p-10 text-center">
           <LoaderCircle className="h-10 w-10 animate-spin text-[#ff4500]" />
           <h1 className="mt-5 text-xl font-bold">Loading your quiz</h1>
@@ -261,13 +284,16 @@ export default function QuizAttemptPage() {
             Preparing your questions...
           </p>
         </div>
+        </div>
       </main>
     );
   }
 
   if (error && !quiz) {
     return (
-      <main className="min-h-screen bg-[var(--background)] px-4 py-12 text-[var(--foreground)]">
+      <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+        <Navbar />
+        <div className="px-4 py-12">
         <div className="neo-surface mx-auto max-w-xl rounded-3xl p-8 text-center">
           <CircleAlert className="mx-auto h-10 w-10 text-[#ff4500]" />
           <h1 className="mt-4 text-xl font-bold">Unable to open quiz</h1>
@@ -287,6 +313,7 @@ export default function QuizAttemptPage() {
             </Link>
           </div>
         </div>
+        </div>
       </main>
     );
   }
@@ -302,7 +329,9 @@ export default function QuizAttemptPage() {
 
   if (result) {
     return (
-      <main className="min-h-screen bg-[var(--background)] px-4 py-8 text-[var(--foreground)] sm:py-12">
+      <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+        <Navbar />
+        <div className="px-4 py-8 sm:py-12">
         <div className="mx-auto max-w-4xl">
           <Link
             href="/quizzes"
@@ -477,12 +506,15 @@ export default function QuizAttemptPage() {
             </div>
           </section>
         </div>
+        </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[var(--background)] px-4 py-6 text-[var(--foreground)] sm:px-6 sm:py-10">
+    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+      <Navbar />
+      <div className="px-4 py-6 sm:px-6 sm:py-10">
       <div className="mx-auto max-w-5xl">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Link
@@ -821,6 +853,7 @@ export default function QuizAttemptPage() {
           </section>
         </div>
       )}
+      </div>
     </main>
   );
 }

@@ -7,9 +7,9 @@ import {
   quizSubjects,
   quizTopics,
   quizzes,
-  quizQuestions,
 } from "@/db/schema";
 import { getCurrentUser } from "@/lib/auth";
+import { encryptQuizPayload } from "@/lib/quiz-token";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -550,247 +550,135 @@ async function generateQuestions(
 export async function POST(request: Request) {
   try {
     const user = await getCurrentUser();
-
     if (!user) {
-      return NextResponse.json(
-        { error: "Please sign in to generate a quiz." },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Please sign in to generate a quiz." }, { status: 401 });
     }
 
     const apiKey = process.env.NVIDIA_API_KEY;
-
     if (!apiKey) {
-      return NextResponse.json(
-        { error: "NVIDIA_API_KEY is not configured." },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "NVIDIA_API_KEY is not configured." }, { status: 500 });
     }
 
     const body = await request.json().catch(() => null);
-
-    if (
-      !body ||
-      typeof body !== "object" ||
-      Array.isArray(body)
-    ) {
-      return NextResponse.json(
-        { error: "Invalid request body." },
-        { status: 400 }
-      );
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
+      return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
     }
 
     const subjectId = Number(body.subjectId);
-
-    const topicId =
-      body.topicId == null || body.topicId === ""
-        ? null
-        : Number(body.topicId);
-
-    const difficulty = String(
-      body.difficulty ?? "MEDIUM"
-    ).toUpperCase();
-
+    const topicId = body.topicId == null || body.topicId === "" ? null : Number(body.topicId);
+    const difficulty = String(body.difficulty ?? "MEDIUM").toUpperCase();
     const count = Number(body.count ?? 5);
-    const shouldSave = body.save !== false;
 
     if (!Number.isSafeInteger(subjectId) || subjectId <= 0) {
-      return NextResponse.json(
-        { error: "Choose a valid subject." },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Choose a valid subject." }, { status: 400 });
     }
-
     if (!["EASY", "MEDIUM", "HARD"].includes(difficulty)) {
-      return NextResponse.json(
-        { error: "Difficulty must be EASY, MEDIUM, or HARD." },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Difficulty must be EASY, MEDIUM, or HARD." }, { status: 400 });
     }
-
     if (!Number.isInteger(count) || count < 5 || count > 20) {
-      return NextResponse.json(
-        { error: "Choose between 5 and 20 questions." },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Choose between 5 and 20 questions." }, { status: 400 });
     }
 
     const [subject] = await db
-      .select({
-        id: quizSubjects.id,
-        name: quizSubjects.name,
-        category: quizSubjects.category,
-      })
+      .select({ id: quizSubjects.id, name: quizSubjects.name, category: quizSubjects.category })
       .from(quizSubjects)
-      .where(
-        and(
-          eq(quizSubjects.id, subjectId),
-          eq(quizSubjects.isActive, true),
-          ne(quizSubjects.category, "CAREER")
-        )
-      )
+      .where(and(eq(quizSubjects.id, subjectId), eq(quizSubjects.isActive, true), ne(quizSubjects.category, "CAREER")))
       .limit(1);
 
     if (!subject) {
-      return NextResponse.json(
-        {
-          error:
-            "Subject not found or unavailable in the Quiz Center.",
-        },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Subject not found or unavailable in the Quiz Center." }, { status: 404 });
     }
 
     let topicName: string | null = null;
-
     if (topicId !== null) {
       if (!Number.isSafeInteger(topicId) || topicId <= 0) {
-        return NextResponse.json(
-          { error: "Invalid topic." },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: "Invalid topic." }, { status: 400 });
       }
-
       const [topic] = await db
-        .select({
-          id: quizTopics.id,
-          name: quizTopics.name,
-        })
+        .select({ id: quizTopics.id, name: quizTopics.name })
         .from(quizTopics)
-        .where(
-          and(
-            eq(quizTopics.id, topicId),
-            eq(quizTopics.subjectId, subjectId),
-            eq(quizTopics.isActive, true)
-          )
-        )
+        .where(and(eq(quizTopics.id, topicId), eq(quizTopics.subjectId, subjectId), eq(quizTopics.isActive, true)))
         .limit(1);
-
       if (!topic) {
-        return NextResponse.json(
-          {
-            error:
-              "Topic does not belong to this subject or is unavailable.",
-          },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: "Topic does not belong to this subject or is unavailable." }, { status: 400 });
       }
-
       topicName = topic.name;
     }
 
     const topicDescription = topicName
       ? `Topic: ${topicName}`
       : "Cover a balanced selection of important topics within the subject.";
+    const generatedQuestions = await generateQuestions(apiKey, count, subject.name, topicDescription, difficulty);
+    const title = `${subject.name}${topicName ? `: ${topicName}` : ""} — ${difficulty.charAt(0) + difficulty.slice(1).toLowerCase()} Quiz`.slice(0, 200);
 
-    const questions = await generateQuestions(
-      apiKey,
-      count,
-      subject.name,
-      topicDescription,
-      difficulty
-    );
-
-    const title = `${subject.name}${
-      topicName ? `: ${topicName}` : ""
-    } — ${
-      difficulty.charAt(0) +
-      difficulty.slice(1).toLowerCase()
-    } Quiz`;
-
-    if (!shouldSave) {
-      return NextResponse.json({
-        saved: false,
-        subject: subject.name,
-        topic: topicName,
-        difficulty,
-        title: title.slice(0, 200),
-        questions,
-      });
-    }
-
-    // Keep the quiz unpublished until its questions are inserted.
+    // Neon stores only the quiz's lightweight metadata. Questions and the encrypted
+    // answer key are returned to the browser and saved in IndexedDB.
     const [createdQuiz] = await db
       .insert(quizzes)
       .values({
         subjectId,
         topicId,
-        title: title.slice(0, 200),
-        description: `AI-generated ${difficulty.toLowerCase()} quiz on ${
-          subject.name
-        }${topicName ? `: ${topicName}` : ""}.`,
+        title,
+        description: `AI-generated ${difficulty.toLowerCase()} quiz on ${subject.name}${topicName ? `: ${topicName}` : ""}.`,
+        difficulty,
+        quizType: "AI",
+        questionCount: generatedQuestions.length,
+        isPublished: true,
+        createdBy: user.id,
+      })
+      .returning({ id: quizzes.id, title: quizzes.title });
+
+    const questions = generatedQuestions.map((question, index) => ({
+      id: index + 1,
+      question: question.question,
+      optionA: question.optionA,
+      optionB: question.optionB,
+      optionC: question.optionC,
+      optionD: question.optionD,
+      sortOrder: index + 1,
+    }));
+
+    const quizToken = encryptQuizPayload({
+      version: 1,
+      quizId: createdQuiz.id,
+      userId: user.id,
+      questions: generatedQuestions.map((question, index) => ({
+        id: index + 1,
+        question: question.question,
+        optionA: question.optionA,
+        optionB: question.optionB,
+        optionC: question.optionC,
+        optionD: question.optionD,
+        correctAnswer: question.correctAnswer as "A" | "B" | "C" | "D",
+        explanation: question.explanation,
+        sortOrder: index + 1,
+      })),
+    });
+
+    return NextResponse.json({
+      saved: true,
+      quiz: {
+        ...createdQuiz,
+        description: `AI-generated ${difficulty.toLowerCase()} quiz on ${subject.name}${topicName ? `: ${topicName}` : ""}.`,
         difficulty,
         quizType: "AI",
         questionCount: questions.length,
-        isPublished: false,
-        createdBy: user.id,
-      })
-      .returning({
-        id: quizzes.id,
-        title: quizzes.title,
-      });
-
-    try {
-      await db.insert(quizQuestions).values(
-        questions.map((question, index) => ({
-          quizId: createdQuiz.id,
-          question: question.question,
-          optionA: question.optionA,
-          optionB: question.optionB,
-          optionC: question.optionC,
-          optionD: question.optionD,
-          correctAnswer: question.correctAnswer,
-          explanation: question.explanation,
-          sortOrder: index + 1,
-        }))
-      );
-
-      await db
-        .update(quizzes)
-        .set({ isPublished: true })
-        .where(eq(quizzes.id, createdQuiz.id));
-    } catch (error) {
-      try {
-        await db
-          .delete(quizQuestions)
-          .where(eq(quizQuestions.quizId, createdQuiz.id));
-
-        await db
-          .delete(quizzes)
-          .where(eq(quizzes.id, createdQuiz.id));
-      } catch (cleanupError) {
-        console.error(
-          "Failed to clean up incomplete quiz:",
-          createdQuiz.id,
-          cleanupError
-        );
-      }
-
-      throw error;
-    }
-
-    return NextResponse.json(
-      {
-        saved: true,
-        quiz: createdQuiz,
-        subject: subject.name,
-        topic: topicName,
-        difficulty,
-        questionCount: questions.length,
+        subjectId,
+        subjectName: subject.name,
+        subjectSlug: subject.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""),
+        topicId,
+        topicName,
       },
-      { status: 201 }
-    );
+      subject: subject.name,
+      topic: topicName,
+      difficulty,
+      questionCount: questions.length,
+      questions,
+      quizToken,
+    }, { status: 201 });
   } catch (error) {
     console.error("AI quiz generation error:", error);
-
-    const message =
-      error instanceof Error
-        ? error.message
-        : "Failed to generate quiz. Please try again.";
-
-    return NextResponse.json(
-      { error: message },
-      { status: 500 }
-    );
+    const message = error instanceof Error ? error.message : "Failed to generate quiz. Please try again.";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

@@ -106,6 +106,12 @@ export async function GET(request: NextRequest) {
         asc(quizTopics.name)
       );
 
+    // The Quiz Center's main screen is a generator/catalog, not a list of
+    // stored quizzes. Avoid extra Neon queries when only subjects/topics are needed.
+    if (params.get("catalogOnly") === "true") {
+      return NextResponse.json({ subjects, topics, quizzes: [], pagination: { page: 1, limit: 0, total: 0, totalPages: 0 } });
+    }
+
     const conditions = [
       eq(quizzes.isPublished, true),
       ne(quizSubjects.category, "CAREER"),

@@ -1,7 +1,8 @@
-
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { saveQuizLocally } from "@/lib/quiz-storage";
+import Navbar from "@/components/navbar";
 import Link from "next/link";
 import {
   Search,
@@ -13,16 +14,14 @@ import {
   Cloud,
   Cpu,
   Calculator,
+  BriefcaseBusiness,
   Sparkles,
   BookOpen,
-  Clock3,
   ChevronRight,
   History,
   RefreshCw,
   X,
   Layers,
-  Play,
-  Filter,
   CheckCircle2,
   AlertCircle,
 } from "lucide-react";
@@ -45,30 +44,9 @@ type Topic = {
   description: string | null;
 };
 
-type Quiz = {
-  id: number;
-  title: string;
-  description: string | null;
-  difficulty: string;
-  quizType: string;
-  questionCount: number;
-  subjectId: number;
-  subjectName: string;
-  subjectSlug: string;
-  topicId: number | null;
-  topicName: string | null;
-};
-
 type ApiResponse = {
   subjects?: Subject[];
   topics?: Topic[];
-  quizzes?: Quiz[];
-  pagination?: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  };
   error?: string;
 };
 
@@ -86,13 +64,14 @@ const CATEGORIES = [
 
 const CATEGORY_STYLES: Record<string, string> = {
   PROGRAMMING: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
-  AI_ML: "bg-[var(--neo-accent)]/10 text-[var(--neo-accent)]",
+  AI_ML: "bg-violet-500/10 text-[#ff4500]",
   WEB_DEVELOPMENT: "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400",
   DATA_SCIENCE: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
   CYBERSECURITY: "bg-rose-500/10 text-rose-600 dark:text-rose-400",
   CLOUD_DEVOPS: "bg-sky-500/10 text-sky-600 dark:text-sky-400",
   CS_FUNDAMENTALS: "bg-amber-500/10 text-amber-700 dark:text-amber-400",
   MATHEMATICS: "bg-orange-500/10 text-orange-700 dark:text-orange-400",
+  CAREER: "bg-pink-500/10 text-pink-600 dark:text-pink-400",
 };
 
 const ICONS: Record<string, typeof Code2> = {
@@ -104,6 +83,7 @@ const ICONS: Record<string, typeof Code2> = {
   cloud: Cloud,
   cpu: Cpu,
   calculator: Calculator,
+  "briefcase": BriefcaseBusiness,
   "book-open": BookOpen,
   layers: Layers,
   sparkles: Sparkles,
@@ -120,21 +100,13 @@ function formatCategory(category: string) {
 export default function QuizzesPage() {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [topics, setTopics] = useState<Topic[]>([]);
-  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("ALL");
-  const [selectedSubject, setSelectedSubject] = useState("ALL");
-  const [selectedTopic, setSelectedTopic] = useState("ALL");
-  const [difficulty, setDifficulty] = useState("ALL");
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
-  const [totalQuizzes, setTotalQuizzes] = useState(0);
   const [showGenerator, setShowGenerator] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [generateError, setGenerateError] = useState("");
-  const [notice, setNotice] = useState("");
 
   const [generateSubject, setGenerateSubject] = useState("");
   const [generateTopic, setGenerateTopic] = useState("");
@@ -146,22 +118,10 @@ export default function QuizzesPage() {
     setError("");
 
     try {
-      const params = new URLSearchParams({
-        page: String(page),
-        limit: "12",
-      });
+      const params = new URLSearchParams({ catalogOnly: "true" });
 
       if (search.trim()) params.set("search", search.trim());
       if (category !== "ALL") params.set("category", category);
-      if (selectedSubject !== "ALL") {
-        params.set("subjectId", selectedSubject);
-      }
-      if (selectedTopic !== "ALL") {
-        params.set("topicId", selectedTopic);
-      }
-      if (difficulty !== "ALL") {
-        params.set("difficulty", difficulty);
-      }
 
       const response = await fetch(`/api/quizzes?${params.toString()}`, {
         cache: "no-store",
@@ -175,10 +135,6 @@ export default function QuizzesPage() {
 
       setSubjects(data.subjects ?? []);
       setTopics(data.topics ?? []);
-      setQuizzes(data.quizzes ?? []);
-      setTotalPages(data.pagination?.totalPages ?? 0);
-      setTotalQuizzes(data.pagination?.total ?? 0);
-
       if (!generateSubject && data.subjects?.length) {
         setGenerateSubject(String(data.subjects[0].id));
       }
@@ -189,15 +145,7 @@ export default function QuizzesPage() {
     } finally {
       setLoading(false);
     }
-  }, [
-    page,
-    search,
-    category,
-    selectedSubject,
-    selectedTopic,
-    difficulty,
-    generateSubject,
-  ]);
+  }, [search, category, generateSubject]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -207,12 +155,6 @@ export default function QuizzesPage() {
     return () => window.clearTimeout(timer);
   }, [fetchCatalog]);
 
-  const visibleTopics = useMemo(() => {
-    if (selectedSubject === "ALL") return topics;
-    return topics.filter(
-      (topic) => topic.subjectId === Number(selectedSubject)
-    );
-  }, [topics, selectedSubject]);
 
   const generatorTopics = useMemo(
     () => topics.filter((topic) => topic.subjectId === Number(generateSubject)),
@@ -239,36 +181,23 @@ export default function QuizzesPage() {
   function resetFilters() {
     setSearch("");
     setCategory("ALL");
-    setSelectedSubject("ALL");
-    setSelectedTopic("ALL");
-    setDifficulty("ALL");
-    setPage(1);
   }
 
   function chooseCategory(nextCategory: string) {
     setCategory(nextCategory);
-    setSelectedSubject("ALL");
-    setSelectedTopic("ALL");
-    setPage(1);
   }
 
   function chooseSubject(subject: Subject) {
-    setCategory(subject.category);
-    setSelectedSubject(String(subject.id));
-    setSelectedTopic("ALL");
-    setPage(1);
-
-    document.getElementById("quiz-list")?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
+    setGenerateSubject(String(subject.id));
+    setGenerateTopic("");
+    setShowGenerator(true);
+    setGenerateError("");
   }
 
   async function generateQuiz(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setGenerating(true);
     setGenerateError("");
-    setNotice("");
 
     try {
       const response = await fetch("/api/quizzes/generate", {
@@ -289,9 +218,16 @@ export default function QuizzesPage() {
         throw new Error(data.error ?? "Failed to generate the quiz.");
       }
 
-      if (!data.quiz?.id) {
-        throw new Error("The quiz was generated but no saved quiz ID was returned.");
+      if (!data.quiz?.id || !data.quizToken || !Array.isArray(data.questions) || !data.questions.length) {
+        throw new Error("The quiz was generated but its local question set could not be prepared.");
       }
+
+      await saveQuizLocally({
+        quizId: Number(data.quiz.id),
+        quizToken: String(data.quizToken),
+        questions: data.questions,
+        savedAt: new Date().toISOString(),
+      });
 
       window.location.assign(`/quizzes/${data.quiz.id}`);
     } catch (err) {
@@ -305,27 +241,28 @@ export default function QuizzesPage() {
 
   return (
     <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+      <Navbar />
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Hero */}
-        <section className="relative overflow-hidden rounded-3xl p-6 neo-surface-lg sm:p-10">
-          <div className="pointer-events-none absolute -right-10 -top-20 h-64 w-64 rounded-full bg-[var(--neo-accent)]/10 blur-3xl" />
-          <div className="pointer-events-none absolute -bottom-20 right-1/3 h-52 w-52 rounded-full bg-[var(--neo-accent)]/5 blur-3xl" />
+        <section className="neo-surface relative overflow-hidden rounded-3xl p-6 sm:p-10">
+          <div className="pointer-events-none absolute -right-10 -top-20 h-64 w-64 rounded-full bg-[#ff4500]/10 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-20 right-1/3 h-52 w-52 rounded-full bg-[#ff4500]/10 blur-3xl" />
 
           <div className="relative grid items-center gap-8 lg:grid-cols-[1fr_auto]">
             <div>
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full rounded-full px-3 py-1.5 text-xs font-semibold text-[var(--neo-accent)] neo-pill">
+              <div className="mb-4 inline-flex items-center gap-2 neo-inset rounded-full px-3 py-1.5 text-xs font-semibold text-[#ff4500]">
                 <Sparkles className="h-4 w-4" />
                 YOUR PERSONAL PRACTICE SPACE
               </div>
 
               <h1 className="max-w-2xl text-3xl font-bold tracking-tight sm:text-5xl">
                 Test your knowledge.
-                <span className="block text-[var(--neo-accent)]">
+                <span className="block text-[#ff4500]">
                   Level up your skills.
                 </span>
               </h1>
 
-              <p className="mt-4 max-w-xl text-sm leading-6 text-slate-600 dark:text-slate-300 sm:text-base">
+              <p className="mt-4 max-w-xl text-sm leading-6 opacity-75 sm:text-base">
                 Practice programming, AI, web development, cybersecurity and
                 more. Build confidence with quizzes tailored to your learning
                 goals.
@@ -334,7 +271,7 @@ export default function QuizzesPage() {
               <div className="mt-7 flex flex-wrap gap-3">
                 <button
                   onClick={() => setShowGenerator(true)}
-                  className="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold text-white neo-accent-button"
+                  className="neo-accent-button inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold"
                 >
                   <Sparkles className="h-4 w-4" />
                   Generate AI Quiz
@@ -342,7 +279,7 @@ export default function QuizzesPage() {
 
                 <Link
                   href="/quizzes/history"
-                  className="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold neo-button"
+                  className="neo-button inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold"
                 >
                   <History className="h-4 w-4" />
                   My Quiz History
@@ -350,8 +287,8 @@ export default function QuizzesPage() {
               </div>
             </div>
 
-            <div className="hidden h-44 w-44 items-center justify-center rounded-3xl neo-surface p-3 lg:flex">
-              <div className="flex h-28 w-28 items-center justify-center rounded-3xl rounded-3xl bg-[var(--neo-accent)] text-white shadow-lg shadow-orange-900/20">
+            <div className="hidden h-44 w-44 items-center justify-center neo-surface rounded-3xl lg:flex">
+              <div className="flex h-28 w-28 items-center justify-center neo-inset rounded-3xl text-[#ff4500]">
                 <Brain className="h-16 w-16" strokeWidth={1.5} />
               </div>
             </div>
@@ -361,15 +298,14 @@ export default function QuizzesPage() {
         {/* Search */}
         <section className="mt-8">
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+            <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 opacity-50" />
             <input
               value={search}
               onChange={(event) => {
                 setSearch(event.target.value);
-                setPage(1);
               }}
-              placeholder="Search subjects, topics or quizzes..."
-              className="w-full rounded-2xl py-4 pl-12 pr-4 text-sm outline-none transition placeholder:text-slate-400 focus:ring-2 focus:ring-[var(--neo-accent)]/20 neo-inset"
+              placeholder="Search subjects..."
+              className="neo-inset w-full rounded-2xl border-0 py-4 pl-12 pr-4 text-sm outline-none transition placeholder:text-zinc-500 focus:ring-2 focus:ring-[#ff4500]/20 dark:placeholder:text-zinc-400"
             />
           </div>
         </section>
@@ -379,7 +315,7 @@ export default function QuizzesPage() {
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
               <h2 className="text-xl font-bold">Explore categories</h2>
-              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+              <p className="mt-1 text-sm opacity-60">
                 Choose an area to get started.
               </p>
             </div>
@@ -394,10 +330,10 @@ export default function QuizzesPage() {
                 <button
                   key={item.id}
                   onClick={() => chooseCategory(item.id)}
-                  className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition neo-button ${
+                  className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition ${
                     active
-                      ? "bg-[var(--neo-accent)] text-white shadow-md shadow-orange-900/20"
-                      : "text-[var(--foreground)]"
+                      ? "bg-[#ff4500] text-white shadow-md shadow-[#ff4500]/20"
+                      : "neo-button hover:text-[#ff4500]"
                   }`}
                 >
                   <Icon className="h-4 w-4" />
@@ -413,7 +349,7 @@ export default function QuizzesPage() {
           <div className="mb-4 flex items-end justify-between gap-3">
             <div>
               <h2 className="text-xl font-bold">Browse subjects</h2>
-              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+              <p className="mt-1 text-sm opacity-60">
                 {featuredSubjects.length} subjects in this selection
               </p>
             </div>
@@ -424,20 +360,20 @@ export default function QuizzesPage() {
               {Array.from({ length: 8 }).map((_, index) => (
                 <div
                   key={index}
-                  className="h-44 animate-pulse rounded-2xl neo-surface-sm"
+                  className="h-44 animate-pulse rounded-2xl border border-slate-200 bg-[var(--neo-bg)] dark:border-slate-800 dark:bg-[var(--neo-bg)]"
                 />
               ))}
             </div>
           ) : featuredSubjects.length === 0 ? (
-            <div className="rounded-2xl p-10 text-center neo-surface">
-              <BookOpen className="mx-auto h-9 w-9 text-slate-400" />
+            <div className="rounded-2xl border border-dashed border-slate-300 p-10 text-center dark:border-slate-700">
+              <BookOpen className="mx-auto h-9 w-9 opacity-50" />
               <p className="mt-3 font-semibold">No subjects found</p>
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm opacity-60">
                 Try another search or category.
               </p>
               <button
                 onClick={resetFilters}
-                className="mt-4 text-sm font-semibold text-[var(--neo-accent)] hover:underline"
+                className="mt-4 text-sm font-semibold text-[#ff4500] hover:underline dark:text-[#ff4500]"
               >
                 Clear filters
               </button>
@@ -454,9 +390,9 @@ export default function QuizzesPage() {
                   <button
                     key={subject.id}
                     onClick={() => chooseSubject(subject)}
-                    className={`group rounded-2xl p-5 text-left transition hover:-translate-y-0.5 neo-surface ${
-                      selectedSubject === String(subject.id)
-                        ? "ring-2 ring-[var(--neo-accent)]/40"
+                    className={`neo-surface group rounded-2xl p-5 text-left transition hover:-translate-y-0.5 hover:text-[#ff4500] ${
+                      generateSubject === String(subject.id)
+                        ? "ring-2 ring-[#ff4500]/50"
                         : ""
                     }`}
                   >
@@ -464,24 +400,24 @@ export default function QuizzesPage() {
                       <div
                         className={`flex h-11 w-11 items-center justify-center rounded-xl ${
                           CATEGORY_STYLES[subject.category] ??
-                          "bg-[var(--neo-accent)]/10 text-[var(--neo-accent)]"
+                          "bg-violet-500/10 text-[#ff4500]"
                         }`}
                       >
                         <Icon className="h-5 w-5" />
                       </div>
-                      <ChevronRight className="h-5 w-5 text-slate-300 transition group-hover:translate-x-1 group-hover:text-[var(--neo-accent)]" />
+                      <ChevronRight className="h-5 w-5 text-slate-300 transition group-hover:translate-x-1 group-hover:text-[#ff4500]" />
                     </div>
 
                     <h3 className="mt-4 font-bold">{subject.name}</h3>
-                    <p className="mt-2 line-clamp-2 min-h-10 text-sm leading-5 text-slate-500 dark:text-slate-400">
+                    <p className="mt-2 line-clamp-2 min-h-10 text-sm leading-5 opacity-60">
                       {subject.description || "Practice and strengthen your skills."}
                     </p>
 
                     <div className="mt-4 flex flex-wrap items-center gap-2">
-                      <span className="rounded-full rounded-full px-2.5 py-1 text-xs text-slate-600 neo-pill">
+                      <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs text-slate-600 dark:bg-slate-800 dark:text-slate-300">
                         {count} topics
                       </span>
-                      <span className="text-xs text-slate-400">
+                      <span className="text-xs opacity-50">
                         {formatCategory(subject.category)}
                       </span>
                     </div>
@@ -492,232 +428,13 @@ export default function QuizzesPage() {
           )}
         </section>
 
-        {/* Quiz listing and filters */}
-        <section id="quiz-list" className="mt-12 scroll-mt-8">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <h2 className="text-2xl font-bold">Available quizzes</h2>
-              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                {totalQuizzes} published quizzes available
-              </p>
-            </div>
 
-            <div className="flex flex-wrap items-center gap-2">
-              <Filter className="h-4 w-4 text-slate-400" />
-
-              <select
-                aria-label="Filter by subject"
-                value={selectedSubject}
-                onChange={(event) => {
-                  setSelectedSubject(event.target.value);
-                  setSelectedTopic("ALL");
-                  setPage(1);
-                }}
-                className="max-w-[190px] rounded-xl px-3 py-2.5 text-sm outline-none neo-inset-sm"
-              >
-                <option value="ALL">All subjects</option>
-                {subjects.map((subject) => (
-                  <option key={subject.id} value={subject.id}>
-                    {subject.name}
-                  </option>
-                ))}
-              </select>
-
-              <select
-                aria-label="Filter by topic"
-                value={selectedTopic}
-                onChange={(event) => {
-                  setSelectedTopic(event.target.value);
-                  setPage(1);
-                }}
-                className="max-w-[190px] rounded-xl px-3 py-2.5 text-sm outline-none neo-inset-sm"
-              >
-                <option value="ALL">All topics</option>
-                {visibleTopics.map((topic) => (
-                  <option key={topic.id} value={topic.id}>
-                    {topic.name}
-                  </option>
-                ))}
-              </select>
-
-              <select
-                aria-label="Filter by difficulty"
-                value={difficulty}
-                onChange={(event) => {
-                  setDifficulty(event.target.value);
-                  setPage(1);
-                }}
-                className="rounded-xl px-3 py-2.5 text-sm outline-none neo-inset-sm"
-              >
-                <option value="ALL">All difficulties</option>
-                <option value="EASY">Easy</option>
-                <option value="MEDIUM">Medium</option>
-                <option value="HARD">Hard</option>
-              </select>
-
-              <button
-                onClick={resetFilters}
-                title="Reset filters"
-                className="inline-flex items-center justify-center rounded-xl p-2.5 transition neo-button"
-              >
-                <RefreshCw className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-
-          {error && (
-            <div className="mt-5 flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/30 dark:text-red-300">
-              <AlertCircle className="h-5 w-5 shrink-0" />
-              {error}
-              <button
-                onClick={() => void fetchCatalog()}
-                className="ml-auto font-semibold underline"
-              >
-                Retry
-              </button>
-            </div>
-          )}
-
-          {loading ? (
-            <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {Array.from({ length: 6 }).map((_, index) => (
-                <div
-                  key={index}
-                  className="h-56 animate-pulse rounded-2xl neo-surface-sm"
-                />
-              ))}
-            </div>
-          ) : quizzes.length === 0 ? (
-            <div className="mt-5 rounded-2xl px-5 py-12 text-center neo-surface">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--neo-accent)]/10 text-[var(--neo-accent)]">
-                <BookOpen className="h-7 w-7" />
-              </div>
-              <h3 className="mt-4 text-lg font-bold">
-                {totalQuizzes === 0
-                  ? "Your quiz library is ready for its first quiz"
-                  : "No quizzes match these filters"}
-              </h3>
-              <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-slate-500 dark:text-slate-400">
-                {totalQuizzes === 0
-                  ? "Generate your first AI quiz to create questions, save them to your library and start practicing."
-                  : "Try a different subject, topic, difficulty or search term."}
-              </p>
-
-              <div className="mt-5 flex flex-wrap justify-center gap-3">
-                {totalQuizzes === 0 ? (
-                  <button
-                    onClick={() => setShowGenerator(true)}
-                    className="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold text-white neo-accent-button"
-                  >
-                    <Sparkles className="h-4 w-4" />
-                    Generate your first quiz
-                  </button>
-                ) : (
-                  <button
-                    onClick={resetFilters}
-                    className="rounded-xl px-5 py-3 text-sm font-semibold text-white neo-accent-button"
-                  >
-                    Clear filters
-                  </button>
-                )}
-              </div>
-            </div>
-          ) : (
-            <>
-              <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {quizzes.map((quiz) => (
-                  <article
-                    key={quiz.id}
-                    className="flex flex-col rounded-2xl p-5 transition neo-surface"
-                  >
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span
-                        className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
-                          CATEGORY_STYLES[
-                            subjects.find((s) => s.id === quiz.subjectId)?.category ?? ""
-                          ] ?? "bg-[var(--neo-accent)]/10 text-[var(--neo-accent)]"
-                        }`}
-                      >
-                        {quiz.subjectName}
-                      </span>
-                      <span className="rounded-full rounded-full px-2.5 py-1 text-xs text-slate-600 neo-pill">
-                        {quiz.difficulty}
-                      </span>
-                    </div>
-
-                    <h3 className="mt-4 text-lg font-bold leading-6">
-                      {quiz.title}
-                    </h3>
-                    <p className="mt-2 line-clamp-2 min-h-10 text-sm leading-5 text-slate-500 dark:text-slate-400">
-                      {quiz.description || "Test your understanding with this quiz."}
-                    </p>
-
-                    {quiz.topicName && (
-                      <p className="mt-3 text-xs text-slate-500">
-                        Topic: {quiz.topicName}
-                      </p>
-                    )}
-
-                    <div className="mt-4 flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
-                      <span className="inline-flex items-center gap-1.5">
-                        <BookOpen className="h-4 w-4" />
-                        {quiz.questionCount} questions
-                      </span>
-                      <span className="inline-flex items-center gap-1.5">
-                        <Clock3 className="h-4 w-4" />
-                        ~{Math.max(1, quiz.questionCount)} min
-                      </span>
-                      {quiz.quizType === "AI" && (
-                        <span className="inline-flex items-center gap-1 text-[var(--neo-accent)]">
-                          <Sparkles className="h-3.5 w-3.5" />
-                          AI
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="mt-5 border-t border-[var(--foreground)]/10 pt-4">
-                      <Link
-                        href={`/quizzes/${quiz.id}`}
-                        className="inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-white neo-accent-button"
-                      >
-                        <Play className="h-4 w-4" />
-                        Start quiz
-                      </Link>
-                    </div>
-                  </article>
-                ))}
-              </div>
-
-              {totalPages > 1 && (
-                <div className="mt-7 flex items-center justify-center gap-3">
-                  <button
-                    disabled={page <= 1}
-                    onClick={() => setPage((current) => current - 1)}
-                    className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-800"
-                  >
-                    Previous
-                  </button>
-                  <span className="text-sm text-slate-500">
-                    Page {page} of {totalPages}
-                  </span>
-                  <button
-                    disabled={page >= totalPages}
-                    onClick={() => setPage((current) => current + 1)}
-                    className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-800"
-                  >
-                    Next
-                  </button>
-                </div>
-              )}
-            </>
-          )}
-        </section>
       </div>
 
       {/* AI Quiz Generator */}
       {showGenerator && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-slate-950/60 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-[var(--neo-bg)]/60 p-4 backdrop-blur-sm"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget && !generating) {
               setShowGenerator(false);
@@ -728,26 +445,25 @@ export default function QuizzesPage() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="generator-title"
-            className="my-8 w-full max-w-xl rounded-3xl p-6 neo-surface-lg sm:p-8"
+            className="my-8 w-full max-w-xl rounded-3xl border border-slate-200 bg-[var(--neo-bg)] p-6 shadow-2xl dark:border-slate-800 dark:bg-[var(--neo-bg)] sm:p-8"
           >
             <div className="flex items-start justify-between gap-4">
               <div>
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--neo-accent)]/10 text-[var(--neo-accent)]">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-500/10 text-[#ff4500]">
                   <Sparkles className="h-6 w-6" />
                 </div>
                 <h2 id="generator-title" className="mt-4 text-2xl font-bold">
                   Create an AI quiz
                 </h2>
-                <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
-                  Customize your practice session. Your generated quiz will be
-                  saved to your library.
+                <p className="mt-2 text-sm leading-6 opacity-60">
+                  Customize your practice session. Your questions will be saved locally in this browser so you can retake the same quiz.
                 </p>
               </div>
               <button
                 onClick={() => setShowGenerator(false)}
                 disabled={generating}
                 aria-label="Close generator"
-                className="rounded-xl p-2 text-slate-500 transition hover:text-[var(--neo-accent)] disabled:opacity-40 neo-button"
+                className="rounded-xl p-2 opacity-60 transition hover:bg-slate-100 disabled:opacity-40 dark:hover:bg-slate-800"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -769,7 +485,7 @@ export default function QuizzesPage() {
                     setGenerateSubject(event.target.value);
                     setGenerateTopic("");
                   }}
-                  className="w-full rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[var(--neo-accent)]/20 neo-inset-sm"
+                  className="w-full rounded-xl border border-slate-200 bg-[var(--neo-bg)] px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#ff4500]/20 dark:border-slate-700 dark:bg-[var(--neo-bg)]"
                 >
                   {subjects.map((subject) => (
                     <option key={subject.id} value={subject.id}>
@@ -784,13 +500,13 @@ export default function QuizzesPage() {
                   htmlFor="generate-topic"
                   className="mb-2 block text-sm font-semibold"
                 >
-                  Topic <span className="font-normal text-slate-400">(optional)</span>
+                  Topic <span className="font-normal opacity-50">(optional)</span>
                 </label>
                 <select
                   id="generate-topic"
                   value={generateTopic}
                   onChange={(event) => setGenerateTopic(event.target.value)}
-                  className="w-full rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[var(--neo-accent)]/20 neo-inset-sm"
+                  className="w-full rounded-xl border border-slate-200 bg-[var(--neo-bg)] px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#ff4500]/20 dark:border-slate-700 dark:bg-[var(--neo-bg)]"
                 >
                   <option value="">All topics in this subject</option>
                   {generatorTopics.map((topic) => (
@@ -813,7 +529,7 @@ export default function QuizzesPage() {
                     id="generate-difficulty"
                     value={generateDifficulty}
                     onChange={(event) => setGenerateDifficulty(event.target.value)}
-                    className="w-full rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[var(--neo-accent)]/20 neo-inset-sm"
+                    className="w-full rounded-xl border border-slate-200 bg-[var(--neo-bg)] px-4 py-3 text-sm outline-none focus:border-[#ff4500] dark:border-slate-700 dark:bg-[var(--neo-bg)]"
                   >
                     <option value="EASY">Easy</option>
                     <option value="MEDIUM">Medium</option>
@@ -832,7 +548,7 @@ export default function QuizzesPage() {
                     id="generate-count"
                     value={questionCount}
                     onChange={(event) => setQuestionCount(event.target.value)}
-                    className="w-full rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[var(--neo-accent)]/20 neo-inset-sm"
+                    className="w-full rounded-xl border border-slate-200 bg-[var(--neo-bg)] px-4 py-3 text-sm outline-none focus:border-[#ff4500] dark:border-slate-700 dark:bg-[var(--neo-bg)]"
                   >
                     <option value="5">5 questions</option>
                     <option value="10">10 questions</option>
@@ -849,14 +565,11 @@ export default function QuizzesPage() {
                 </div>
               )}
 
-              {notice && (
-                <p className="text-sm text-emerald-600">{notice}</p>
-              )}
 
               <button
                 type="submit"
                 disabled={generating || subjects.length === 0}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3.5 text-sm font-semibold text-white neo-accent-button disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#ff4500] px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-[#ff4500]/20 transition hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {generating ? (
                   <>
@@ -871,7 +584,7 @@ export default function QuizzesPage() {
                 )}
               </button>
 
-              <p className="text-center text-xs leading-5 text-slate-400">
+              <p className="text-center text-xs leading-5 opacity-50">
                 AI-generated questions may occasionally contain errors. Review
                 explanations and verify important technical details.
               </p>
