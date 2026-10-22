@@ -1,3 +1,4 @@
+
 import ProgressAutoRefresh from "@/components/progress-auto-refresh";
 import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
@@ -7,12 +8,12 @@ import {
   ArrowRight,
   BookOpen,
   Clock3,
-  Flame,
   Play,
   Search,
   Sparkles,
   Target,
   Trophy,
+  Users,
 } from "lucide-react";
 
 import { eq } from "drizzle-orm";
@@ -52,9 +53,9 @@ function durationToSeconds(
 }
 
 export default async function DashboardPage() {
-  // =========================================================
-  // GET CURRENT USER
-  // =========================================================
+  /* =========================================================
+     GET CURRENT USER
+  ========================================================= */
 
   const user = await getCurrentUser();
 
@@ -67,9 +68,9 @@ export default async function DashboardPage() {
     redirect("/admin");
   }
 
-  // =========================================================
-  // GET ALL COURSES
-  // =========================================================
+  /* =========================================================
+     GET ALL COURSES
+  ========================================================= */
 
   const allCourses = await db
     .select({
@@ -84,9 +85,9 @@ export default async function DashboardPage() {
     })
     .from(courses);
 
-  // =========================================================
-  // GET USER PROGRESS
-  // =========================================================
+  /* =========================================================
+     GET USER PROGRESS
+  ========================================================= */
 
   const userProgress = await db
     .select({
@@ -99,9 +100,9 @@ export default async function DashboardPage() {
     .from(progress)
     .where(eq(progress.userId, user.id));
 
-  // =========================================================
-  // COMPLETED LESSONS
-  // =========================================================
+  /* =========================================================
+     COMPLETED LESSONS
+  ========================================================= */
 
   const completedLessonIds = new Set(
     userProgress
@@ -111,9 +112,9 @@ export default async function DashboardPage() {
 
   const completedLessonsCount = completedLessonIds.size;
 
-  // =========================================================
-  // GET QUIZ ATTEMPTS
-  // =========================================================
+  /* =========================================================
+     GET QUIZ ATTEMPTS
+  ========================================================= */
 
   const userQuizAttempts = await db
     .select({
@@ -125,9 +126,9 @@ export default async function DashboardPage() {
 
   const quizzesCompleted = userQuizAttempts.length;
 
-  // =========================================================
-  // AVERAGE QUIZ SCORE
-  // =========================================================
+  /* =========================================================
+     AVERAGE QUIZ SCORE
+  ========================================================= */
 
   let averageQuizScore = 0;
 
@@ -150,23 +151,23 @@ export default async function DashboardPage() {
     }
   }
 
-  // =========================================================
-  // GET ALL LESSONS
-  // =========================================================
+  /* =========================================================
+     GET ALL LESSONS
+  ========================================================= */
 
   const allLessons = await db
-  .select({
-    id: lessons.id,
-    courseId: lessons.courseId,
-    duration: lessons.duration,
-    order: lessons.order,
-  })
-  .from(lessons)
-  .orderBy(lessons.order);
+    .select({
+      id: lessons.id,
+      courseId: lessons.courseId,
+      duration: lessons.duration,
+      order: lessons.order,
+    })
+    .from(lessons)
+    .orderBy(lessons.order);
 
-  // =========================================================
-  // CALCULATE COURSE PROGRESS
-  // =========================================================
+  /* =========================================================
+     CALCULATE COURSE PROGRESS
+  ========================================================= */
 
   const courseProgress = allCourses.map((course) => {
     const courseLessons = allLessons.filter(
@@ -227,9 +228,9 @@ export default async function DashboardPage() {
     };
   });
 
-  // =========================================================
-  // FIND CURRENT COURSE
-  // =========================================================
+  /* =========================================================
+     FIND CURRENT COURSE
+  ========================================================= */
 
   let currentCourse =
     allCourses.length > 0 ? allCourses[0] : null;
@@ -238,7 +239,7 @@ export default async function DashboardPage() {
   let currentCourseCompleted = 0;
   let currentCourseTotal = 0;
 
-  let currentLesson = null;
+  let currentLesson: (typeof allLessons)[number] | null = null;
 
   if (courseProgress.length > 0) {
     const startedCourses = courseProgress.filter(
@@ -250,8 +251,7 @@ export default async function DashboardPage() {
     if (startedCourses.length > 0) {
       startedCourses.sort(
         (a, b) =>
-          b.totalWatchedSeconds -
-          a.totalWatchedSeconds
+          b.totalWatchedSeconds - a.totalWatchedSeconds
       );
 
       const selected = startedCourses[0];
@@ -270,15 +270,14 @@ export default async function DashboardPage() {
     }
   }
 
-  // =========================================================
-  // FIND NEXT LESSON
-  // =========================================================
+  /* =========================================================
+     FIND NEXT LESSON
+  ========================================================= */
 
   if (currentCourse) {
     const currentCourseLessons = allLessons
       .filter(
-        (lesson) =>
-          lesson.courseId === currentCourse!.id
+        (lesson) => lesson.courseId === currentCourse!.id
       )
       .sort((a, b) => a.order - b.order);
 
@@ -302,9 +301,9 @@ export default async function DashboardPage() {
     }
   }
 
-  // =========================================================
-  // RECOMMENDED COURSES
-  // =========================================================
+  /* =========================================================
+     RECOMMENDED COURSES
+  ========================================================= */
 
   const recommendedCourses = allCourses
     .filter(
@@ -314,9 +313,9 @@ export default async function DashboardPage() {
     )
     .slice(0, 3);
 
-  // =========================================================
-  // FALLBACK
-  // =========================================================
+  /* =========================================================
+     FALLBACK
+  ========================================================= */
 
   if (
     recommendedCourses.length === 0 &&
@@ -325,20 +324,18 @@ export default async function DashboardPage() {
     recommendedCourses.push(currentCourse);
   }
 
-  // =========================================================
-  // UI
-  // =========================================================
+  /* =========================================================
+     UI
+  ========================================================= */
 
   return (
-    <main className="min-h-screen w-full min-w-0 overflow-x-hidden bg-[#e0e5ec] text-black dark:bg-[#1a1d23] dark:text-[#f5f7fa] dark:text-[#f5f7fa]">
+    <main className="min-h-screen w-full min-w-0 overflow-x-hidden bg-[#e0e5ec] text-black dark:bg-[#1a1d23] dark:text-[#f5f7fa]">
       <ProgressAutoRefresh />
 
       <Navbar />
 
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
-        {/* =================================================
-            HEADER
-        ================================================= */}
+        {/* HEADER */}
 
         <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
           <div>
@@ -351,55 +348,31 @@ export default async function DashboardPage() {
             </h1>
 
             <p className="mt-2 text-[#3f3e3e] dark:text-[#a8adb7]">
-              Keep going. You're making progress.
+              Keep going. You&apos;re making progress.
             </p>
           </div>
 
           <Link
             href="/courses"
-            className="flex w-fit items-center gap-2 rounded-[20px] bg-[orangered] px-5 py-3 text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(170,35,0,0.45),inset_-3px_-3px_6px_rgba(255,180,160,0.45)]"
+            className="flex w-fit items-center gap-2 rounded-[20px] bg-[orangered] px-5 py-3 text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(170,35,0,0.45),inset_-3px_-3px_6px_rgba(255,180,160,0.45)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]"
           >
             <Search size={17} />
             Find a course
           </Link>
         </div>
 
-        {/* =================================================
-            STATS
-        ================================================= */}
+        {/* LEARNING STATISTICS */}
 
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {/* STREAK */}
-
-          <div className="rounded-[30px] bg-[#e0e5ec] dark:bg-[#1e2229] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
-            <div className="flex items-center justify-between">
-              <p className="text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
-                Learning streak
-              </p>
-
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#e0e5ec] dark:bg-[#1e2229] text-[orangered] dark:bg-[#1e2229] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
-                <Flame size={17} />
-              </div>
-            </div>
-
-            <p className="mt-4 text-3xl font-bold text-black dark:text-[#f5f7fa]">
-              —
-            </p>
-
-            <p className="mt-1 text-xs text-[#3f3e3e] dark:text-[#a8adb7]/70">
-              Streak tracking coming soon
-            </p>
-          </div>
-
           {/* COURSES STARTED */}
 
-          <div className="rounded-[30px] bg-[#e0e5ec] dark:bg-[#1e2229] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
+          <div className="rounded-[30px] bg-[#e0e5ec] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
             <div className="flex items-center justify-between">
               <p className="text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
                 Courses started
               </p>
 
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#e0e5ec] dark:bg-[#1e2229] text-[orangered] dark:bg-[#1e2229] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
                 <BookOpen size={17} />
               </div>
             </div>
@@ -415,19 +388,19 @@ export default async function DashboardPage() {
             </p>
 
             <p className="mt-1 text-xs text-[#3f3e3e] dark:text-[#a8adb7]/70">
-              Courses you've started
+              Courses you&apos;ve started
             </p>
           </div>
 
-          {/* LESSONS */}
+          {/* LESSONS COMPLETED */}
 
-          <div className="rounded-[30px] bg-[#e0e5ec] dark:bg-[#1e2229] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
+          <div className="rounded-[30px] bg-[#e0e5ec] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
             <div className="flex items-center justify-between">
               <p className="text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
                 Lessons completed
               </p>
 
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#e0e5ec] dark:bg-[#1e2229] text-[orangered] dark:bg-[#1e2229] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
                 <Clock3 size={17} />
               </div>
             </div>
@@ -441,15 +414,15 @@ export default async function DashboardPage() {
             </p>
           </div>
 
-          {/* QUIZZES */}
+          {/* QUIZZES COMPLETED */}
 
-          <div className="rounded-[30px] bg-[#e0e5ec] dark:bg-[#1e2229] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
+          <div className="rounded-[30px] bg-[#e0e5ec] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
             <div className="flex items-center justify-between">
               <p className="text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
                 Quizzes completed
               </p>
 
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#e0e5ec] dark:bg-[#1e2229] text-[orangered] dark:bg-[#1e2229] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
                 <Trophy size={17} />
               </div>
             </div>
@@ -464,240 +437,244 @@ export default async function DashboardPage() {
                 : "No quizzes completed yet"}
             </p>
           </div>
+          {/* INTERVIEWS COMPLETED */}
+
+          <div className="rounded-[30px] bg-[#e0e5ec] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
+                Interviews completed
+              </p>
+
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
+                <Users size={17} />
+              </div>
+            </div>
+
+            <p className="mt-4 text-3xl font-bold text-black dark:text-[#f5f7fa]">
+              0
+            </p>
+
+            <p className="mt-1 text-xs text-[#3f3e3e] dark:text-[#a8adb7]/70">
+              Interview practice sessions
+            </p>
+          </div>
         </div>
 
-        {/* =================================================
-            MAIN GRID
-        ================================================= */}
+        {/* CONTINUE LEARNING */}
 
-        <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_340px]">
-          {/* =================================================
-              CONTINUE LEARNING
-          ================================================= */}
+        <section className="mt-10">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <h2 className="text-xl font-bold text-black dark:text-[#f5f7fa]">
+                Continue learning
+              </h2>
 
-          <section>
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-xl font-bold text-black dark:text-[#f5f7fa]">
-                  Continue learning
-                </h2>
-
-                <p className="mt-1 text-sm text-[#3f3e3e] dark:text-[#a8adb7]/70">
-                  Pick up where you left off.
-                </p>
-              </div>
-
-              <Link
-                href="/my-learning"
-                className="hidden items-center gap-1 text-sm font-semibold text-[orangered] transition hover:text-[red] sm:flex"
-              >
-                View all
-                <ArrowRight size={15} />
-              </Link>
+              <p className="mt-1 text-sm text-[#3f3e3e] dark:text-[#a8adb7]/70">
+                Pick up where you left off.
+              </p>
             </div>
 
-            {/* CURRENT COURSE */}
+            <Link
+              href="/my-learning"
+              className="hidden items-center gap-1 text-sm font-semibold text-[orangered] transition hover:text-[red] sm:flex"
+            >
+              View all
+              <ArrowRight size={15} />
+            </Link>
+          </div>
 
-            {currentCourse ? (
-              <div className="mt-5 overflow-hidden rounded-[30px] bg-[#e0e5ec] dark:bg-[#1e2229] shadow-[14px_14px_28px_rgba(163,177,198,0.6),-14px_-14px_28px_rgba(255,255,255,0.8)] dark:shadow-[14px_14px_28px_rgba(5,7,10,0.8),-14px_-14px_28px_rgba(43,48,58,0.8)]">
-                <div className="grid md:grid-cols-[190px_1fr]">
-                  {/* COURSE VISUAL */}
+          {/* CURRENT COURSE */}
 
-                  <div className="m-3 flex min-h-[190px] items-center justify-center rounded-[24px] bg-[#e0e5ec] dark:bg-[#1e2229] shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] dark:shadow-[inset_6px_6px_10px_rgba(5,7,10,0.75),inset_-6px_-6px_10px_rgba(43,48,58,0.75)] md:m-4">
-                    <div className="text-center">
-                      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#e0e5ec] dark:bg-[#1e2229] text-[orangered] dark:bg-[#1e2229] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]">
-                        <BookOpen size={25} />
-                      </div>
+          {currentCourse ? (
+            <div className="mt-5 overflow-hidden rounded-[30px] bg-[#e0e5ec] shadow-[14px_14px_28px_rgba(163,177,198,0.6),-14px_-14px_28px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[14px_14px_28px_rgba(5,7,10,0.8),-14px_-14px_28px_rgba(43,48,58,0.8)]">
+              <div className="grid md:grid-cols-[190px_1fr]">
+                {/* COURSE VISUAL */}
 
-                      <p className="mt-4 text-[10px] font-bold uppercase tracking-[0.14em] text-[#3f3e3e] dark:text-[#a8adb7]/60">
-                        Current course
-                      </p>
-
-                      <p className="mt-1 px-4 text-sm font-semibold text-black dark:text-[#f5f7fa]">
-                        {currentCourse.title}
-                      </p>
+                <div className="m-3 flex min-h-[190px] items-center justify-center rounded-[24px] bg-[#e0e5ec] shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] dark:bg-[#1e2229] dark:shadow-[inset_6px_6px_10px_rgba(5,7,10,0.75),inset_-6px_-6px_10px_rgba(43,48,58,0.75)] md:m-4">
+                  <div className="text-center">
+                    <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#e0e5ec] text-[orangered] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]">
+                      <BookOpen size={25} />
                     </div>
+
+                    <p className="mt-4 text-[10px] font-bold uppercase tracking-[0.14em] text-[#3f3e3e] dark:text-[#a8adb7]/60">
+                      Current course
+                    </p>
+
+                    <p className="mt-1 px-4 text-sm font-semibold text-black dark:text-[#f5f7fa]">
+                      {currentCourse.title}
+                    </p>
                   </div>
+                </div>
 
-                  {/* COURSE INFORMATION */}
+                {/* COURSE INFORMATION */}
 
-                  <div className="p-5 sm:p-6">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="min-w-0">
-                        <span className="inline-flex rounded-full bg-[#e0e5ec] dark:bg-[#1e2229] px-2.5 py-1 text-xs font-semibold text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
-                          {currentCourse.category}
-                        </span>
-
-                        <h3 className="mt-3 text-xl font-bold text-black dark:text-[#f5f7fa]">
-                          {currentCourse.title}
-                        </h3>
-
-                        <p className="mt-2 text-sm text-[#3f3e3e] dark:text-[#a8adb7]/70">
-                          {currentLesson?.title ??
-                            "Start this course"}
-                        </p>
-                      </div>
-
-                      <span className="shrink-0 text-sm font-bold text-[orangered]">
-                        {currentCourseProgress}%
+                <div className="p-5 sm:p-6">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0">
+                      <span className="inline-flex rounded-full bg-[#e0e5ec] px-2.5 py-1 text-xs font-semibold text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
+                        {currentCourse.category}
                       </span>
-                    </div>
 
-                    {/* PROGRESS */}
+                      <h3 className="mt-3 break-words text-xl font-bold text-black dark:text-[#f5f7fa]">
+                        {currentCourse.title}
+                      </h3>
 
-                    <div className="mt-6 h-3 overflow-hidden rounded-full bg-[#e0e5ec] dark:bg-[#1e2229] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
-                      <div
-                        className="h-full rounded-full bg-[orangered] transition-all"
-                        style={{
-                          width: `${currentCourseProgress}%`,
-                        }}
-                      />
-                    </div>
-
-                    <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
-                      <p className="text-xs text-[#3f3e3e] dark:text-[#a8adb7]/70">
-                        {currentCourseCompleted} of{" "}
-                        {currentCourseTotal} lessons completed
+                      <p className="mt-2 text-sm text-[#3f3e3e] dark:text-[#a8adb7]/70">
+                        {currentLesson?.title ??
+                          "Start this course"}
                       </p>
-
-                      <Link
-                        href={`/learn/${currentCourse.slug}`}
-                        className="flex items-center gap-2 rounded-[20px] bg-[orangered] px-4 py-2.5 text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(170,35,0,0.45),inset_-3px_-3px_6px_rgba(255,180,160,0.45)]"
-                      >
-                        <Play
-                          size={15}
-                          fill="currentColor"
-                        />
-                        Continue
-                      </Link>
                     </div>
+
+                    <span className="shrink-0 text-sm font-bold text-[orangered]">
+                      {currentCourseProgress}%
+                    </span>
+                  </div>
+
+                  {/* PROGRESS */}
+
+                  <div
+                    className="mt-6 h-3 overflow-hidden rounded-full bg-[#e0e5ec] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]"
+                    role="progressbar"
+                    aria-label="Course progress"
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-valuenow={currentCourseProgress}
+                  >
+                    <div
+                      className="h-full rounded-full bg-[orangered] transition-all"
+                      style={{
+                        width: `${currentCourseProgress}%`,
+                      }}
+                    />
+                  </div>
+
+                  <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
+                    <p className="text-xs text-[#3f3e3e] dark:text-[#a8adb7]/70">
+                      {currentCourseCompleted} of{" "}
+                      {currentCourseTotal} lessons completed
+                    </p>
+
+                    <Link
+                      href={`/learn/${currentCourse.slug}`}
+                      className="flex items-center gap-2 rounded-[20px] bg-[orangered] px-4 py-2.5 text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(170,35,0,0.45),inset_-3px_-3px_6px_rgba(255,180,160,0.45)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]"
+                    >
+                      <Play size={15} fill="currentColor" />
+                      Continue
+                    </Link>
                   </div>
                 </div>
               </div>
-            ) : (
-              <div className="mt-5 rounded-[30px] bg-[#e0e5ec] dark:bg-[#1e2229] p-10 text-center shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#e0e5ec] dark:bg-[#1e2229] text-[#3f3e3e] dark:text-[#a8adb7]/50 shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
-                  <BookOpen size={30} />
-                </div>
-
-                <h3 className="mt-4 font-semibold text-black dark:text-[#f5f7fa]">
-                  No courses available
-                </h3>
-
-                <p className="mt-2 text-sm text-[#3f3e3e] dark:text-[#a8adb7]/70">
-                  Search for a course to get started.
-                </p>
-
-                <Link
-                  href="/courses"
-                  className="mt-5 inline-flex items-center gap-2 rounded-[20px] bg-[orangered] px-4 py-2.5 text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] transition-all duration-200 hover:bg-[red]"
-                >
-                  Find courses
-                  <ArrowRight size={15} />
-                </Link>
-              </div>
-            )}
-          </section>
-
-          {/* =================================================
-              SIDEBAR
-          ================================================= */}
-
-          <aside>
-            {/* DAILY GOAL */}
-
-            <div className="rounded-[30px] bg-[#e0e5ec] dark:bg-[#1e2229] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] sm:p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="font-bold text-black dark:text-[#f5f7fa]">
-                    Today's goal
-                  </h2>
-
-                  <p className="mt-1 text-xs text-[#3f3e3e] dark:text-[#a8adb7]/70">
-                    Keep learning consistently
-                  </p>
-                </div>
-
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#e0e5ec] dark:bg-[#1e2229] text-[orangered] dark:bg-[#1e2229] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
-                  <Target size={19} />
-                </div>
-              </div>
-
-              <div className="mt-7 flex items-center gap-5">
-                <div className="relative flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-[#e0e5ec] dark:bg-[#1e2229] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
-                  <div className="absolute inset-2 rounded-full bg-[#e0e5ec] dark:bg-[#1e2229] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]" />
-
-                  <div className="relative z-10 text-center">
-                    <p className="text-xl font-bold text-black dark:text-[#f5f7fa]">
-                      {currentLesson ? "1" : "0"}
-                    </p>
-
-                    <p className="text-[10px] text-[#3f3e3e] dark:text-[#a8adb7]/60">
-                      LESSON
-                    </p>
-                  </div>
-                </div>
-
-                <div className="min-w-0">
-                  <p className="text-sm font-semibold text-black dark:text-[#f5f7fa]">
-                    {currentLesson
-                      ? "Keep going!"
-                      : "You're all caught up!"}
-                  </p>
-
-                  <p className="mt-1 text-xs leading-5 text-[#3f3e3e] dark:text-[#a8adb7]/70">
-                    {currentLesson
-                      ? `Next: ${currentLesson.title}`
-                      : "Complete a course to keep your progress growing."}
-                  </p>
-                </div>
-              </div>
-
-              {currentCourse && (
-                <Link
-                  href={`/learn/${currentCourse.slug}`}
-                  className="mt-7 flex w-full items-center justify-center gap-2 rounded-[20px] bg-[orangered] py-3 text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(170,35,0,0.45),inset_-3px_-3px_6px_rgba(255,180,160,0.45)]"
-                >
-                  Start learning
-                  <ArrowRight size={16} />
-                </Link>
-              )}
             </div>
-
-            {/* AI SUGGESTION */}
-
-            <div className="mt-5 rounded-[30px] bg-[#e0e5ec] dark:bg-[#1e2229] p-6 text-black dark:text-[#f5f7fa] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] dark:bg-[#1e2229] dark:text-[#f5f7fa] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#e0e5ec] dark:bg-[#1e2229] text-[orangered] dark:bg-[#1e2229] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
-                <Sparkles size={20} />
+          ) : (
+            <div className="mt-5 rounded-[30px] bg-[#e0e5ec] p-10 text-center shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#e0e5ec] text-[#3f3e3e] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:text-[#a8adb7]/50 dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
+                <BookOpen size={30} />
               </div>
 
-              <h3 className="mt-4 font-bold text-black dark:text-[#f5f7fa]">
-                Your AI learning tip
+              <h3 className="mt-4 font-semibold text-black dark:text-[#f5f7fa]">
+                No courses available
               </h3>
 
-              <p className="mt-2 text-sm leading-6 text-[#3f3e3e] dark:text-[#a8adb7]">
-                {currentLesson
-                  ? `Continue with "${currentLesson.title}" to keep building your skills.`
-                  : "Explore a course and start learning something new today."}
+              <p className="mt-2 text-sm text-[#3f3e3e] dark:text-[#a8adb7]/70">
+                Search for a course to get started.
               </p>
 
               <Link
                 href="/courses"
-                className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[orangered] transition hover:text-[red]"
+                className="mt-5 inline-flex items-center gap-2 rounded-[20px] bg-[orangered] px-4 py-2.5 text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:bg-[red] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]"
               >
-                Explore courses
+                Find courses
                 <ArrowRight size={15} />
               </Link>
             </div>
-          </aside>
-        </div>
+          )}
+        </section>
 
-        {/* =================================================
-            RECOMMENDED COURSES
-        ================================================= */}
+        {/* PRACTICE & CAREER PREPARATION */}
+
+        <section className="mt-12">
+          <div>
+            <p className="text-sm font-bold uppercase tracking-[0.14em] text-[orangered]">
+              Build your skills
+            </p>
+
+            <h2 className="mt-2 text-2xl font-bold text-black dark:text-[#f5f7fa]">
+              Practice & career preparation
+            </h2>
+
+            <p className="mt-2 text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
+              Test your knowledge and prepare for your next career opportunity.
+            </p>
+          </div>
+
+          <div className="mt-5 grid gap-5 md:grid-cols-2">
+            {/* QUIZ PRACTICE */}
+
+            <Link
+              href="/quizzes"
+              className="group flex min-h-[210px] flex-col justify-between rounded-[30px] bg-[#e0e5ec] p-6 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[12px_12px_22px_rgba(163,177,198,0.65),-12px_-12px_22px_rgba(255,255,255,0.9)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]"
+            >
+              <div>
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
+                  <Trophy size={23} />
+                </div>
+
+                <h3 className="mt-5 text-lg font-bold text-black dark:text-[#f5f7fa]">
+                  Quiz practice
+                </h3>
+
+                <p className="mt-2 max-w-md text-sm leading-6 text-[#3f3e3e] dark:text-[#a8adb7]">
+                  Test your understanding of programming and computer science
+                  with topic-based quizzes and track your performance.
+                </p>
+              </div>
+
+              <span className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[orangered]">
+                Start practising
+                <ArrowRight
+                  size={16}
+                  className="transition-transform group-hover:translate-x-1"
+                />
+              </span>
+            </Link>
+
+            {/* INTERVIEW PREPARATION */}
+
+            <div className="flex min-h-[210px] flex-col justify-between rounded-[30px] bg-[#e0e5ec] p-6 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
+              <div>
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
+                  <Target size={23} />
+                </div>
+
+                <div className="mt-5 flex flex-wrap items-center gap-2">
+                  <h3 className="text-lg font-bold text-black dark:text-[#f5f7fa]">
+                    Interview preparation
+                  </h3>
+
+                  <span className="rounded-full bg-[#e0e5ec] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[#3f3e3e] shadow-[inset_2px_2px_4px_rgba(163,177,198,0.5),inset_-2px_-2px_4px_rgba(255,255,255,0.7)] dark:bg-[#272c35] dark:text-[#a8adb7] dark:shadow-none">
+                    Coming soon
+                  </span>
+                </div>
+
+                <p className="mt-2 max-w-md text-sm leading-6 text-[#3f3e3e] dark:text-[#a8adb7]">
+                  Prepare for technical and HR interviews with programming,
+                  data structures, DBMS, operating systems, computer networks,
+                  aptitude and more.
+                </p>
+              </div>
+
+              <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#3f3e3e]/70 dark:text-[#a8adb7]/70">
+                Interview practice will be available here
+                <ArrowRight size={16} />
+              </span>
+            </div>
+          </div>
+        </section>
+
+        {/* RECOMMENDED COURSES */}
 
         <section className="mt-12 pb-10">
-          <div className="flex items-end justify-between">
+          <div className="flex items-end justify-between gap-4">
             <div>
               <h2 className="text-xl font-bold text-black dark:text-[#f5f7fa]">
                 Recommended for you
@@ -717,15 +694,15 @@ export default async function DashboardPage() {
             </Link>
           </div>
 
-          <div className="mt-5 grid gap-5 md:grid-cols-3">
+          <div className="mt-5 grid gap-5 sm:grid-cols-2 md:grid-cols-3">
             {recommendedCourses.map((course) => (
               <div
                 key={course.id}
-                className="group overflow-hidden rounded-[30px] bg-[#e0e5ec] dark:bg-[#1e2229] p-2 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] transition-all duration-300 hover:-translate-y-1"
+                className="group overflow-hidden rounded-[30px] bg-[#e0e5ec] p-2 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-300 hover:-translate-y-1 dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]"
               >
-                {/* YOUTUBE THUMBNAIL */}
+                {/* COURSE THUMBNAIL */}
 
-                <div className="relative h-55 overflow-hidden rounded-[24px] bg-[#e0e5ec] dark:bg-[#1e2229] shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] dark:shadow-[inset_6px_6px_10px_rgba(5,7,10,0.75),inset_-6px_-6px_10px_rgba(43,48,58,0.75)]">
+                <div className="relative h-55 overflow-hidden rounded-[24px] bg-[#e0e5ec] shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] dark:bg-[#1e2229] dark:shadow-[inset_6px_6px_10px_rgba(5,7,10,0.75),inset_-6px_-6px_10px_rgba(43,48,58,0.75)]">
                   {course.thumbnailUrl ? (
                     <img
                       src={course.thumbnailUrl}
@@ -734,12 +711,10 @@ export default async function DashboardPage() {
                     />
                   ) : (
                     <div className="flex h-full items-center justify-center">
-                      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#e0e5ec] dark:bg-[#1e2229] text-[orangered] dark:bg-[#1e2229] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]">
-                        {course.category ===
-                          "Programming" ? (
+                      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#e0e5ec] text-[orangered] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]">
+                        {course.category === "Programming" ? (
                           <BookOpen size={23} />
-                        ) : course.category ===
-                          "Computer Science" ? (
+                        ) : course.category === "Computer Science" ? (
                           <Target size={23} />
                         ) : (
                           <Sparkles size={23} />
@@ -766,19 +741,14 @@ export default async function DashboardPage() {
                     {course.title}
                   </h3>
 
-                  <div className="mt-4 flex items-center justify-between text-xs text-[#3f3e3e] dark:text-[#a8adb7]/65">
-                    <span>
-                      {course.lessonsCount} lessons
-                    </span>
-
-                    <span>
-                      {course.duration}
-                    </span>
+                  <div className="mt-4 flex items-center justify-between gap-3 text-xs text-[#3f3e3e] dark:text-[#a8adb7]/65">
+                    <span>{course.lessonsCount} lessons</span>
+                    <span>{course.duration}</span>
                   </div>
 
                   <Link
                     href={`/courses/${course.slug}`}
-                    className="mt-5 flex w-full items-center justify-center gap-2 rounded-[20px] bg-[orangered] py-2.5 text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(170,35,0,0.45),inset_-3px_-3px_6px_rgba(255,180,160,0.45)]"
+                    className="mt-5 flex w-full items-center justify-center gap-2 rounded-[20px] bg-[orangered] py-2.5 text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(170,35,0,0.45),inset_-3px_-3px_6px_rgba(255,180,160,0.45)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]"
                   >
                     View course
                     <ArrowRight size={15} />
