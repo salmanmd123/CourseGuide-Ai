@@ -8,9 +8,11 @@ import {
   BookOpen,
   Brain,
   CheckCircle2,
+  MessageCircle,
   Search,
   Sparkles,
   Target,
+  Users,
 } from "lucide-react";
 
 import Navbar from "@/components/navbar";
@@ -39,6 +41,12 @@ const features = [
     title: "AI Tutor",
     description:
       "Ask questions whenever you get stuck and get explanations in simple language.",
+  },
+  {
+    icon: Users,
+    title: "Interview Preparation",
+    description:
+      "Prepare confidently and ace your next interview.",
   },
 ];
 
@@ -460,216 +468,114 @@ export default function Home() {
 
                 </div>
 
+
                 {/* MINI CARDS */}
 
                 <div className="grid grid-cols-2 gap-4">
 
                   {/* AI NOTES */}
 
-                  <div
+                  <Link
+                    href="/ai-notes"
                     className="
-                      flex
-                      flex-col
-                      items-start
-                      gap-1
-                      rounded-[20px]
-                      bg-[#e0e5ec]
-                      p-4
-                      shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]
-                      transition-all
-                      duration-200
-                      hover:-translate-y-[2px]
-
-                      dark:bg-[#1a1d23]
-                      dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]
-                    "
+      flex flex-col items-start gap-1 rounded-[20px]
+      bg-[#e0e5ec] p-4
+      shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]
+      transition-all duration-200 hover:-translate-y-[2px]
+      dark:bg-[#1a1d23]
+      dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]
+    "
                   >
-
-                    <div
-                      className="
-                        mb-1
-                        flex
-                        h-8
-                        w-8
-                        items-center
-                        justify-center
-                        rounded-full
-                        bg-[#e0e5ec]
-                        text-[orangered]
-                        shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
-
-                        dark:bg-[#1a1d23]
-                        dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]
-                      "
-                    >
-                      <CheckCircle2
-                        size={15}
-                        strokeWidth={1.8}
-                      />
+                    <div className="mb-1 flex h-8 w-8 items-center justify-center rounded-full bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1a1d23] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
+                      <CheckCircle2 size={15} strokeWidth={1.8} />
                     </div>
 
-                    <strong
-                      className="
-                        text-[13px]
-                        font-bold
-                        text-black
-                        dark:text-[#f5f7fa]
-                      "
-                    >
+                    <strong className="text-[13px] font-bold text-black dark:text-[#f5f7fa]">
                       AI Notes
                     </strong>
 
-                    <small
-                      className="
-                        text-[10px]
-                        text-[#3f3e3e]
-                        dark:text-[#a8adb7]
-                      "
-                    >
+                    <small className="text-[10px] text-[#3f3e3e] dark:text-[#a8adb7]">
                       Ready to review
                     </small>
+                  </Link>
 
-                  </div>
+                  {/* AI TUTOR */}
+
+                  <Link
+                    href="/ai-tutor"
+                    className="
+      flex flex-col items-start gap-1 rounded-[20px]
+      bg-[#e0e5ec] p-4
+      shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]
+      transition-all duration-200 hover:-translate-y-[2px]
+      dark:bg-[#1a1d23]
+      dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]
+    "
+                  >
+                    <div className="mb-1 flex h-8 w-8 items-center justify-center rounded-full bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1a1d23] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
+                      <MessageCircle size={15} strokeWidth={1.8} />
+                    </div>
+
+                    <strong className="text-[13px] font-bold text-black dark:text-[#f5f7fa]">
+                      AI Tutor
+                    </strong>
+
+                    <small className="text-[10px] text-[#3f3e3e] dark:text-[#a8adb7]">
+                      Ask questions
+                    </small>
+                  </Link>
 
                   {/* QUIZ */}
 
-                  <div
+                  <Link
+                    href="/quizzes"
                     className="
-                      flex
-                      flex-col
-                      items-start
-                      gap-1
-                      rounded-[20px]
-                      bg-[#e0e5ec]
-                      p-4
-                      shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]
-                      transition-all
-                      duration-200
-                      hover:-translate-y-[2px]
-
-                      dark:bg-[#1a1d23]
-                      dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]
-                    "
+      flex flex-col items-start gap-1 rounded-[20px]
+      bg-[#e0e5ec] p-4
+      shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]
+      transition-all duration-200 hover:-translate-y-[2px]
+      dark:bg-[#1a1d23]
+      dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]
+    "
                   >
-
-                    <div
-                      className="
-                        mb-1
-                        flex
-                        h-8
-                        w-8
-                        items-center
-                        justify-center
-                        rounded-full
-                        bg-[#e0e5ec]
-                        text-[orangered]
-                        shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
-
-                        dark:bg-[#1a1d23]
-                        dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]
-                      "
-                    >
-                      <Target
-                        size={15}
-                        strokeWidth={1.8}
-                      />
+                    <div className="mb-1 flex h-8 w-8 items-center justify-center rounded-full bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1a1d23] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
+                      <Target size={15} strokeWidth={1.8} />
                     </div>
 
-                    <strong
-                      className="
-                        text-[13px]
-                        font-bold
-                        text-black
-                        dark:text-[#f5f7fa]
-                      "
-                    >
+                    <strong className="text-[13px] font-bold text-black dark:text-[#f5f7fa]">
                       Quiz
                     </strong>
 
-                    <small
-                      className="
-                        text-[10px]
-                        text-[#3f3e3e]
-                        dark:text-[#a8adb7]
-                      "
-                    >
-                      8 questions
+                    <small className="text-[10px] text-[#3f3e3e] dark:text-[#a8adb7]">
+                      Practice questions
                     </small>
+                  </Link>
 
-                  </div>
+                  {/* INTERVIEW */}
 
-                </div>
-
-              </div>
-
-              {/* STREAK */}
-
-              <div
-                className="
-                  absolute
-                  -bottom-5
-                  -left-3
-                  hidden
-                  items-center
-                  gap-3
-                  rounded-[20px]
-                  bg-[#e0e5ec]
-                  px-5
-                  py-3
-                  shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]
-                  sm:flex
-
-                  dark:bg-[#1e2229]
-                  dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]
-                "
-              >
-
-                <div
-                  className="
-                    flex
-                    h-8
-                    w-8
-                    items-center
-                    justify-center
-                    rounded-full
-                    bg-[#e0e5ec]
-                    text-[orangered]
-                    shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)]
-
-                    dark:bg-[#1a1d23]
-                    dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]
-                  "
-                >
-                  <CheckCircle2
-                    size={15}
-                    strokeWidth={1.8}
-                  />
-                </div>
-
-                <div>
-
-                  <strong
+                  <Link
+                    href="/interviews"
                     className="
-                      block
-                      text-[12px]
-                      font-bold
-                      leading-tight
-                      text-black
-                      dark:text-[#f5f7fa]
-                    "
+      flex flex-col items-start gap-1 rounded-[20px]
+      bg-[#e0e5ec] p-4
+      shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]
+      transition-all duration-200 hover:-translate-y-[2px]
+      dark:bg-[#1a1d23]
+      dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]
+    "
                   >
-                    Learning streak
-                  </strong>
+                    <div className="mb-1 flex h-8 w-8 items-center justify-center rounded-full bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1a1d23] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
+                      <Users size={15} strokeWidth={1.8} />
+                    </div>
 
-                  <small
-                    className="
-                      text-[10px]
-                      font-bold
-                      text-[orangered]
-                    "
-                  >
-                    7 days 🔥
-                  </small>
+                    <strong className="text-[13px] font-bold text-black dark:text-[#f5f7fa]">
+                      Interview
+                    </strong>
+
+                    <small className="text-[10px] text-[#3f3e3e] dark:text-[#a8adb7]">
+                      Prepare for interviews
+                    </small>
+                  </Link>
 
                 </div>
 
@@ -740,7 +646,7 @@ export default function Home() {
 
           {/* FEATURE CARDS */}
 
-          <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
 
             {features.map((feature) => {
 
@@ -796,7 +702,7 @@ export default function Home() {
                   <h3
                     className="
                       mt-6
-                      text-[17px]
+                      text-[16px]
                       font-bold
                       text-black
                       dark:text-[#f5f7fa]
