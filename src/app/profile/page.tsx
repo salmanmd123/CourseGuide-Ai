@@ -9,6 +9,9 @@ import {
   User,
 } from "lucide-react";
 import Navbar from "@/components/navbar";
+import { db } from "@/db";
+import { progress, lessons } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 export default async function ProfilePage() {
   const user = await getCurrentUser();
@@ -19,6 +22,38 @@ export default async function ProfilePage() {
   }
 
   const initial = user.name.charAt(0).toUpperCase();
+
+  // Get the logged-in user's learning progress
+  const userProgress = await db
+    .select({
+      lessonId: progress.lessonId,
+      watchedSeconds: progress.watchedSeconds,
+      completed: progress.completed,
+      courseId: lessons.courseId,
+    })
+    .from(progress)
+    .innerJoin(lessons, eq(progress.lessonId, lessons.id))
+    .where(eq(progress.userId, user.id));
+
+  // Total learning time in seconds
+  const totalWatchedSeconds = userProgress.reduce(
+    (total, item) =>
+      total + Math.max(0, item.watchedSeconds ?? 0),
+    0
+  );
+
+  // Convert seconds into hours
+  const learningHours = (totalWatchedSeconds / 3600).toFixed(1);
+
+  // Count unique courses with learning activity
+  const coursesStarted = new Set(
+    userProgress
+      .filter(
+        (item) =>
+          (item.watchedSeconds ?? 0) > 0 || item.completed
+      )
+      .map((item) => item.courseId)
+  ).size;
 
   return (
     <main className="min-h-screen bg-[#e0e5ec] text-black dark:bg-[#1a1d23] dark:text-[#f5f7fa]">
@@ -150,11 +185,11 @@ export default async function ProfilePage() {
             </div>
 
             <p className="mt-5 text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
-              Courses enrolled
+              Courses started
             </p>
 
             <p className="mt-1 text-3xl font-bold text-black dark:text-[#f5f7fa]">
-              4
+              {coursesStarted}
             </p>
 
           </div>
@@ -171,7 +206,7 @@ export default async function ProfilePage() {
             </p>
 
             <p className="mt-1 text-3xl font-bold text-black dark:text-[#f5f7fa]">
-              18.5h
+              {learningHours}h
             </p>
 
           </div>
