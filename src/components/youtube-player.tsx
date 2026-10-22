@@ -13,12 +13,10 @@ type YouTubePlayerProps = {
   videoId: string;
   startSeconds?: number;
   lessonId: number;
-
   onProgress?: (
     currentTime: number,
     duration: number
   ) => void;
-
   onComplete?: () => void;
 };
 
@@ -29,48 +27,22 @@ export default function YouTubePlayer({
   onProgress,
   onComplete,
 }: YouTubePlayerProps) {
-  // =========================================================
   // REFS
-  // =========================================================
-
   const playerRef = useRef<any>(null);
 
   const intervalRef =
     useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const completedRef =
-    useRef(false);
+  const onProgressRef = useRef(onProgress);
+  const onCompleteRef = useRef(onComplete);
 
-  const onProgressRef =
-    useRef(onProgress);
-
-  const onCompleteRef =
-    useRef(onComplete);
-
-  // =========================================================
   // KEEP CALLBACKS UPDATED
-  // =========================================================
-
   useEffect(() => {
     onProgressRef.current = onProgress;
-  }, [onProgress]);
-
-  useEffect(() => {
     onCompleteRef.current = onComplete;
-  }, [onComplete]);
+  }, [onProgress, onComplete]);
 
-  // =========================================================
-  // RESET WHEN LESSON CHANGES
-  // =========================================================
-
-  useEffect(() => {
-    completedRef.current = false;
-  }, [videoId, lessonId]);
-
-  // =========================================================
   // STOP PROGRESS TIMER
-  // =========================================================
-
   function stopProgressTimer() {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
@@ -78,10 +50,7 @@ export default function YouTubePlayer({
     }
   }
 
-  // =========================================================
   // CHECK + SEND PROGRESS
-  // =========================================================
-
   function checkProgress() {
     const player = playerRef.current;
 
@@ -90,13 +59,8 @@ export default function YouTubePlayer({
     }
 
     try {
-      const currentTime = Number(
-        player.getCurrentTime()
-      );
-
-      const duration = Number(
-        player.getDuration()
-      );
+      const currentTime = Number(player.getCurrentTime());
+      const duration = Number(player.getDuration());
 
       if (
         !Number.isFinite(currentTime) ||
@@ -111,38 +75,9 @@ export default function YouTubePlayer({
         Math.min(currentTime, duration)
       );
 
-      const percentage = Math.min(
-        100,
-        Math.max(
-          0,
-          Math.floor(
-            (safeCurrentTime / duration) *
-              100
-          )
-        )
-      );
-
-      // =====================================================
-      // SEND LIVE PROGRESS TO PARENT
-      // =====================================================
-
-      onProgressRef.current?.(
-        safeCurrentTime,
-        duration
-      );
-
-      // =====================================================
-      // COMPLETE AT 90%
-      // =====================================================
-
-      if (
-        percentage >= 90 &&
-        !completedRef.current
-      ) {
-        completedRef.current = true;
-
-        onCompleteRef.current?.();
-      }
+      // Report playback position.
+      // Completion is determined by the progress API.
+      onProgressRef.current?.(safeCurrentTime, duration);
     } catch (error) {
       console.error(
         "Failed to read YouTube progress:",
@@ -151,36 +86,21 @@ export default function YouTubePlayer({
     }
   }
 
-  // =========================================================
   // START TIMER
-  // =========================================================
-
   function startProgressTimer() {
     stopProgressTimer();
 
-    /*
-     * Update every 1 second instead of every 5 seconds.
-     *
-     * This makes the UI feel live.
-     */
-    intervalRef.current =
-      setInterval(() => {
-        checkProgress();
-      }, 1000);
+    intervalRef.current = setInterval(() => {
+      checkProgress();
+    }, 1000);
   }
 
-  // =========================================================
   // CREATE YOUTUBE PLAYER
-  // =========================================================
-
   useEffect(() => {
     let mounted = true;
 
     function createPlayer() {
-      if (
-        !mounted ||
-        !window.YT?.Player
-      ) {
+      if (!mounted || !window.YT?.Player) {
         return;
       }
 
@@ -189,192 +109,124 @@ export default function YouTubePlayer({
         return;
       }
 
-      const playerElement =
-        document.getElementById(
-          "youtube-player"
-        );
+      const playerElement = document.getElementById(
+        "youtube-player"
+      );
 
       if (!playerElement) {
         return;
       }
 
-      playerRef.current =
-        new window.YT.Player(
-          "youtube-player",
-          {
-            videoId,
+      playerRef.current = new window.YT.Player(
+        "youtube-player",
+        {
+          videoId,
 
-            playerVars: {
-              autoplay: 0,
-              controls: 1,
-              rel: 0,
-              modestbranding: 1,
-              playsinline: 1,
-              start: Math.max(
-                0,
-                Math.floor(startSeconds)
-              ),
+          playerVars: {
+            autoplay: 0,
+            controls: 1,
+            rel: 0,
+            modestbranding: 1,
+            playsinline: 1,
+            start: Math.max(0, Math.floor(startSeconds)),
+          },
+
+          events: {
+            // READY
+            onReady: (event: any) => {
+              if (startSeconds > 0) {
+                event.target.seekTo(
+                  Math.floor(startSeconds),
+                  true
+                );
+              }
+
+              // Report initial position without completing
+              // the lesson.
+              setTimeout(() => {
+                if (mounted) {
+                  checkProgress();
+                }
+              }, 500);
             },
 
-            events: {
-              // =================================================
-              // READY
-              // =================================================
+            // STATE CHANGE
+            onStateChange: (event: any) => {
+              const YTState = window.YT.PlayerState;
 
-              onReady: (event: any) => {
-                if (
-                  startSeconds > 0
-                ) {
-                  event.target.seekTo(
-                    Math.floor(
-                      startSeconds
-                    ),
-                    true
-                  );
-                }
+              // PLAYING
+              if (event.data === YTState.PLAYING) {
+                startProgressTimer();
+              }
 
-                /*
-                 * Immediately report the initial
-                 * position to the parent.
-                 */
-                setTimeout(() => {
-                  checkProgress();
-                }, 500);
-              },
+              // PAUSED
+              if (event.data === YTState.PAUSED) {
+                stopProgressTimer();
+                checkProgress();
+              }
 
-              // =================================================
-              // STATE CHANGE
-              // =================================================
+              // BUFFERING
+              if (event.data === YTState.BUFFERING) {
+                stopProgressTimer();
+              }
 
-              onStateChange: (
-                event: any
-              ) => {
-                const YTState =
-                  window.YT.PlayerState;
+              // ENDED
+              if (event.data === YTState.ENDED) {
+                stopProgressTimer();
 
-                // =========================
-                // PLAYING
-                // =========================
+                // Capture final playback position.
+                checkProgress();
 
-                if (
-                  event.data ===
-                  YTState.PLAYING
-                ) {
-                  startProgressTimer();
-                }
-
-                // =========================
-                // PAUSED
-                // =========================
-
-                if (
-                  event.data ===
-                  YTState.PAUSED
-                ) {
-                  stopProgressTimer();
-
-                  // Save immediately
-                  checkProgress();
-                }
-
-                // =========================
-                // BUFFERING
-                // =========================
-
-                if (
-                  event.data ===
-                  YTState.BUFFERING
-                ) {
-                  stopProgressTimer();
-                }
-
-                // =========================
-                // ENDED
-                // =========================
-
-                if (
-                  event.data ===
-                  YTState.ENDED
-                ) {
-                  stopProgressTimer();
-
-                  // Save final position
-                  checkProgress();
-
-                  if (
-                    !completedRef.current
-                  ) {
-                    completedRef.current =
-                      true;
-
-                    onCompleteRef.current?.();
-                  }
-                }
-              },
+                // Save progress immediately.
+                // The API still decides whether the lesson
+                // qualifies as completed.
+                onCompleteRef.current?.();
+              }
             },
-          }
-        );
+          },
+        }
+      );
     }
 
-    // =======================================================
     // API ALREADY LOADED
-    // =======================================================
-
     if (window.YT?.Player) {
       createPlayer();
-    }
-
-    // =======================================================
-    // LOAD YOUTUBE API
-    // =======================================================
-
-    else {
-      const existingScript =
-        document.querySelector(
-          'script[src="https://www.youtube.com/iframe_api"]'
-        );
+    } else {
+      // LOAD YOUTUBE API
+      const existingScript = document.querySelector(
+        'script[src="https://www.youtube.com/iframe_api"]'
+      );
 
       if (!existingScript) {
-        const script =
-          document.createElement(
-            "script"
-          );
+        const script = document.createElement("script");
 
         script.src =
           "https://www.youtube.com/iframe_api";
 
         script.async = true;
 
-        document.body.appendChild(
-          script
-        );
+        document.body.appendChild(script);
       }
 
       const previousCallback =
         window.onYouTubeIframeAPIReady;
 
-      window.onYouTubeIframeAPIReady =
-        () => {
-          previousCallback?.();
+      window.onYouTubeIframeAPIReady = () => {
+        previousCallback?.();
 
-          if (mounted) {
-            createPlayer();
-          }
-        };
+        if (mounted) {
+          createPlayer();
+        }
+      };
     }
 
-    // =======================================================
     // CLEANUP
-    // =======================================================
-
     return () => {
       mounted = false;
 
       stopProgressTimer();
 
-      if (
-        playerRef.current?.destroy
-      ) {
+      if (playerRef.current?.destroy) {
         try {
           playerRef.current.destroy();
         } catch (error) {
@@ -387,16 +239,9 @@ export default function YouTubePlayer({
 
       playerRef.current = null;
     };
-  }, [
-    videoId,
-    startSeconds,
-    lessonId,
-  ]);
+  }, [videoId, startSeconds, lessonId]);
 
-  // =========================================================
-  // UI
-  // =========================================================
-
+  // UI — unchanged
   return (
     <div
       className="

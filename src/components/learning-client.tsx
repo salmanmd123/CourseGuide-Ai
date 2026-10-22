@@ -50,6 +50,7 @@ export default function LearningClient({
 
   return (
     <LessonVideo
+      key={`${lessonId}-${videoUrl}`}
       lessonId={lessonId}
       videoUrl={videoUrl}
       startSeconds={startSeconds}

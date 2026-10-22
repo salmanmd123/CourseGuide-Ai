@@ -68,6 +68,7 @@ export default function LessonVideo({
   const pendingSaveRef = useRef(false);
   const mountedRef = useRef(true);
 
+ 
   const saveProgress = useCallback(async (keepalive = false): Promise<void> => {
     if (savingRef.current) {
       pendingSaveRef.current = true;
@@ -75,12 +76,15 @@ export default function LessonVideo({
     }
 
     if (latestProgressRef.current.durationSeconds <= 0) return;
+
     savingRef.current = true;
 
     try {
       do {
         pendingSaveRef.current = false;
+
         const current = latestProgressRef.current;
+
         const response = await fetch("/api/progress", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -95,18 +99,23 @@ export default function LessonVideo({
           keepalive,
         });
 
-        if (!response.ok && mountedRef.current) {
-          console.error("Failed to save video progress:", response.status);
-        } else if (response.ok) {
+        if (!response.ok) {
+          if (mountedRef.current) {
+            console.error("Failed to save video progress:", response.status);
+          }
+        } else {
           lastSavedAtRef.current = Date.now();
         }
       } while (pendingSaveRef.current && !keepalive);
     } catch (error) {
-      if (mountedRef.current) console.error("Failed to save video progress:", error);
+      if (mountedRef.current) {
+        console.error("Failed to save video progress:", error);
+      }
     } finally {
       savingRef.current = false;
     }
   }, [lessonId]);
+
 
   useEffect(() => {
     mountedRef.current = true;
