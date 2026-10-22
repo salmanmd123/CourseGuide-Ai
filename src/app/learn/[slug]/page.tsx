@@ -216,16 +216,16 @@ export default async function LearningPage({
   const previousLesson =
     currentLessonIndex > 0
       ? courseLessons[
-          currentLessonIndex - 1
-        ]
+      currentLessonIndex - 1
+      ]
       : null;
 
   const nextLesson =
     currentLessonIndex <
       courseLessons.length - 1
       ? courseLessons[
-          currentLessonIndex + 1
-        ]
+      currentLessonIndex + 1
+      ]
       : null;
 
   // =========================================================
@@ -311,16 +311,16 @@ export default async function LearningPage({
   const progressPercentage =
     totalCourseSeconds > 0
       ? Math.min(
-          100,
-          Math.max(
-            0,
-            Math.round(
-              (totalWatchedSeconds /
-                totalCourseSeconds) *
-                100
-            )
+        100,
+        Math.max(
+          0,
+          Math.round(
+            (totalWatchedSeconds /
+              totalCourseSeconds) *
+            100
           )
         )
+      )
       : 0;
 
   // =========================================================
@@ -460,6 +460,55 @@ export default async function LearningPage({
               </div>
             )}
           </div>
+
+          {/* =====================================================
+              LESSON NAVIGATION
+          ===================================================== */}
+
+        <div className="w-full min-w-0 border-t border-[#d2d7df] dark:border-[#303640] bg-[#e0e5ec] dark:bg-[#1a1d23] px-3 py-4 sm:px-5">
+          <div className="mx-auto flex w-full max-w-7xl min-w-0 items-center justify-between gap-4 rounded-[20px] bg-[#e0e5ec] dark:bg-[#1e2229] px-4 py-3 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] sm:px-5">
+            {/* PREVIOUS */}
+
+            {previousLesson ? (
+              <Link
+                href={`/learn/${course.slug}?lesson=${previousLesson.id}`}
+                className="inline-flex shrink-0 items-center gap-2 rounded-[20px] bg-[#e0e5ec] dark:bg-[#1e2229] px-3 py-2 text-xs font-semibold text-[#3f3e3e] dark:text-[#a8adb7] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] transition-all duration-200 hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]"
+              >
+                <ArrowLeft size={14} />
+
+                Previous lesson
+              </Link>
+            ) : (
+              <div />
+            )}
+
+            {/* NEXT */}
+
+            {nextLesson ? (
+              <Link
+                href={`/learn/${course.slug}?lesson=${nextLesson.id}`}
+                className="inline-flex shrink-0 items-center gap-2 rounded-[20px] bg-[orangered] px-4 py-2.5 text-xs font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(170,35,0,0.45),inset_-3px_-3px_6px_rgba(255,180,160,0.45)] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]"
+              >
+                Next lesson
+
+                <ArrowRight
+                  size={14}
+                />
+              </Link>
+            ) : (
+              <Link
+                href={`/courses/${course.slug}`}
+                className="inline-flex shrink-0 items-center gap-2 rounded-[20px] bg-[orangered] px-4 py-2.5 text-xs font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(170,35,0,0.45),inset_-3px_-3px_6px_rgba(255,180,160,0.45)] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]"
+              >
+                Finish course
+
+                <CheckCircle2
+                  size={14}
+                />
+              </Link>
+            )}
+          </div>
+        </div>
         </section>
 
         {/* ===================================================
@@ -539,22 +588,20 @@ export default async function LearningPage({
                       lessonItem.id
                     }
                     href={`/learn/${course.slug}?lesson=${lessonItem.id}`}
-                    className={`mt-2 flex w-full min-w-0 items-center gap-3 rounded-[20px] px-4 py-3 text-left transition-all duration-200 ${
-                      current
+                    className={`mt-2 flex w-full min-w-0 items-center gap-3 rounded-[20px] px-4 py-3 text-left transition-all duration-200 ${current
                         ? "bg-[#e0e5ec] dark:bg-[#1e2229] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]"
                         : "hover:bg-[#e0e5ec] dark:hover:bg-[#252a32] hover:shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:hover:shadow-[5px_5px_10px_rgba(5,7,10,0.55),-5px_-5px_10px_rgba(43,48,58,0.55)]"
-                    }`}
+                      }`}
                   >
                     {/* NUMBER */}
 
                     <div
-                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
-                        completed
+                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${completed
                           ? "bg-[#e0e5ec] dark:bg-[#1e2229] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]"
                           : current
                             ? "bg-[orangered] text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]"
                             : "bg-[#e0e5ec] dark:bg-[#1e2229] text-[#3f3e3e] dark:text-[#a8adb7]/50 shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]"
-                      }`}
+                        }`}
                     >
                       {completed ? (
                         <CheckCircle2
@@ -569,13 +616,12 @@ export default async function LearningPage({
 
                     <div className="min-w-0 flex-1">
                       <p
-                        className={`truncate text-sm ${
-                          current
+                        className={`truncate text-sm ${current
                             ? "font-semibold text-[orangered]"
                             : completed
                               ? "text-[#3f3e3e] dark:text-[#a8adb7]/50"
                               : "text-[#3f3e3e] dark:text-[#a8adb7]"
-                        }`}
+                          }`}
                       >
                         {
                           lessonItem.title
@@ -653,55 +699,6 @@ export default async function LearningPage({
           </div>
         </div>
       </section>
-
-      {/* =====================================================
-          BOTTOM LESSON NAVIGATION
-      ===================================================== */}
-
-      <div className="w-full min-w-0 border-t border-[#d2d7df] dark:border-[#303640] bg-[#e0e5ec] dark:bg-[#1a1d23] px-3 py-4 sm:px-5">
-        <div className="mx-auto flex w-full max-w-7xl min-w-0 items-center justify-between gap-4 rounded-[20px] bg-[#e0e5ec] dark:bg-[#1e2229] px-4 py-3 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] sm:px-5">
-          {/* PREVIOUS */}
-
-          {previousLesson ? (
-            <Link
-              href={`/learn/${course.slug}?lesson=${previousLesson.id}`}
-              className="inline-flex shrink-0 items-center gap-2 rounded-[20px] bg-[#e0e5ec] dark:bg-[#1e2229] px-3 py-2 text-xs font-semibold text-[#3f3e3e] dark:text-[#a8adb7] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] transition-all duration-200 hover:text-[orangered] hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]"
-            >
-              <ArrowLeft size={14} />
-
-              Previous lesson
-            </Link>
-          ) : (
-            <div />
-          )}
-
-          {/* NEXT */}
-
-          {nextLesson ? (
-            <Link
-              href={`/learn/${course.slug}?lesson=${nextLesson.id}`}
-              className="inline-flex shrink-0 items-center gap-2 rounded-[20px] bg-[orangered] px-4 py-2.5 text-xs font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(170,35,0,0.45),inset_-3px_-3px_6px_rgba(255,180,160,0.45)] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]"
-            >
-              Next lesson
-
-              <ArrowRight
-                size={14}
-              />
-            </Link>
-          ) : (
-            <Link
-              href={`/courses/${course.slug}`}
-              className="inline-flex shrink-0 items-center gap-2 rounded-[20px] bg-[orangered] px-4 py-2.5 text-xs font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(170,35,0,0.45),inset_-3px_-3px_6px_rgba(255,180,160,0.45)] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]"
-            >
-              Finish course
-
-              <CheckCircle2
-                size={14}
-              />
-            </Link>
-          )}
-        </div>
-      </div>
     </main>
   );
 }

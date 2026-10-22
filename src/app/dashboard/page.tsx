@@ -158,6 +158,7 @@ export default async function DashboardPage() {
   const allLessons = await db
     .select({
       id: lessons.id,
+      title: lessons.title,
       courseId: lessons.courseId,
       duration: lessons.duration,
       order: lessons.order,
