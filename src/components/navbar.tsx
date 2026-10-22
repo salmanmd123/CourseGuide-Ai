@@ -8,7 +8,6 @@ import {
     Sun,
     User,
     BookOpen,
-    Settings,
     LogOut,
     ChevronDown,
     X,
@@ -531,23 +530,7 @@ export default function Navbar() {
 
                                             My Learning
 
-                                        </Link>
-
-                                        <Link
-                                            href="/settings"
-                                            onClick={() =>
-                                                setProfileOpen(
-                                                    false
-                                                )
-                                            }
-                                            className="neo-button flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-[#3f3e3e] dark:text-[#f5f7fa]"
-                                        >
-
-                                            <Settings size={17} />
-
-                                            Settings
-
-                                        </Link>
+                                        </Link>                            
 
                                     </div>
 
