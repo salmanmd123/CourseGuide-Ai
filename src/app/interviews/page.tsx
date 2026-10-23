@@ -9,5 +9,5 @@ export default async function InterviewsPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
   if (user.role === "ADMIN") redirect("/admin");
-  return <><Navbar /><InterviewsClient userName={user.name} /></>;
+  return <><Navbar /><InterviewsClient userName={user.name} userId={Number(user.id)} /></>;
 }
