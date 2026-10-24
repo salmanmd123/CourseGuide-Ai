@@ -117,13 +117,39 @@ const ROUNDS: Round[] = [
 
 async function requestApi(body: Record<string, unknown>) {
 
-  const response = await fetch("/api/interviews", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const action = typeof body.action === "string" ? body.action : "unknown";
 
-  const data = await response.json().catch(() => ({}));
+  try {
+    const response = await fetch("/api/interviews", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
 
-  if (!response.ok) throw new Error(data.error || "Interview request failed.");
+    const data = await response.json().catch(() => ({}));
 
-  return data;
+    if (!response.ok) {
+      const detail = typeof data?.error === "string" ? data.error : `HTTP ${response.status}`;
+      // Keep technical details in DevTools / the browser console, not in the UI.
+      console.error("[Interview UI] API request failed", {
+        action,
+        status: response.status,
+        statusText: response.statusText,
+        message: detail,
+      });
+      throw new Error("Something went wrong. Please try again. Technical details are available in the browser console.");
+    }
+
+    return data;
+  } catch (error) {
+    if (error instanceof Error && error.message.startsWith("Something went wrong.")) throw error;
+
+    console.error("[Interview UI] Could not reach the interview API", {
+      action,
+      message: error instanceof Error ? error.message : String(error),
+    });
+    throw new Error("Could not connect to the interview service. Please try again. Technical details are available in the browser console.");
+  }
 
 }
 
