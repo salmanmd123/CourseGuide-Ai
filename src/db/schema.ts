@@ -591,25 +591,3 @@ export const aiTutorMessages = pgTable(
 );
 
 
-/* =========================
-   AI INTERVIEW SESSIONS
-========================= */
-
-export const interviewAttempts = pgTable(
-  "interview_attempts",
-  {
-    id: serial("id").primaryKey(),
-    userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-    mode: varchar("mode", { length: 20 }).notNull(),
-    status: varchar("status", { length: 20 }).default("in_progress").notNull(),
-    score: integer("score").default(0).notNull(),
-    answersReviewed: integer("answers_reviewed").default(0).notNull(),
-    startedAt: timestamp("started_at").defaultNow().notNull(),
-    completedAt: timestamp("completed_at"),
-    updatedAt: timestamp("updated_at").defaultNow().notNull(),
-  },
-  (table) => ({
-    userIdIdx: index("interview_attempts_user_id_idx").on(table.userId),
-    statusIdx: index("interview_attempts_status_idx").on(table.status),
-  })
-);
