@@ -98,6 +98,8 @@ type SessionData = {
   startedAt: string;
   completedAt?: string;
   status: "in_progress" | "completed";
+  mockVoiceDurationMinutes?: number;
+  mockJobRole?: string;
   voiceInterview?: {
     enabled: boolean;
     jobRole: string;
@@ -1892,12 +1894,18 @@ export async function POST(request: Request) {
         status: "in_progress",
       };
 
+      const requestedDuration = Number(body.durationMinutes);
+      const allowedDurations = mode === "mock" || roundIds[0] === "hr" ? [5, 10, 15] : [5, 10, 15, 20, 30];
+      const configuredVoiceDuration = allowedDurations.includes(requestedDuration) ? requestedDuration : 10;
+      const configuredJobRole = typeof body.jobRole === "string" ? body.jobRole.trim().slice(0, 120) : "Software Engineer";
+      if (mode === "mock") {
+        session.mockVoiceDurationMinutes = configuredVoiceDuration;
+        session.mockJobRole = configuredJobRole || "Software Engineer";
+      }
       const voiceRound = mode === "round" && ["technical", "project", "hr"].includes(roundIds[0]);
       if (voiceRound) {
-        const requestedDuration = Number(body.durationMinutes);
-        const allowedDurations = roundIds[0] === "hr" ? [5, 10, 15] : [5, 10, 15, 20, 30];
-        const durationMinutes = allowedDurations.includes(requestedDuration) ? requestedDuration : 10;
-        const jobRole = typeof body.jobRole === "string" ? body.jobRole.trim().slice(0, 120) : "Software Engineer";
+        const durationMinutes = configuredVoiceDuration;
+        const jobRole = configuredJobRole;
         session.voiceInterview = {
           enabled: true,
           jobRole: jobRole || "Software Engineer",
@@ -2101,6 +2109,42 @@ Time expired: ${finalTurn ? "yes" : "no"}. Evaluate the latest answer and genera
         round: session.roundIds[session.roundIndex],
       } : null;
       if (entry) session.answers.push(entry);
+
+      // In a full mock, expiry ends the current timed voice round, not the entire mock.
+      if (finalTurn && session.mode === "mock") {
+        session.roundIndex += 1;
+        session.questionIndex = 0;
+        const nextRoundId = session.roundIds[session.roundIndex];
+        if (nextRoundId) {
+          const nextRound = getRound(nextRoundId);
+          session.voiceInterview = undefined;
+          if (nextRound && ["technical", "project", "hr"].includes(nextRoundId)) {
+            const voiceDuration = 10;
+            session.voiceInterview = {
+              enabled: true,
+              jobRole: nextRoundId === "hr" ? "General HR / Managerial Candidate" : voice.jobRole,
+              durationMinutes: voiceDuration,
+              deadlineAt: new Date(Date.now() + voiceDuration * 60_000).toISOString(),
+              conversation: [],
+            };
+          }
+          session.currentQuestion = await nextQuestion(session);
+          if (session.voiceInterview) {
+            session.voiceInterview.deadlineAt = new Date(Date.now() + session.voiceInterview.durationMinutes * 60_000).toISOString();
+            session.voiceInterview.conversation.push({ role: "assistant", content: session.currentQuestion });
+          }
+          const transitionText = `Thank you. That concludes the ${getRound(currentRoundId)?.title || "current"} round. Next is ${nextRound?.title || "the next round"}. ${session.currentQuestion}`;
+          return NextResponse.json({
+            finished: false,
+            response: transitionText,
+            evaluation: entry,
+            session: publicSession(session),
+            round: nextRound,
+            roundChanged: true,
+          });
+        }
+      }
+
       voice.conversation.push({ role: "assistant", content: responseText });
       session.currentQuestion = responseText;
       const finished = finalTurn || parsed.finished === true;
@@ -2436,7 +2480,24 @@ Do not return JSON or Markdown.
         session.roundIds[session.roundIndex]
       );
 
+      // Full mock interviews enable timed, hands-free voice rounds on arrival.
+      if (session.mode === "mock" && nextRound && ["technical", "project", "hr"].includes(nextRound.id)) {
+        const voiceDuration = session.mockVoiceDurationMinutes || 10;
+        session.voiceInterview = {
+          enabled: true,
+          jobRole: nextRound.id === "hr" ? "General HR / Managerial Candidate" : (session.mockJobRole || "Software Engineer"),
+          durationMinutes: voiceDuration,
+          deadlineAt: new Date(Date.now() + voiceDuration * 60_000).toISOString(),
+          conversation: [],
+        };
+      } else if (session.mode === "mock") {
+        session.voiceInterview = undefined;
+      }
+
       session.currentQuestion = await nextQuestion(session);
+      if (session.voiceInterview?.enabled && session.mode === "mock") {
+        session.voiceInterview.deadlineAt = new Date(Date.now() + session.voiceInterview.durationMinutes * 60_000).toISOString();
+      }
 
       console.info("[Interview API] Next question ready", {
         durationMs: Date.now() - startedAt,
