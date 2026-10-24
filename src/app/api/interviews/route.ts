@@ -1,9 +1,5 @@
 
 import { NextResponse } from "next/server";
-import { and, eq } from "drizzle-orm";
-
-import { db } from "@/db";
-import { interviewAttempts } from "@/db/schema";
 import { getCurrentUser } from "@/lib/auth";
 
 export const runtime = "nodejs";
@@ -45,7 +41,7 @@ const ROUNDS = [
   {
     id: "project",
     title: "Project / Advanced Technical",
-    detail: "Project decisions, architecture, trade-offs and system design",
+    detail: "Your projects, tech stack, implementation, architecture and trade-offs",
     count: 4,
   },
   {
@@ -102,6 +98,13 @@ type SessionData = {
   startedAt: string;
   completedAt?: string;
   status: "in_progress" | "completed";
+  voiceInterview?: {
+    enabled: boolean;
+    jobRole: string;
+    durationMinutes: number;
+    deadlineAt: string;
+    conversation: { role: "assistant" | "user"; content: string }[];
+  };
 };
 
 function getRound(id: string) {
@@ -1807,35 +1810,14 @@ export async function GET() {
       );
     }
 
-    const rows = await db
-      .select({
-        status: interviewAttempts.status,
-        score: interviewAttempts.score,
-        answersReviewed: interviewAttempts.answersReviewed,
-      })
-      .from(interviewAttempts)
-      .where(eq(interviewAttempts.userId, user.id));
-
-    const completed = rows.filter(
-      (row) => row.status === "completed"
-    );
-
+    // Interview history persistence is disabled. Keep the endpoint compatible
+    // with clients that request aggregate metrics.
     return NextResponse.json({
       stats: {
-        startedCount: rows.length,
-        completedCount: completed.length,
-        overallScore: completed.length
-          ? Math.round(
-              completed.reduce(
-                (sum, row) => sum + row.score,
-                0
-              ) / completed.length
-            )
-          : 0,
-        totalAnswersReviewed: rows.reduce(
-          (sum, row) => sum + row.answersReviewed,
-          0
-        ),
+        startedCount: 0,
+        completedCount: 0,
+        overallScore: 0,
+        totalAnswersReviewed: 0,
       },
     });
   } catch (error) {
@@ -1910,6 +1892,21 @@ export async function POST(request: Request) {
         status: "in_progress",
       };
 
+      const voiceRound = mode === "round" && ["technical", "project", "hr"].includes(roundIds[0]);
+      if (voiceRound) {
+        const requestedDuration = Number(body.durationMinutes);
+        const allowedDurations = roundIds[0] === "hr" ? [5, 10, 15] : [5, 10, 15, 20, 30];
+        const durationMinutes = allowedDurations.includes(requestedDuration) ? requestedDuration : 10;
+        const jobRole = typeof body.jobRole === "string" ? body.jobRole.trim().slice(0, 120) : "Software Engineer";
+        session.voiceInterview = {
+          enabled: true,
+          jobRole: jobRole || "Software Engineer",
+          durationMinutes,
+          deadlineAt: new Date(Date.now() + durationMinutes * 60_000).toISOString(),
+          conversation: [],
+        };
+      }
+
       // Select four unique coding questions once for this interview session.
       if (roundIds.includes("coding")) {
         session.codingQuestions = selectCodingQuestions(4);
@@ -1935,35 +1932,28 @@ export async function POST(request: Request) {
       }
 
       session.currentQuestion = await nextQuestion(session);
+      // Start the selected duration after the opening question has been prepared.
+      if (session.voiceInterview) {
+        session.voiceInterview.deadlineAt = new Date(Date.now() + session.voiceInterview.durationMinutes * 60_000).toISOString();
+      }
 
-      const [attempt] = await db
-        .insert(interviewAttempts)
-        .values({
-          userId: user.id,
-          mode,
-          status: "in_progress",
-          score: 0,
-          answersReviewed: 0,
-          startedAt: new Date(session.startedAt),
-        })
-        .returning({
-          id: interviewAttempts.id,
-        });
+      // No interview-attempt row is created; the client carries the session data.
+      const sessionId = Date.now();
 
       console.info("[Interview API] Interview started", {
         durationMs: Date.now() - startedAt,
         round: roundIds[0],
-        sessionId: attempt.id,
+        sessionId,
       });
 
       return NextResponse.json({
-        sessionId: attempt.id,
+        sessionId,
         session: publicSession(session),
         round: getRound(roundIds[0]),
       });
     }
 
-    // ALL OTHER ACTIONS REQUIRE A SESSION AND ATTEMPT.
+    // ALL OTHER ACTIONS REQUIRE A SESSION.
     const session = body?.session as SessionData | undefined;
 
     if (
@@ -1993,30 +1983,133 @@ export async function POST(request: Request) {
       );
     }
 
-    const [attempt] = await db
-      .select({
-        id: interviewAttempts.id,
-        status: interviewAttempts.status,
-      })
-      .from(interviewAttempts)
-      .where(
-        and(
-          eq(interviewAttempts.id, attemptId),
-          eq(interviewAttempts.userId, user.id)
-        )
-      );
+    // NVIDIA MAGPIE TEXT-TO-SPEECH. The browser falls back to native speech if this is not configured.
+    if (action === "speak") {
+      const voice = session.voiceInterview;
+      const text = typeof body.text === "string" ? body.text.trim().slice(0, 1800) : "";
+      if (!text) return NextResponse.json({ error: "Speech text is required." }, { status: 400 });
+      const apiKey = process.env.NVIDIA_INTERVIEW_API_KEY || process.env.NVIDIA_API_KEY;
+      const endpoint = process.env.NVIDIA_MAGPIE_ENDPOINT || "https://877104f7-e885-42b9-8de8-f6e4c6303969.invocation.api.nvcf.nvidia.com/v1/audio/synthesize";
+      if (!apiKey) return NextResponse.json({ error: "Magpie TTS is not configured." }, { status: 503 });
+      const form = new FormData();
+      form.set("text", text);
+      form.set("language", process.env.NVIDIA_MAGPIE_LANGUAGE || "en-US");
+      form.set("voice", process.env.NVIDIA_MAGPIE_VOICE || "Magpie-Multilingual.EN-US.Aria");
+      form.set("encoding", "LINEAR_PCM");
+      form.set("sample_rate_hz", "44100");
+      const ttsResponse = await fetch(endpoint, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${apiKey}` },
+        body: form,
+        signal: AbortSignal.timeout(45_000),
+      });
+      if (!ttsResponse.ok) {
+        const detail = await ttsResponse.text().catch(() => "");
+        console.error("[Interview TTS] Magpie request failed", { status: ttsResponse.status, detail: detail.slice(0, 500) });
+        return NextResponse.json({ error: "Voice generation is temporarily unavailable." }, { status: 502 });
+      }
+      const audio = await ttsResponse.arrayBuffer();
+      return new Response(audio, { status: 200, headers: { "Content-Type": "audio/wav", "Cache-Control": "no-store" } });
+    }
 
-    if (
-      !attempt ||
-      attempt.status === "completed" ||
-      attempt.status === "abandoned"
-    ) {
-      return NextResponse.json(
-        {
-          error: "Interview attempt not found or already ended.",
-        },
-        { status: 404 }
-      );
+    // NATURAL, ADAPTIVE VOICE INTERVIEW TURN. The client handles mic capture and five-second silence detection.
+    if (action === "voice-turn") {
+      const voice = session.voiceInterview;
+      if (!voice?.enabled) return NextResponse.json({ error: "This session is not a voice conversation interview." }, { status: 400 });
+      const candidateAnswer = typeof body.answer === "string" ? body.answer.trim().slice(0, 12000) : "";
+      const timeExpired = body.timeExpired === true || Date.now() >= new Date(voice.deadlineAt).getTime();
+      const silenceTimeout = body.silenceTimeout === true;
+      const previousPrompt = session.currentQuestion || "Interview question";
+      if (!candidateAnswer && !timeExpired && !silenceTimeout) return NextResponse.json({ error: "No speech was detected. Please try again." }, { status: 400 });
+      if (candidateAnswer) voice.conversation.push({ role: "user", content: candidateAnswer });
+      // A deadline alone should not interrupt the interviewer's turn. The client
+      // submits the last candidate answer after the five-second silence window.
+      const finalTurn = timeExpired;
+      if (silenceTimeout && !candidateAnswer && !finalTurn) {
+        const nextPrompt = await askModel([
+          { role: "system", content: `You are a natural placement interviewer for ${voice.jobRole}. The candidate did not answer the previous question within five seconds. Be kind and do not shame them. Briefly say it is okay to move on, then ask exactly one new, relevant question for the ${getRound(session.roundIds[session.roundIndex])?.title || "interview"} round. If this is Round 3 Technical Interview, ask only a role-specific technical/core CS question and never ask about past projects or project walkthroughs. If this is Round 4 Project / Advanced Technical and the candidate has not yet stated the technologies used, ask directly which programming languages, frameworks, database, APIs/services, and tools they used for their project. If this is Round 5 HR/Managerial and the candidate has not yet introduced themselves, ask them to tell you about themselves before any other topic. In Round 5, never ask about projects, project details, tech stacks, or implementation; if the candidate mentions a project, redirect to a non-project HR topic. Keep it concise and conversational. Return plain text only.` },
+          { role: "user", content: `Previous interviewer prompt: ${previousPrompt}
+Conversation so far:
+${voice.conversation.slice(-12).map((m) => `${m.role === "assistant" ? "Interviewer" : "Candidate"}: ${m.content}`).join("\n")}` },
+        ], 220);
+        voice.conversation.push({ role: "assistant", content: nextPrompt });
+        session.currentQuestion = nextPrompt;
+        return NextResponse.json({ finished: false, response: nextPrompt, session: publicSession(session), round: getRound(session.roundIds[session.roundIndex]) });
+      }
+      const currentRoundId = session.roundIds[session.roundIndex];
+      const roundGuard = currentRoundId === "technical"
+        ? "STRICT ROUND 3 RULE: do not ask about projects the candidate has worked on, project descriptions, their learning platform, project implementation, or past project decisions. Stay on role-specific technical knowledge and core CS concepts such as OOP, DBMS, SQL, operating systems, networking, data structures, algorithms, and role-relevant fundamentals. If the candidate mentions a project, acknowledge briefly and redirect to a general technical concept."
+        : currentRoundId === "project"
+          ? "STRICT ROUND 4 PROJECT INTERVIEW: The candidate must be interviewed about real projects they personally worked on, built, contributed to, or studied deeply. Begin from their own project experience, not generic textbook questions. Ask about the project's purpose and users, their individual contribution, why they chose the technologies/frameworks/database/APIs, how the system was implemented, architecture and data flow, important code/design decisions, challenges and debugging, testing, deployment, security, performance, scalability, trade-offs, limitations, and what they would improve. Use their previous answers to choose one specific, natural follow-up at a time. The tech stack is mandatory: explicitly ask which programming languages, frontend/backend frameworks, database, APIs/services, and development tools were used. The opening question must ask about the tech stack directly. If the candidate has not answered that part, the next question must ask for the stack before moving to other topics. Do not assume they used any particular technology or claim features they have not mentioned. If they say they have no completed project, allow a coursework, prototype, internship, or personal project and help them select one."
+          : currentRoundId === "hr"
+            ? "STRICT ROUND 5 PLACEMENT HR INTERVIEW FOR A CANDIDATE SEEKING A CSE/SOFTWARE PLACEMENT. This is a general company-placement HR round for a CSE/software placement candidate, NOT an interview for an HR or manager job. Never ask what HR/managerial role the candidate wants. The first question MUST be 'Tell me about yourself.' Do not move to another topic until they have introduced themselves. After the introduction, ask why they chose computer science/software FIRST. Then progress naturally to why they want to join the company, career goals, strengths and weaknesses, teamwork/team behaviour, conflict resolution, communication, adaptability, receiving feedback, deadlines/pressure, realistic workplace scenarios, and expected entry-level salary. Salary must be respectful and may be a range. STRICTLY DO NOT ask about a project, project details, project technology stack, implementation, or what they built; Round 4 already covers projects. If the candidate volunteers project details or uses a project as an example, acknowledge it briefly without probing and immediately redirect to a non-project HR topic from the list. Never ask for a project, a specific project moment, an achievement story, or what they built. These prompts often trigger project walkthroughs, which belong exclusively to Round 4. Ask one question at a time, adapt to the candidate, and do not turn this into technical trivia or a project interview. Do not ask every topic mechanically; prioritize the most relevant remaining topics based on interview duration. Keep it natural, fair, and professional."
+            : "Stay within the selected round's scope.";
+      const raw = await askModel([
+        { role: "system", content: `You are a natural, professional placement interviewer conducting a spoken interview for the job role: ${voice.jobRole}. Interview round: ${getRound(currentRoundId)?.title || "Technical Interview"}. ${roundGuard} For Round 5, this is a general HR round for a CSE/software placement candidate, not an HR/manager job interview; never ask which HR or managerial role they want. Hold a realistic conversation, not a list of quiz questions. Use the complete conversation context. If the answer is incorrect or partly incorrect, tactfully say so and briefly explain the key correction. If it is good, acknowledge specifically what was correct. Ask at most ONE relevant follow-up question per turn, or move to a related topic when appropriate. Keep every spoken response concise (2-5 sentences) and natural. Never claim to hear anything that is not in the transcript. ${finalTurn ? "THIS IS THE FINAL TURN: the selected interview time has expired and the candidate's current answer has now been received. Briefly acknowledge and fairly assess the latest answer, then naturally close the interview in the same spoken response. End with a warm sign-off such as: 'That brings us to the end of your interview. Thank you for your time and answers. Keep learning, and best of luck with your future interviews. Have a great day!' Do not ask another question. Set finished=true." : currentRoundId === "hr" ? "This is an ongoing company-placement HR interview for a CSE/software candidate, not an HR/manager job interview. Never ask which HR or managerial role they want. The introduction is mandatory and must come first. Ask exactly one natural, adaptive question about motivation for CSE/software, company motivation, career goals, strengths/weaknesses, teamwork, communication, conflict, adaptability, feedback, deadlines, workplace scenarios, or entry-level salary. STRICTLY NEVER ask about a project, project details, stack, implementation, or what the candidate built; Round 4 already covers projects. If they mention a project in an answer, do not ask a follow-up about it; briefly acknowledge it and redirect to a non-project HR topic. Do not ask about a specific achievement, proud moment, project, or anything they built; those belong outside Round 5. Ask salary respectfully and allow a range or flexible answer. Avoid technical trivia. Set finished=false." : currentRoundId === "project" ? "This is an ongoing project interview. Respond to the candidate's latest answer specifically, then ask exactly ONE relevant project follow-up. Build on details they gave (project purpose, their role, tech stack, implementation, architecture, decisions, challenges, testing, deployment, trade-offs, or improvements). If the candidate has not clearly named their stack yet, the next question MUST explicitly ask what programming language(s), framework(s), database, APIs/services, and tools they used. Do not skip this requirement or restart with a generic question. Set finished=false." : "The interview time has not expired. Respond to the candidate and ask one natural follow-up question or the next relevant question. Set finished=false."} Return ONLY valid JSON: {"score": 0-100, "feedback":"short constructive assessment", "strengths":["..."], "improvements":["..."], "response":"exact concise spoken response", "finished": ${finalTurn ? "true" : "false"}}. Do not include markdown or extra text.` },
+        { role: "user", content: `Current interviewer prompt: ${previousPrompt}
+Candidate's latest answer: ${candidateAnswer || "No answer was captured before the interview timer expired."}
+Conversation so far:
+${voice.conversation.slice(-18).map((m) => `${m.role === "assistant" ? "Interviewer" : "Candidate"}: ${m.content}`).join("\n")}
+Time expired: ${finalTurn ? "yes" : "no"}. Evaluate the latest answer and generate the next spoken response.` },
+      ], 700, true);
+      const parsed = extractJson<{ score?: number; feedback?: string; strengths?: string[]; improvements?: string[]; response?: string; finished?: boolean }>(raw);
+      let responseText = String(parsed.response || (finalTurn ? "Thank you for your answers. Our interview time is over, so we'll stop here." : "Thank you. Let me ask you a related question."));
+      // Enforce Round 3 boundaries even if the model ignores its system prompt.
+      // Do not allow project walkthroughs or past-project implementation questions in Technical Interview.
+      if (currentRoundId === "technical" && /\b(project you (?:worked on|built|developed)|tell me about (?:your|a) project|walk me through (?:your|a) project|learning platform you|your project\b|project architecture|project implementation|challenges did you face in (?:your|the) project)\b/i.test(responseText)) {
+        responseText = finalTurn
+          ? "Thank you for your answer. The interview time is over, so we'll stop here."
+          : "Let's focus on a core technical concept instead. What is the difference between process and thread in an operating system?";
+      }
+      // Round 5 is a placement HR interview, not a project or managerial-role interview.
+      // Enforce a predictable non-project topic progression so model drift cannot
+      // accidentally send the candidate back into Round 4 topics.
+      if (currentRoundId === "hr" && !finalTurn) {
+        const candidateTurnCount = voice.conversation.filter((message) => message.role === "user").length;
+        const hrNextQuestions: Record<number, string> = {
+          1: "Thank you for that introduction. What motivated you to choose computer science or software development as your career?",
+          2: "What interests you about joining our company, and how does this opportunity fit your career goals?",
+          3: "What would you say are your greatest strengths for an entry-level software role?",
+          4: "What is one weakness or skill you are actively working to improve, and what are you doing about it?",
+          5: "How do you usually work in a team when people have different opinions or working styles?",
+          6: "If you and a teammate disagreed about how to complete a task, how would you handle the disagreement?",
+          7: "Imagine you have a tight deadline and an important task is taking longer than expected. What would you do?",
+          8: "How do you respond when a supervisor gives you constructive criticism about your work?",
+          9: "What are your expected salary or compensation requirements for an entry-level software position? A reasonable range is fine.",
+          10: "How do you adapt when you are assigned a task or tool that you have not used before?",
+          11: "What would you do if you noticed a mistake at work that had already been shared with your team?",
+          12: "What kind of work environment helps you learn, collaborate, and do your best work?",
+        };
+        const forbiddenHrTopic = /\b(project|tech(?:nology)? stack|frameworks? you used|database you used|apis? you used|implementation details|what did you build|what have you built|walk me through|specific moment|achievement|something you (?:built|created|developed)|proudest accomplishment|greatest accomplishment|managerial role|hr role)\b/i;
+        if (candidateTurnCount === 1) {
+          responseText = hrNextQuestions[1];
+        } else if (forbiddenHrTopic.test(responseText)) {
+          responseText = hrNextQuestions[Math.min(candidateTurnCount, 12)] || hrNextQuestions[7];
+        } else {
+          // Prefer the next topic in the placement-HR sequence, rather than
+          // letting the model continue probing a volunteered project example.
+          responseText = hrNextQuestions[Math.min(candidateTurnCount, 12)] || responseText;
+        }
+      }
+      const entry: AnswerEntry | null = candidateAnswer ? {
+        question: previousPrompt,
+        answer: candidateAnswer,
+        score: Math.max(0, Math.min(100, Math.round(Number(parsed.score) || 0))),
+        feedback: String(parsed.feedback || "Answer reviewed."),
+        strengths: Array.isArray(parsed.strengths) ? parsed.strengths.slice(0, 3).map(String) : [],
+        improvements: Array.isArray(parsed.improvements) ? parsed.improvements.slice(0, 3).map(String) : [],
+        round: session.roundIds[session.roundIndex],
+      } : null;
+      if (entry) session.answers.push(entry);
+      voice.conversation.push({ role: "assistant", content: responseText });
+      session.currentQuestion = responseText;
+      const finished = finalTurn || parsed.finished === true;
+      if (finished) {
+        session.status = "completed";
+        session.completedAt = new Date().toISOString();
+        return NextResponse.json({ finished: true, finalResponse: responseText, evaluation: entry, session: publicSession(session), round: getRound(session.roundIds[session.roundIndex]) });
+      }
+      return NextResponse.json({ finished: false, response: responseText, evaluation: entry, session: publicSession(session), round: getRound(session.roundIds[session.roundIndex]) });
     }
 
     // EXPLAIN CODING QUESTION WITHOUT REVEALING THE SOLUTION
@@ -2320,25 +2413,7 @@ Do not return JSON or Markdown.
         session.answers
       );
 
-      await db
-        .update(interviewAttempts)
-        .set({
-          score: scoreSoFar,
-          answersReviewed: session.answers.length,
-          status: finished ? "completed" : "in_progress",
-          completedAt: finished
-            ? new Date(
-                session.completedAt || new Date().toISOString()
-              )
-            : null,
-          updatedAt: new Date(),
-        })
-        .where(
-          and(
-            eq(interviewAttempts.id, attemptId),
-            eq(interviewAttempts.userId, user.id)
-          )
-        );
+
 
       if (finished) {
         console.info("[Interview API] Interview completed", {
@@ -2382,25 +2457,6 @@ Do not return JSON or Markdown.
 
     // FINISH / ABANDON INTERVIEW
     if (action === "finish") {
-      const scoreSoFar = calculateOverallScore(
-        session.answers
-      );
-
-      await db
-        .update(interviewAttempts)
-        .set({
-          score: scoreSoFar,
-          answersReviewed: session.answers.length,
-          status: "abandoned",
-          updatedAt: new Date(),
-        })
-        .where(
-          and(
-            eq(interviewAttempts.id, attemptId),
-            eq(interviewAttempts.userId, user.id)
-          )
-        );
-
       session.status = "completed";
       session.completedAt = new Date().toISOString();
 
@@ -2474,6 +2530,16 @@ async function nextQuestion(
 
   session.currentCodingQuestion = undefined;
 
+  if (session.voiceInterview?.enabled && session.questionIndex === 0 && !session.voiceInterview.conversation.length) {
+    const voiceRoundTitle = round.title;
+    const opening = await askModel([
+      { role: "system", content: `You are a friendly, professional placement interviewer. The candidate is interviewing for ${roundId === "hr" ? "a CSE/software placement candidate in a general company HR round" : session.voiceInterview.jobRole}. Start the ${voiceRoundTitle} interview with a brief natural greeting and exactly one opening question relevant to the selected round. ${roundId === "technical" ? "This is Round 3: ask only role-specific technical/core CS knowledge. Do NOT ask about any project the candidate worked on or request a project walkthrough." : roundId === "hr" ? "This is Round 5: general company-placement HR for a CSE/software candidate, NOT an HR or manager job interview. The first question MUST be a self-introduction: warmly greet the candidate and ask 'Tell me about yourself.' Do not ask strengths, teamwork, motivation, salary, or scenarios before they answer the introduction. Afterward, naturally cover motivation for choosing computer science/software and joining the company, strengths and weaknesses, teamwork/team behaviour, conflict resolution, communication, adaptability, feedback, deadlines/pressure, realistic workplace scenarios, and expected salary for an entry-level software placement. Round 4 already handles projects: NEVER ask what project they built, project details, tech stack, implementation, or project follow-ups. If the candidate volunteers project details, acknowledge briefly and redirect to a non-project HR question. Avoid achievement prompts that invite project walkthroughs. Ask one question at a time and never ask which HR/managerial role they want." : roundId === "project" ? "This is Round 4, a project-based interview. Open warmly and ask the candidate to choose one project they worked on. In the opening question, explicitly ask them to explain (1) what the project does, (2) their personal role, and (3) the exact technology stack used: programming language(s), frontend/backend frameworks, database, APIs/services, and important tools. The phrase “what tech stack did you use?” or an equally explicit direct question MUST be included in the opening question. Do not ask generic technical trivia first. In later turns, if the candidate has not yet named their stack, the next question MUST directly ask which languages, frameworks, database, APIs, and tools they used; do not move on to architecture or challenges until the stack is established. Then ask why those technologies were chosen and how they were implemented, followed by architecture/data flow, individual contributions, challenges, debugging, testing, deployment, trade-offs, and improvements." : "Stay within the selected round's scope."} Do not mention a timer. Keep it to 1-3 spoken sentences. Return plain text only.` },
+      { role: "user", content: `Begin a ${voiceRoundTitle} interview${roundId === "hr" ? "" : ` for the role ${session.voiceInterview.jobRole}`}.` },
+    ], 180);
+    session.voiceInterview.conversation.push({ role: "assistant", content: opening });
+    return opening;
+  }
+
   const previous = session.answers
     .filter((answer) => answer.round === roundId)
     .map((answer) => answer.question)
@@ -2484,7 +2550,9 @@ async function nextQuestion(
       {
         role: "system",
         content: `
-You are a realistic, professional and encouraging CSE placement interviewer.
+You are a realistic, professional and encouraging placement interviewer.
+
+${roundId === "technical" ? "STRICT ROUND 3 RULE: Do NOT ask about past projects, project walkthroughs, a learning platform the candidate built, or project implementation decisions. Ask role-specific technical and core CS questions only (OOP, DBMS, SQL, OS, networking, algorithms, data structures, and role-relevant fundamentals)." : roundId === "project" ? "STRICT ROUND 4 PROJECT INTERVIEW: Ask about the candidate's own project(s), their personal contribution, purpose/users, tech stack and reasons for choosing it, implementation, architecture/data flow, APIs/database, key decisions, challenges/debugging, testing, deployment, security/performance, trade-offs, limitations, and what they would improve. Start by asking them to choose and introduce one project if none is identified in the conversation. Follow their actual details with one adaptive question at a time. Never invent their stack, role, features, or results. Prefer practical, project-specific follow-ups over generic technical trivia." : "Stay strictly within the selected round's scope."}
 
 Ask exactly ONE interview question.
 Do not answer the question.
@@ -2531,7 +2599,11 @@ For project interviews:
 - Ask about decisions, architecture, trade-offs, implementation and challenges.
 
 For HR interviews:
-- Ask realistic behavioral or workplace questions.
+- Treat Round 5 as a general company-placement HR round for a CSE/software candidate, not an HR/manager job interview.
+- Ask realistic placement questions about introduction, motivation for computer science/software and joining the company, strengths and weaknesses, teamwork/team behaviour, conflict resolution, communication, adaptability, feedback, deadlines/pressure, workplace scenarios, and expected entry-level salary.
+- Round 4 already covers projects. NEVER ask project-related questions, project tech stack, project implementation, or follow up when a candidate mentions a project. Briefly acknowledge project details and redirect to a non-project HR topic. Avoid prompts about a great achievement/moment if they lead into a project walkthrough.
+- Never ask the candidate which HR or managerial role they are interested in.
+- Ask one question at a time and begin with self-introduction.
 
 Avoid repeating these questions:
 ${previous.join("\n") || "None so far."}
