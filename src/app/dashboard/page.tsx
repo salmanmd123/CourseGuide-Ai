@@ -329,7 +329,7 @@ export default async function DashboardPage() {
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
         {/* HEADER */}
 
-        <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
+        <div className="flex min-w-0 flex-col justify-between gap-4 sm:gap-5 md:flex-row md:items-end">
           <div>
             <p className="text-sm font-bold uppercase tracking-[0.14em] text-[orangered]">
               Learning dashboard
@@ -355,12 +355,12 @@ export default async function DashboardPage() {
 
         {/* LEARNING STATISTICS */}
 
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-6 grid min-w-0 grid-cols-2 gap-3 sm:mt-8 sm:gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {/* COURSES STARTED */}
 
-          <div className="rounded-[30px] bg-[#e0e5ec] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
+          <div className="rounded-[24px] bg-[#e0e5ec] p-3 sm:rounded-[30px] sm:p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
+              <p className="text-xs sm:text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
                 Courses started
               </p>
 
@@ -369,7 +369,7 @@ export default async function DashboardPage() {
               </div>
             </div>
 
-            <p className="mt-4 text-3xl font-bold text-black dark:text-[#f5f7fa]">
+            <p className="mt-4 text-2xl sm:text-3xl font-bold text-black dark:text-[#f5f7fa]">
               {
                 courseProgress.filter(
                   (item) =>
@@ -379,16 +379,16 @@ export default async function DashboardPage() {
               }
             </p>
 
-            <p className="mt-1 text-xs text-[#3f3e3e] dark:text-[#a8adb7]/70">
+            <p className="mt-1 text-[11px] sm:text-xs text-[#3f3e3e] dark:text-[#a8adb7]/70">
               Courses you&apos;ve started
             </p>
           </div>
 
           {/* LESSONS COMPLETED */}
 
-          <div className="rounded-[30px] bg-[#e0e5ec] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
+          <div className="rounded-[24px] bg-[#e0e5ec] p-3 sm:rounded-[30px] sm:p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
+              <p className="text-xs sm:text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
                 Lessons completed
               </p>
 
@@ -397,20 +397,20 @@ export default async function DashboardPage() {
               </div>
             </div>
 
-            <p className="mt-4 text-3xl font-bold text-black dark:text-[#f5f7fa]">
+            <p className="mt-4 text-2xl sm:text-3xl font-bold text-black dark:text-[#f5f7fa]">
               {completedLessonsCount}
             </p>
 
-            <p className="mt-1 text-xs text-[#3f3e3e] dark:text-[#a8adb7]/70">
+            <p className="mt-1 text-[11px] sm:text-xs text-[#3f3e3e] dark:text-[#a8adb7]/70">
               Across all courses
             </p>
           </div>
 
           {/* QUIZZES COMPLETED */}
 
-          <div className="rounded-[30px] bg-[#e0e5ec] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
+          <div className="rounded-[24px] bg-[#e0e5ec] p-3 sm:rounded-[30px] sm:p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
             <div className="flex items-center justify-between">
-              <p className="text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
+              <p className="text-xs sm:text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
                 Quizzes completed
               </p>
 
@@ -419,11 +419,11 @@ export default async function DashboardPage() {
               </div>
             </div>
 
-            <p className="mt-4 text-3xl font-bold text-black dark:text-[#f5f7fa]">
+            <p className="mt-4 text-2xl sm:text-3xl font-bold text-black dark:text-[#f5f7fa]">
               {quizzesCompleted}
             </p>
 
-            <p className="mt-1 text-xs text-[#3f3e3e] dark:text-[#a8adb7]/70">
+            <p className="mt-1 text-[11px] sm:text-xs text-[#3f3e3e] dark:text-[#a8adb7]/70">
               {quizzesCompleted > 0
                 ? `${averageQuizScore}% average score`
                 : "No quizzes completed yet"}
@@ -433,10 +433,10 @@ export default async function DashboardPage() {
 
           <Link
             href="/interviews"
-            className="block rounded-[30px] bg-[#e0e5ec] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-200 hover:-translate-y-1 dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]"
+            className="block rounded-[24px] bg-[#e0e5ec] p-3 sm:rounded-[30px] sm:p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-200 hover:-translate-y-1 dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]"
           >
             <div className="flex items-center justify-between">
-              <p className="text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
+              <p className="text-xs sm:text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
                 Interview practice
               </p>
 
@@ -449,22 +449,22 @@ export default async function DashboardPage() {
               Start now
             </p>
 
-            <p className="mt-1 text-xs text-[#3f3e3e] dark:text-[#a8adb7]/70">
-              Practice interviews and prepare for placements
+            <p className="mt-1 text-[11px] sm:text-xs text-[#3f3e3e] dark:text-[#a8adb7]/70">
+              Practice mock interviews 
             </p>
           </Link>
         </div>
 
         {/* CONTINUE LEARNING */}
 
-        <section className="mt-10">
+        <section className="mt-8 sm:mt-10">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <h2 className="text-xl font-bold text-black dark:text-[#f5f7fa]">
+              <h2 className="text-lg sm:text-xl font-bold text-black dark:text-[#f5f7fa]">
                 Continue learning
               </h2>
 
-              <p className="mt-1 text-sm text-[#3f3e3e] dark:text-[#a8adb7]/70">
+              <p className="mt-1 text-xs sm:text-sm text-[#3f3e3e] dark:text-[#a8adb7]/70">
                 Pick up where you left off.
               </p>
             </div>
@@ -481,11 +481,11 @@ export default async function DashboardPage() {
           {/* CURRENT COURSE */}
 
           {currentCourse ? (
-            <div className="mt-5 overflow-hidden rounded-[30px] bg-[#e0e5ec] shadow-[14px_14px_28px_rgba(163,177,198,0.6),-14px_-14px_28px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[14px_14px_28px_rgba(5,7,10,0.8),-14px_-14px_28px_rgba(43,48,58,0.8)]">
-              <div className="grid md:grid-cols-[190px_1fr]">
+            <div className="mt-4 sm:mt-5 min-w-0 overflow-hidden rounded-[24px] sm:rounded-[30px] bg-[#e0e5ec] shadow-[14px_14px_28px_rgba(163,177,198,0.6),-14px_-14px_28px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[14px_14px_28px_rgba(5,7,10,0.8),-14px_-14px_28px_rgba(43,48,58,0.8)]">
+              <div className="grid min-w-0 md:grid-cols-[190px_minmax(0,1fr)]">
                 {/* COURSE VISUAL */}
 
-                <div className="m-3 flex min-h-[190px] items-center justify-center rounded-[24px] bg-[#e0e5ec] shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] dark:bg-[#1e2229] dark:shadow-[inset_6px_6px_10px_rgba(5,7,10,0.75),inset_-6px_-6px_10px_rgba(43,48,58,0.75)] md:m-4">
+                <div className="mx-3 mt-3 flex min-h-[112px] items-center justify-center md:m-3 md:min-h-[190px] rounded-[24px] bg-[#e0e5ec] shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] dark:bg-[#1e2229] dark:shadow-[inset_6px_6px_10px_rgba(5,7,10,0.75),inset_-6px_-6px_10px_rgba(43,48,58,0.75)] md:m-4">
                   <div className="text-center">
                     <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#e0e5ec] text-[orangered] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]">
                       <BookOpen size={25} />
@@ -495,26 +495,24 @@ export default async function DashboardPage() {
                       Current course
                     </p>
 
-                    <p className="mt-1 px-4 text-sm font-semibold text-black dark:text-[#f5f7fa]">
-                      {currentCourse.title}
-                    </p>
+                    
                   </div>
                 </div>
 
                 {/* COURSE INFORMATION */}
 
-                <div className="p-5 sm:p-6">
+                <div className="p-4 sm:p-6">
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0">
                       <span className="inline-flex rounded-full bg-[#e0e5ec] px-2.5 py-1 text-xs font-semibold text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
                         {currentCourse.category}
                       </span>
 
-                      <h3 className="mt-3 break-words text-xl font-bold text-black dark:text-[#f5f7fa]">
+                      <h3 className="mt-3 break-words text-lg sm:text-xl font-bold text-black dark:text-[#f5f7fa]">
                         {currentCourse.title}
                       </h3>
 
-                      <p className="mt-2 text-sm text-[#3f3e3e] dark:text-[#a8adb7]/70">
+                      <p className="mt-2 text-xs sm:text-sm text-[#3f3e3e] dark:text-[#a8adb7]/70">
                         {currentLesson?.title ??
                           "Start this course"}
                       </p>
@@ -528,7 +526,7 @@ export default async function DashboardPage() {
                   {/* PROGRESS */}
 
                   <div
-                    className="mt-6 h-3 overflow-hidden rounded-full bg-[#e0e5ec] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]"
+                    className="mt-4 sm:mt-6 h-3 overflow-hidden rounded-full bg-[#e0e5ec] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]"
                     role="progressbar"
                     aria-label="Course progress"
                     aria-valuemin={0}
@@ -543,15 +541,15 @@ export default async function DashboardPage() {
                     />
                   </div>
 
-                  <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
-                    <p className="text-xs text-[#3f3e3e] dark:text-[#a8adb7]/70">
+                  <div className="mt-4 sm:mt-5 flex flex-wrap items-center justify-between gap-3 sm:gap-4">
+                    <p className="text-[11px] sm:text-xs text-[#3f3e3e] dark:text-[#a8adb7]/70">
                       {currentCourseCompleted} of{" "}
                       {currentCourseTotal} lessons completed
                     </p>
 
                     <Link
                       href={`/learn/${currentCourse.slug}`}
-                      className="flex items-center gap-2 rounded-[20px] bg-[orangered] px-4 py-2.5 text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(170,35,0,0.45),inset_-3px_-3px_6px_rgba(255,180,160,0.45)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]"
+                      className="flex items-center gap-2 rounded-[20px] bg-[orangered] px-3 py-2.5 text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:bg-[red] hover:shadow-[inset_3px_3px_6px_rgba(170,35,0,0.45),inset_-3px_-3px_6px_rgba(255,180,160,0.45)] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]"
                     >
                       <Play size={15} fill="currentColor" />
                       Continue
@@ -561,7 +559,7 @@ export default async function DashboardPage() {
               </div>
             </div>
           ) : (
-            <div className="mt-5 rounded-[30px] bg-[#e0e5ec] p-10 text-center shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
+            <div className="mt-4 sm:mt-5 rounded-[24px] sm:rounded-[30px] bg-[#e0e5ec] p-6 sm:p-10 text-center shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
               <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#e0e5ec] text-[#3f3e3e] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:text-[#a8adb7]/50 dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
                 <BookOpen size={30} />
               </div>
@@ -570,13 +568,13 @@ export default async function DashboardPage() {
                 Ready to start learning?
               </h3>
 
-              <p className="mt-2 text-sm text-[#3f3e3e] dark:text-[#a8adb7]/70">
+              <p className="mt-2 text-xs sm:text-sm text-[#3f3e3e] dark:text-[#a8adb7]/70">
                 You haven&apos;t started a course yet. Browse the catalog and choose your first course.
               </p>
 
               <Link
                 href="/courses"
-                className="mt-5 inline-flex items-center gap-2 rounded-[20px] bg-[orangered] px-4 py-2.5 text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:bg-[red] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]"
+                className="mt-5 inline-flex items-center gap-2 rounded-[20px] bg-[orangered] px-3 py-2.5 text-sm font-semibold text-white shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] transition-all duration-200 hover:bg-[red] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]"
               >
                 Find courses
                 <ArrowRight size={15} />
@@ -587,7 +585,7 @@ export default async function DashboardPage() {
 
         {/* PRACTICE & CAREER PREPARATION */}
 
-        <section className="mt-12">
+        <section className="mt-8 sm:mt-12 min-w-0">
           <div>
             <p className="text-sm font-bold uppercase tracking-[0.14em] text-[orangered]">
               Build your skills
@@ -597,17 +595,17 @@ export default async function DashboardPage() {
               Practice & career preparation
             </h2>
 
-            <p className="mt-2 text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
+            <p className="mt-2 text-xs sm:text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
               Test your knowledge and prepare for your next career opportunity.
             </p>
           </div>
 
-          <div className="mt-5 grid gap-5 md:grid-cols-2">
+          <div className="mt-4 sm:mt-5 grid min-w-0 gap-4 sm:gap-5 md:grid-cols-2">
             {/* QUIZ PRACTICE */}
 
             <Link
               href="/quizzes"
-              className="group flex min-h-[210px] flex-col justify-between rounded-[30px] bg-[#e0e5ec] p-6 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[12px_12px_22px_rgba(163,177,198,0.65),-12px_-12px_22px_rgba(255,255,255,0.9)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]"
+              className="group flex min-h-[190px] min-w-0 flex-col justify-between rounded-[24px] sm:rounded-[30px] bg-[#e0e5ec] p-5 sm:min-h-[210px] sm:p-6 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[12px_12px_22px_rgba(163,177,198,0.65),-12px_-12px_22px_rgba(255,255,255,0.9)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]"
             >
               <div>
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
@@ -637,7 +635,7 @@ export default async function DashboardPage() {
 
             <Link
               href="/interviews"
-              className="group flex min-h-[210px] flex-col justify-between rounded-[30px] bg-[#e0e5ec] p-6 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[12px_12px_22px_rgba(163,177,198,0.65),-12px_-12px_22px_rgba(255,255,255,0.9)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] dark:hover:shadow-[12px_12px_22px_rgba(5,7,10,0.8),-12px_-12px_22px_rgba(43,48,58,0.8)]"
+              className="group flex min-h-[190px] min-w-0 flex-col justify-between rounded-[24px] sm:rounded-[30px] bg-[#e0e5ec] p-5 sm:min-h-[210px] sm:p-6 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[12px_12px_22px_rgba(163,177,198,0.65),-12px_-12px_22px_rgba(255,255,255,0.9)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] dark:hover:shadow-[12px_12px_22px_rgba(5,7,10,0.8),-12px_-12px_22px_rgba(43,48,58,0.8)]"
             >
               <div>
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
@@ -663,14 +661,14 @@ export default async function DashboardPage() {
 
         {/* RECOMMENDED COURSES */}
 
-        <section className="mt-12 pb-10">
+        <section className="mt-8 pb-8 sm:mt-12 sm:pb-10 min-w-0">
           <div className="flex items-end justify-between gap-4">
             <div>
-              <h2 className="text-xl font-bold text-black dark:text-[#f5f7fa]">
+              <h2 className="text-lg sm:text-xl font-bold text-black dark:text-[#f5f7fa]">
                 Recommended for you
               </h2>
 
-              <p className="mt-1 text-sm text-[#3f3e3e] dark:text-[#a8adb7]/70">
+              <p className="mt-1 text-xs sm:text-sm text-[#3f3e3e] dark:text-[#a8adb7]/70">
                 Explore more courses from CourseGuide.
               </p>
             </div>
@@ -684,15 +682,15 @@ export default async function DashboardPage() {
             </Link>
           </div>
 
-          <div className="mt-5 grid gap-5 sm:grid-cols-2 md:grid-cols-3">
+          <div className="mt-4 sm:mt-5 grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 md:grid-cols-3">
             {recommendedCourses.map((course) => (
               <div
                 key={course.id}
-                className="group overflow-hidden rounded-[30px] bg-[#e0e5ec] p-2 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-300 hover:-translate-y-1 dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]"
+                className="group min-w-0 overflow-hidden rounded-[24px] sm:rounded-[30px] bg-[#e0e5ec] p-2 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-300 hover:-translate-y-1 dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]"
               >
                 {/* COURSE THUMBNAIL */}
 
-                <div className="relative h-55 overflow-hidden rounded-[24px] bg-[#e0e5ec] shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] dark:bg-[#1e2229] dark:shadow-[inset_6px_6px_10px_rgba(5,7,10,0.75),inset_-6px_-6px_10px_rgba(43,48,58,0.75)]">
+                <div className="relative h-48 sm:h-55 overflow-hidden rounded-[24px] bg-[#e0e5ec] shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] dark:bg-[#1e2229] dark:shadow-[inset_6px_6px_10px_rgba(5,7,10,0.75),inset_-6px_-6px_10px_rgba(43,48,58,0.75)]">
                   {course.thumbnailUrl ? (
                     <img
                       src={course.thumbnailUrl}
