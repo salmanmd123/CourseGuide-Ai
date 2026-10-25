@@ -11,6 +11,7 @@ import {
     LogOut,
     ChevronDown,
     X,
+    Menu,
 } from "lucide-react";
 
 import { useTheme } from "next-themes";
@@ -30,6 +31,7 @@ export default function Navbar() {
     const [user, setUser] = useState<UserData | null>(null);
     const [loading, setLoading] = useState(true);
     const [profileOpen, setProfileOpen] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     /* =========================================================
        SEARCH
@@ -154,7 +156,7 @@ export default function Navbar() {
     return (
         <header className="sticky top-0 z-50 bg-[#e0e5ec]/95 backdrop-blur-md transition-colors duration-300 dark:bg-[#1a1d23]/95">
 
-            <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+            <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-3 py-3 sm:gap-4 sm:px-6 sm:py-4">
 
                 {/* =================================================
                    LOGO
@@ -162,7 +164,7 @@ export default function Navbar() {
 
                 <Link
                     href="/"
-                    className="neo-surface-sm flex shrink-0 items-center gap-3 rounded-[20px] px-5 py-2"
+                    className="neo-surface-sm flex min-w-0 shrink-0 items-center justify-center gap-2 rounded-[18px] p-2.5 sm:justify-start sm:gap-3 sm:rounded-[20px] sm:px-5 sm:py-2"
                     onClick={() =>
                         setProfileOpen(false)
                     }
@@ -171,24 +173,24 @@ export default function Navbar() {
                     <img
                         src="/logo2.png"
                         alt="CourseGuide"
-                        className="h-9 w-9 rounded-full object-contain"
+                        className="h-9 w-9 rounded-full object-contain sm:h-9 sm:w-9"
                     />
 
-                    <div>
+                    <div className="hidden leading-tight sm:block">
 
-                        <div className="translate-y-1">
+                        <div className="translate-y-0 sm:translate-y-1">
 
-                            <span className="text-[16px] font-bold leading-none tracking-tight text-black dark:text-[#f5f7fa]">
+                            <span className="text-[14px] font-bold leading-none tracking-tight text-black sm:text-[16px] dark:text-[#f5f7fa]">
                                 Course
                             </span>
 
-                            <span className="text-[16px] font-bold leading-none tracking-tight text-[#ff4500]">
+                            <span className="text-[14px] font-bold leading-none tracking-tight text-[#ff4500] sm:text-[16px]">
                                 Guide
                             </span>
 
                         </div>
 
-                        <p className="mb-1 mt-0 text-[10px] font-bold uppercase tracking-[0.18em] text-[#ff4500]">
+                        <p className="mb-0 mt-1 text-[8px] font-bold uppercase tracking-[0.15em] text-[#ff4500] sm:mb-1 sm:text-[10px] sm:tracking-[0.18em]">
                             AI Learning
                         </p>
 
@@ -307,7 +309,7 @@ export default function Navbar() {
                    ACTIONS
                 ================================================= */}
 
-                <div className="flex items-center gap-2 sm:gap-3">
+                <div className="ml-auto flex min-w-0 items-center gap-1 sm:gap-3 md:ml-0">
 
                     {/* =================================================
                        SEARCH
@@ -317,7 +319,7 @@ export default function Navbar() {
 
                         <form
                             onSubmit={handleSearchSubmit}
-                            className="neo-inset flex h-10 w-[240px] items-center rounded-full px-2 sm:w-[280px]"
+                            className="neo-inset absolute left-3 right-3 top-[calc(100%+8px)] z-20 flex h-11 items-center rounded-full px-2 sm:static sm:w-[280px]"
                         >
 
                             <Search
@@ -355,7 +357,7 @@ export default function Navbar() {
                             type="button"
                             aria-label="Search courses"
                             onClick={openSearch}
-                            className="neo-button flex h-10 w-10 items-center justify-center rounded-full text-[#3f3e3e] dark:text-[#f5f7fa]"
+                            className="neo-button flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#3f3e3e] sm:h-10 sm:w-10 dark:text-[#f5f7fa]"
                         >
                             <Search
                                 size={19}
@@ -381,7 +383,7 @@ export default function Navbar() {
                                 )
                             }
                             aria-label="Toggle dark mode"
-                            className="neo-button flex h-10 w-10 items-center justify-center rounded-full text-[#3f3e3e] dark:text-[#f5f7fa]"
+                            className="neo-button flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#3f3e3e] sm:h-10 sm:w-10 dark:text-[#f5f7fa]"
                         >
 
                             {theme === "dark" ? (
@@ -575,7 +577,7 @@ export default function Navbar() {
 
                             <Link
                                 href="/register"
-                                className="neo-accent-button rounded-full px-5 py-2.5 text-sm font-bold"
+                                className="neo-accent-button whitespace-nowrap rounded-full px-2.5 py-2 text-[11px] font-bold sm:px-5 sm:py-2.5 sm:text-sm"
                             >
                                 Get started
                             </Link>
@@ -586,7 +588,39 @@ export default function Navbar() {
 
                 </div>
 
+                {/* MOBILE HAMBURGER */}
+                <button
+                    type="button"
+                    aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+                    aria-expanded={mobileMenuOpen}
+                    onClick={() => setMobileMenuOpen((open) => !open)}
+                    className="neo-button ml-0 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[#3f3e3e] md:ml-0 md:hidden dark:text-[#f5f7fa] sm:h-10 sm:w-10"
+                >
+                    {mobileMenuOpen ? <X size={21} /> : <Menu size={21} />}
+                </button>
+
             </div>
+
+            {/* MOBILE DROPDOWN: links stacked vertically */}
+            {mobileMenuOpen && (
+                <nav className="mx-3 mb-3 grid gap-2 rounded-[22px] p-3 shadow-[inset_4px_4px_8px_rgba(163,177,198,0.55),inset_-4px_-4px_8px_rgba(255,255,255,0.8)] md:hidden dark:shadow-[inset_4px_4px_8px_rgba(5,7,10,0.65),inset_-4px_-4px_8px_rgba(43,48,58,0.55)]" aria-label="Mobile navigation">
+                    {[
+                        { href: "/courses", label: "Courses" },
+                        { href: "/quizzes", label: "Quizzes" },
+                        { href: "/interviews", label: "Interviews" },
+                        ...(user ? [{ href: "/my-learning", label: "My Learning" }, { href: "/profile", label: "Profile" }] : [{ href: "/login", label: "Log in" }]),
+                    ].map((item) => (
+                        <Link key={item.href} href={item.href} onClick={() => setMobileMenuOpen(false)} className="neo-button flex min-h-11 items-center rounded-xl px-4 py-3 text-sm font-semibold text-[#222] dark:text-[#f5f7fa]">
+                            {item.label}
+                        </Link>
+                    ))}
+                    {user && (
+                        <button type="button" onClick={handleLogout} className="neo-button flex min-h-11 items-center rounded-xl px-4 py-3 text-left text-sm font-semibold text-red-600">
+                            <LogOut size={16} className="mr-2" /> Log out
+                        </button>
+                    )}
+                </nav>
+            )}
 
         </header>
     );

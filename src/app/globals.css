@@ -491,3 +491,90 @@ a {
 .dark ::-webkit-scrollbar-thumb:hover {
   background: #4b5360;
 }
+/* =========================================================
+   RESPONSIVE SAFETY NET — COURSEGUIDE AI
+   Keeps existing desktop styling while preventing mobile overflow.
+========================================================= */
+
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+body {
+  overflow-wrap: break-word;
+}
+
+img,
+video,
+canvas,
+iframe,
+svg {
+  max-width: 100%;
+}
+
+/* Long code, URLs, and content should not force the page wider. */
+pre,
+code {
+  overflow-wrap: anywhere;
+}
+
+pre {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Tables may scroll inside their own area on small screens. */
+table {
+  max-width: 100%;
+}
+
+/* Avoid mobile browser zooming into small form controls. */
+@media (max-width: 639px) {
+  input,
+  select,
+  textarea,
+  button {
+    max-width: 100%;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+
+  /* Make embedded media preserve a useful aspect ratio. */
+  iframe,
+  video {
+    height: auto;
+  }
+
+  /* Prevent large fixed shadows from clipping content at the viewport edge. */
+  .neo-surface,
+  .neo-surface-sm,
+  .neo-surface-lg,
+  .neo-inset,
+  .neo-inset-sm {
+    min-width: 0;
+  }
+}
+
+/* Respect devices that request reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
