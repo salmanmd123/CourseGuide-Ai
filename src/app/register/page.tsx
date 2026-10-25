@@ -174,31 +174,6 @@ export default function RegisterPage() {
             </Link>
 
 
-            {/* Mobile logo */}
-            <div className="mb-8 lg:hidden">
-
-              <Link
-                href="/"
-                className="flex w-fit items-center gap-3 rounded-[20px] bg-[#e0e5ec] px-4 py-3 shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]"
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-[#e0e5ec] font-bold text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.65),inset_-3px_-3px_6px_rgba(43,48,58,0.65)]">
-                  C
-                </div>
-
-                <div>
-                  <p className="font-bold text-black dark:text-[#f5f7fa]">
-                    CourseGuide
-                  </p>
-
-                  <p className="text-[9px] uppercase tracking-[0.18em] text-[orangered]">
-                    AI Learning
-                  </p>
-                </div>
-              </Link>
-
-            </div>
-
-
             {/* Heading */}
             <div>
 
@@ -335,34 +310,6 @@ export default function RegisterPage() {
               </button>
 
             </form>
-
-
-            {/* Divider */}
-            <div className="my-7 flex items-center gap-4">
-
-              <div className="h-px flex-1 bg-[#c8ced7] dark:bg-[#3a404b]" />
-
-              <span className="text-xs text-[#3f3e3e] dark:text-[#a8adb7]">
-                OR
-              </span>
-
-              <div className="h-px flex-1 bg-[#c8ced7] dark:bg-[#3a404b]" />
-
-            </div>
-
-
-            {/* Google */}
-            <button
-              type="button"
-              className="flex h-12 w-full items-center justify-center gap-3 rounded-[12px] bg-[#e0e5ec] text-sm font-medium text-[#3f3e3e] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-200 hover:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:text-[#a8adb7] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] dark:hover:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.65),inset_-3px_-3px_6px_rgba(43,48,58,0.65)]"
-            >
-              <span className="font-bold text-[orangered]">
-                G
-              </span>
-
-              Continue with Google
-            </button>
-
 
             {/* Login */}
             <p className="mt-8 text-center text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
