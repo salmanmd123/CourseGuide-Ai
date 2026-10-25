@@ -1200,8 +1200,10 @@ export default function CoursesPage() {
             <article
                 className={`
                     group
+                    min-w-0
                     overflow-hidden
-                    rounded-[24px]
+                    rounded-[20px]
+                    sm:rounded-[24px]
                     bg-[#e0e5ec] dark:bg-[#1e2229]
                     shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]
                     transition-all
@@ -1400,7 +1402,7 @@ export default function CoursesPage() {
                    CARD CONTENT
                 ================================================= */}
 
-                <div className="p-5">
+                <div className="min-w-0 p-3.5 sm:p-5">
 
                     {/* CATEGORY + LEVEL */}
 
@@ -1446,9 +1448,11 @@ export default function CoursesPage() {
                             mt-3
                             line-clamp-2
                             min-h-[48px]
-                            text-[17px]
+                            text-base
                             font-extrabold
-                            leading-6
+                            leading-[1.35]
+                            sm:text-[17px]
+                            sm:leading-6
                             tracking-tight
                             text-black dark:text-[#f5f7fa]
                         "
@@ -1464,9 +1468,12 @@ export default function CoursesPage() {
                         className="
                             mt-2
                             line-clamp-2
-                            min-h-[44px]
-                            text-sm
-                            leading-[22px]
+                            min-h-0
+                            text-[13px]
+                            leading-5
+                            sm:min-h-[44px]
+                            sm:text-sm
+                            sm:leading-[22px]
                             text-[#3f3e3e] dark:text-[#f5f7fa]
                         "
                     >
@@ -1481,14 +1488,19 @@ export default function CoursesPage() {
 
                     <div
                         className="
-                            mt-4
+                            mt-3
                             flex
+                            min-w-0
                             items-center
-                            gap-3
+                            gap-2.5
                             rounded-[16px]
+                            sm:mt-4
+                            sm:gap-3
                             bg-[#e0e5ec] dark:bg-[#1e2229]
-                            px-3
-                            py-2.5
+                            px-2.5
+                            py-2
+                            sm:px-3
+                            sm:py-2.5
                             shadow-[inset_3px_3px_6px_rgba(163,177,198,0.55),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.75),inset_-3px_-3px_6px_rgba(43,48,58,0.75)]
                         "
                     >
@@ -1496,9 +1508,11 @@ export default function CoursesPage() {
                         <div
                             className="
                                 flex
-                                h-9
-                                w-9
+                                h-8
+                                w-8
                                 shrink-0
+                                sm:h-9
+                                sm:w-9
                                 items-center
                                 justify-center
                                 rounded-full
@@ -1617,14 +1631,16 @@ export default function CoursesPage() {
 
                     <div
                         className="
-                            mt-4
+                            mt-3
                             border-t
                             border-white/50
-                            pt-4
+                            pt-3
+                            sm:mt-4
+                            sm:pt-4
                         "
                     >
 
-                        <div className="flex items-center justify-between">
+                        <div className="flex flex-wrap items-center justify-between gap-3">
 
                             {/* LIKES */}
 
@@ -1776,18 +1792,22 @@ export default function CoursesPage() {
     ========================================================= */
 
     return (
-        <main className="min-h-screen bg-[#e0e5ec] dark:bg-[#1e2229] text-black dark:text-[#f5f7fa]">
+        <main className="min-h-screen w-full min-w-0 overflow-x-hidden bg-[#e0e5ec] text-black dark:bg-[#1e2229] dark:text-[#f5f7fa]">
 
             <Navbar />
 
             <div
                 className="
                     mx-auto
+                    w-full
                     max-w-7xl
-                    px-5
-                    py-10
+                    min-w-0
+                    px-4
+                    py-6
                     sm:px-6
-                    sm:py-12
+                    sm:py-10
+                    lg:px-8
+                    lg:py-12
                 "
             >
 
@@ -1812,9 +1832,11 @@ export default function CoursesPage() {
                     <h1
                         className="
                             mt-2
-                            text-3xl
+                            text-[28px]
+                            leading-[1.12]
                             font-extrabold
                             tracking-tight
+                            sm:text-4xl
                             text-black dark:text-[#f5f7fa]
                             sm:text-4xl
                         "
@@ -1848,10 +1870,12 @@ export default function CoursesPage() {
                         handleSearchSubmit
                     }
                     className="
-                        mt-7
+                        mt-6
                         flex
+                        min-w-0
                         flex-col
                         gap-3
+                        sm:mt-7
                         sm:flex-row
                     "
                 >
@@ -1859,8 +1883,9 @@ export default function CoursesPage() {
                     <div
                         className="
                             flex
-                            h-12
+                            h-11
                             flex-1
+                            sm:h-12
                             items-center
                             rounded-full
                             bg-[#e0e5ec] dark:bg-[#1e2229]
@@ -1898,7 +1923,7 @@ export default function CoursesPage() {
                                 font-medium
                                 text-black dark:text-[#f5f7fa]
                                 outline-none
-                                placeholder:text-[#3f3e3e] dark:text-[#f5f7fa]
+                                placeholder:text-[#3f3e3e] dark:text-[#f5f7fa] h-12
                             "
                         />
 
@@ -1934,9 +1959,10 @@ export default function CoursesPage() {
                         type="submit"
                         className="
                             flex
-                            h-12
+                            h-11
                             items-center
                             justify-center
+                            sm:h-12
                             gap-2
                             rounded-full
                             bg-[orangered]
@@ -1967,11 +1993,13 @@ export default function CoursesPage() {
 
                 <div
                     className="
-                        mt-6
+                        mt-4
                         flex
                         flex-wrap
                         items-center
-                        gap-3
+                        gap-2
+                        sm:mt-6
+                        sm:gap-3
                     "
                 >
 
@@ -1985,7 +2013,7 @@ export default function CoursesPage() {
                         Preferred language:
                     </span>
 
-                    <div className="flex flex-wrap gap-3">
+                    <div className="flex flex-wrap gap-2 sm:gap-3">
 
                         {languages.map(
                             (item) => (
@@ -2001,9 +2029,11 @@ export default function CoursesPage() {
                                     }
                                     className={`
                                         rounded-full
-                                        px-4
+                                        px-3
                                         py-2
-                                        text-sm
+                                        text-xs
+                                        sm:px-4
+                                        sm:text-sm
                                         font-semibold
                                         transition-all
                                         duration-200
@@ -2122,10 +2152,11 @@ export default function CoursesPage() {
                         )
                     }
                     className="
-                        mt-6
+                        mt-4
                         flex
                         items-center
                         gap-2
+                        sm:mt-6
                         rounded-full
                         bg-[#e0e5ec] dark:bg-[#1e2229]
                         px-5
@@ -2175,8 +2206,10 @@ export default function CoursesPage() {
                     className="
                         mt-8
                         grid
-                        gap-8
-                        lg:grid-cols-[220px_1fr]
+                        min-w-0
+                        gap-5
+                        sm:gap-8
+                        lg:grid-cols-[220px_minmax(0,1fr)]
                     "
                 >
 
@@ -2375,16 +2408,21 @@ export default function CoursesPage() {
                        RESULTS
                     ================================================= */}
 
-                    <section>
+                    <section className="min-w-0">
 
                         {/* TOOLBAR */}
 
                         <div
                             className="
                                 flex
-                                items-center
+                                min-w-0
+                                flex-col
+                                items-stretch
                                 justify-between
-                                gap-4
+                                gap-3
+                                sm:flex-row
+                                sm:items-center
+                                sm:gap-4
                             "
                         >
 
@@ -2407,7 +2445,7 @@ export default function CoursesPage() {
                                 courses found
                             </p>
 
-                            <div className="relative">
+                            <div className="relative w-full sm:w-auto">
 
                                 <select
                                     value={
@@ -2422,8 +2460,10 @@ export default function CoursesPage() {
                                         )
                                     }
                                     className="
+                                        w-full
                                         appearance-none
                                         rounded-full
+                                        sm:w-auto
                                         bg-[#e0e5ec] dark:bg-[#1e2229]
                                         px-4
                                         py-2.5
@@ -2499,10 +2539,15 @@ export default function CoursesPage() {
                             0 && (
                                 <div
                                     className="
-                                        mt-6
+                                        mt-4
                                         grid
-                                        gap-6
+                                        min-w-0
+                                        grid-cols-1
+                                        gap-5
+                                        sm:mt-6
+                                        sm:gap-5
                                         sm:grid-cols-2
+                                        sm:gap-5
                                         xl:grid-cols-3
                                     "
                                 >
@@ -2533,10 +2578,13 @@ export default function CoursesPage() {
                                 <div
                                     className="
                                         mt-6
-                                        rounded-[28px]
+                                        rounded-[24px]
                                         bg-[#e0e5ec] dark:bg-[#1e2229]
-                                        px-6
-                                        py-20
+                                        px-4
+                                        py-12
+                                        sm:rounded-[28px]
+                                        sm:px-6
+                                        sm:py-20
                                         text-center
                                         shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]
                                     "
