@@ -80,7 +80,7 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#e0e5ec] text-black transition-colors duration-300 dark:bg-[#1a1d23] dark:text-[#f5f7fa]">
+    <main className="min-h-screen w-full min-w-0 max-w-full overflow-x-clip bg-[#e0e5ec] text-black transition-colors duration-300 dark:bg-[#1a1d23] dark:text-[#f5f7fa]">
 
       {/* =========================================================
           NAVBAR
@@ -94,21 +94,21 @@ export default function Home() {
 
       <section className="bg-[#e0e5ec] dark:bg-[#1a1d23]">
 
-        <div className="mx-auto max-w-[1200px] px-8 pb-28 pt-16">
+        <div className="mx-auto w-full min-w-0 max-w-[1200px] px-4 pb-12 pt-8 sm:px-6 md:px-8 md:pb-28 md:pt-16">
 
-          <div className="grid items-center gap-16 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="grid min-w-0 items-center gap-8 md:gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
 
             {/* =====================================================
                 HERO LEFT
             ===================================================== */}
 
-            <div className="max-w-[650px]">
+            <div className="w-full min-w-0 max-w-[650px]">
 
               {/* EYEBROW */}
 
               <div
                 className="
-                  mb-7
+                  mb-4
                   inline-flex
                   items-center
                   gap-2
@@ -143,13 +143,13 @@ export default function Home() {
 
               <h1
                 className="
-                  max-w-[680px]
-                  text-[3.5rem]
+                  w-full max-w-[680px] break-words
+                  text-[3.25rem] 
                   font-extrabold
                   leading-[1.15]
                   tracking-[-1px]
                   text-black
-                  sm:text-[3.8rem]
+                  sm:text-[4rem]
                   lg:text-[4rem]
                   dark:text-[#f5f7fa]
                 "
@@ -169,10 +169,10 @@ export default function Home() {
 
               <p
                 className="
-                  mt-5
+                  mt-3
                   max-w-[500px]
-                  text-[16px]
-                  leading-7
+                  text-[14px]
+                  leading-6 sm:text-[16px] sm:leading-7
                   text-[#3f3e3e]
                   sm:text-[17px]
                   dark:text-[#a8adb7]
@@ -187,9 +187,10 @@ export default function Home() {
               <form
                 onSubmit={handleSearch}
                 className="
-                  mt-7
+                  mt-5
                   flex
-                  h-[58px]
+                  w-full min-w-0
+                  h-[48px] sm:h-[58px]
                   max-w-[520px]
                   items-center
                   rounded-full
@@ -231,11 +232,11 @@ export default function Home() {
                 <button
                   type="submit"
                   className="
-                    h-[46px]
+                    h-[38px] sm:h-[46px]
                     rounded-full
                     bg-[orangered]
-                    px-7
-                    text-[13px]
+                    px-4 sm:px-7
+                    text-[12px] sm:text-[13px]
                     font-semibold
                     text-white
                     shadow-[5px_5px_12px_rgba(255,69,0,0.28),-5px_-5px_12px_rgba(255,255,255,0.8)]
@@ -254,13 +255,13 @@ export default function Home() {
 
               {/* TOPICS */}
 
-              <div className="mt-5 flex flex-wrap gap-3">
+              <div className="mt-3 flex flex-wrap gap-2 sm:mt-5 sm:gap-3">
 
                 {[
                   "Python",
                   "Data Structures",
                   "Machine Learning",
-                  "DBMS",
+                  
                 ].map((topic) => (
                   <button
                     key={topic}
@@ -269,8 +270,8 @@ export default function Home() {
                     className="
                       rounded-[12px]
                       bg-[#e0e5ec]
-                      px-4
-                      py-2
+                      px-3
+                      py-1.5 sm:px-4 sm:py-2
                       text-[12px]
                       font-semibold
                       text-[#3f3e3e]
@@ -301,20 +302,19 @@ export default function Home() {
                 HERO RIGHT
             ===================================================== */}
 
-            <div className="relative flex justify-center">
+            <div className="relative flex w-full min-w-0 justify-center">
 
               {/* DASHBOARD */}
 
               <div
                 className="
                   flex
-                  w-full
-                  max-w-[420px]
+                  w-full min-w-0 max-w-[420px]
                   flex-col
-                  gap-6
-                  rounded-[30px]
+                  gap-3 sm:gap-6
+                  rounded-[24px] sm:rounded-[30px]
                   bg-[#e0e5ec]
-                  p-8
+                  p-4 sm:p-8
                   shadow-[14px_14px_28px_rgba(163,177,198,0.6),-14px_-14px_28px_rgba(255,255,255,0.8)]
 
                   dark:bg-[#1e2229]
@@ -471,15 +471,15 @@ export default function Home() {
 
                 {/* MINI CARDS */}
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
 
                   {/* AI NOTES */}
 
                   <Link
                     href="/ai-notes"
                     className="
-      flex flex-col items-start gap-1 rounded-[20px]
-      bg-[#e0e5ec] p-4
+      flex flex-col items-start gap-1 rounded-[18px]
+      bg-[#e0e5ec] p-3 sm:rounded-[20px] sm:p-4
       shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]
       transition-all duration-200 hover:-translate-y-[2px]
       dark:bg-[#1a1d23]
@@ -504,8 +504,8 @@ export default function Home() {
                   <Link
                     href="/ai-tutor"
                     className="
-      flex flex-col items-start gap-1 rounded-[20px]
-      bg-[#e0e5ec] p-4
+      flex flex-col items-start gap-1 rounded-[18px]
+      bg-[#e0e5ec] p-3 sm:rounded-[20px] sm:p-4
       shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]
       transition-all duration-200 hover:-translate-y-[2px]
       dark:bg-[#1a1d23]
@@ -530,8 +530,8 @@ export default function Home() {
                   <Link
                     href="/quizzes"
                     className="
-      flex flex-col items-start gap-1 rounded-[20px]
-      bg-[#e0e5ec] p-4
+      flex flex-col items-start gap-1 rounded-[18px]
+      bg-[#e0e5ec] p-3 sm:rounded-[20px] sm:p-4
       shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]
       transition-all duration-200 hover:-translate-y-[2px]
       dark:bg-[#1a1d23]
@@ -556,8 +556,8 @@ export default function Home() {
                   <Link
                     href="/interviews"
                     className="
-      flex flex-col items-start gap-1 rounded-[20px]
-      bg-[#e0e5ec] p-4
+      flex flex-col items-start gap-1 rounded-[18px]
+      bg-[#e0e5ec] p-3 sm:rounded-[20px] sm:p-4
       shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)]
       transition-all duration-200 hover:-translate-y-[2px]
       dark:bg-[#1a1d23]
@@ -595,14 +595,14 @@ export default function Home() {
 
       <section
         id="features"
-        className="bg-[#e0e5ec] dark:bg-[#1a1d23] px-8 py-24"
+        className="w-full min-w-0 overflow-x-clip bg-[#e0e5ec] px-4 py-14 dark:bg-[#1a1d23] sm:px-6 md:px-8 md:py-24"
       >
 
-        <div className="mx-auto max-w-[1200px]">
+        <div className="mx-auto w-full min-w-0 max-w-[1200px]">
 
           {/* HEADING */}
 
-          <div className="mx-auto mb-16 max-w-[650px] text-center">
+          <div className="mx-auto mb-8 max-w-[650px] text-center sm:mb-12 md:mb-16">
 
             <span
               className="
@@ -620,7 +620,7 @@ export default function Home() {
 
             <h2
               className="
-                text-[2.5rem]
+                text-[1.9rem] sm:text-[2.2rem] md:text-[2.5rem]
                 font-extrabold
                 leading-[1.2]
                 tracking-[-0.5px]
@@ -633,8 +633,8 @@ export default function Home() {
 
             <p
               className="
-                mt-3
-                text-[16px]
+                mt-2
+                text-[14px] sm:mt-3 sm:text-[16px]
                 text-[#3f3e3e]
                 dark:text-[#a8adb7]
               "
@@ -657,12 +657,12 @@ export default function Home() {
                   key={feature.title}
                   className="
                     flex
-                    min-h-[250px]
+                    min-h-[190px] sm:min-h-[230px] md:min-h-[250px]
                     flex-col
                     items-start
-                    rounded-[30px]
+                    rounded-[24px] sm:rounded-[30px]
                     bg-[#e0e5ec]
-                    p-7
+                    p-5 sm:p-6 md:p-7
                     shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]
                     transition-all
                     duration-300
@@ -742,14 +742,14 @@ export default function Home() {
 
       <section
         id="how-it-works"
-        className="bg-[#e0e5ec] dark:bg-[#1a1d23] px-8 py-24"
+        className="w-full min-w-0 overflow-x-clip bg-[#e0e5ec] px-4 py-14 dark:bg-[#1a1d23] sm:px-6 md:px-8 md:py-24"
       >
 
-        <div className="mx-auto max-w-[1200px]">
+        <div className="mx-auto w-full min-w-0 max-w-[1200px]">
 
           {/* HEADING */}
 
-          <div className="mx-auto mb-16 max-w-[650px] text-center">
+          <div className="mx-auto mb-8 max-w-[650px] text-center sm:mb-12 md:mb-16">
 
             <span
               className="
@@ -767,7 +767,7 @@ export default function Home() {
 
             <h2
               className="
-                text-[2.5rem]
+                text-[1.9rem] sm:text-[2.2rem] md:text-[2.5rem]
                 font-extrabold
                 leading-[1.2]
                 tracking-[-0.5px]
@@ -782,7 +782,7 @@ export default function Home() {
 
           {/* STEPS */}
 
-          <div className="mb-20 grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mb-10 grid gap-4 sm:mb-20 sm:gap-7 sm:grid-cols-2 lg:grid-cols-4">
 
             {[
               [
@@ -810,9 +810,9 @@ export default function Home() {
               <div
                 key={number}
                 className="
-                  rounded-[30px]
+                  rounded-[24px] sm:rounded-[30px]
                   bg-[#e0e5ec]
-                  p-7
+                  p-5 sm:p-7
                   shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)]
                   transition-all
                   duration-200
@@ -829,7 +829,7 @@ export default function Home() {
                 <span
                   className="
                     block
-                    text-[2rem]
+                    text-[1.7rem] sm:text-[2rem]
                     font-extrabold
                     leading-none
                     text-[orangered]
@@ -883,10 +883,10 @@ export default function Home() {
               flex-col
               items-start
               justify-between
-              gap-8
-              rounded-[30px]
+              gap-5 sm:gap-8
+              rounded-[24px] sm:rounded-[30px]
               bg-[#e0e5ec]
-              p-8
+              p-6 sm:p-8
               shadow-[14px_14px_28px_rgba(163,177,198,0.6),-14px_-14px_28px_rgba(255,255,255,0.8)]
               sm:p-12
               md:flex-row
@@ -901,7 +901,7 @@ export default function Home() {
 
               <h2
                 className="
-                  text-[2rem]
+                  text-[1.65rem] sm:text-[2rem]
                   font-extrabold
                   text-black
                   dark:text-[#f5f7fa]
@@ -913,8 +913,8 @@ export default function Home() {
               <p
                 className="
                   mt-2
-                  text-[15px]
-                  text-[#3f3e3e]
+                  text-[14px]
+                  text-[#3f3e3e] sm:text-[15px]
                   dark:text-[#a8adb7]
                 "
               >
@@ -932,8 +932,8 @@ export default function Home() {
                 gap-3
                 rounded-full
                 bg-[orangered]
-                px-7
-                py-4
+                px-5
+                py-3 sm:px-7 sm:py-4
                 text-[14px]
                 font-bold
                 text-white
@@ -973,8 +973,8 @@ export default function Home() {
           border-t
           border-white/40
           bg-[#e0e5ec]
-          px-8
-          py-10
+          px-4
+          py-6 sm:px-8 sm:py-10
           dark:border-[#3b414c]
           dark:bg-[#1a1d23]
         "
