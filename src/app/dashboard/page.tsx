@@ -1,4 +1,3 @@
-
 import ProgressAutoRefresh from "@/components/progress-auto-refresh";
 import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
@@ -438,12 +437,15 @@ export default async function DashboardPage() {
                 : "No quizzes completed yet"}
             </p>
           </div>
-          {/* INTERVIEWS COMPLETED */}
+          {/* INTERVIEW PRACTICE */}
 
-          <div className="rounded-[30px] bg-[#e0e5ec] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
+          <Link
+            href="/interviews"
+            className="block rounded-[30px] bg-[#e0e5ec] p-5 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-200 hover:-translate-y-1 dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]"
+          >
             <div className="flex items-center justify-between">
               <p className="text-sm text-[#3f3e3e] dark:text-[#a8adb7]">
-                Interviews completed
+                Interview practice
               </p>
 
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
@@ -451,14 +453,14 @@ export default async function DashboardPage() {
               </div>
             </div>
 
-            <p className="mt-4 text-3xl font-bold text-black dark:text-[#f5f7fa]">
-              0
+            <p className="mt-4 text-2xl font-bold text-black dark:text-[#f5f7fa]">
+              Start now
             </p>
 
             <p className="mt-1 text-xs text-[#3f3e3e] dark:text-[#a8adb7]/70">
-              Interview practice sessions
+              Practice interviews and prepare for placements
             </p>
-          </div>
+          </Link>
         </div>
 
         {/* CONTINUE LEARNING */}
@@ -641,34 +643,29 @@ export default async function DashboardPage() {
 
             {/* INTERVIEW PREPARATION */}
 
-            <div className="flex min-h-[210px] flex-col justify-between rounded-[30px] bg-[#e0e5ec] p-6 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]">
+            <Link
+              href="/interviews"
+              className="group flex min-h-[210px] flex-col justify-between rounded-[30px] bg-[#e0e5ec] p-6 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[12px_12px_22px_rgba(163,177,198,0.65),-12px_-12px_22px_rgba(255,255,255,0.9)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] dark:hover:shadow-[12px_12px_22px_rgba(5,7,10,0.8),-12px_-12px_22px_rgba(43,48,58,0.8)]"
+            >
               <div>
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
                   <Target size={23} />
                 </div>
 
-                <div className="mt-5 flex flex-wrap items-center gap-2">
-                  <h3 className="text-lg font-bold text-black dark:text-[#f5f7fa]">
-                    Interview preparation
-                  </h3>
-
-                  <span className="rounded-full bg-[#e0e5ec] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[#3f3e3e] shadow-[inset_2px_2px_4px_rgba(163,177,198,0.5),inset_-2px_-2px_4px_rgba(255,255,255,0.7)] dark:bg-[#272c35] dark:text-[#a8adb7] dark:shadow-none">
-                    Coming soon
-                  </span>
-                </div>
+                <h3 className="mt-5 text-lg font-bold text-black dark:text-[#f5f7fa]">
+                  Interview preparation
+                </h3>
 
                 <p className="mt-2 max-w-md text-sm leading-6 text-[#3f3e3e] dark:text-[#a8adb7]">
-                  Prepare for technical and HR interviews with programming,
-                  data structures, DBMS, operating systems, computer networks,
-                  aptitude and more.
+                  Practise aptitude, coding, technical, project and HR interview rounds with AI-powered interview feedback.
                 </p>
               </div>
 
-              <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#3f3e3e]/70 dark:text-[#a8adb7]/70">
-                Interview practice will be available here
-                <ArrowRight size={16} />
+              <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[orangered]">
+                Start interview practice
+                <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
               </span>
-            </div>
+            </Link>
           </div>
         </section>
 
