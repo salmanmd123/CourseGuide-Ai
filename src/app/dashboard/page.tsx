@@ -232,8 +232,9 @@ export default async function DashboardPage() {
      FIND CURRENT COURSE
   ========================================================= */
 
-  let currentCourse =
-    allCourses.length > 0 ? allCourses[0] : null;
+  // Only show a course here if the user has genuinely started it
+  // and it still has unfinished lessons. Never default to the first course.
+  let currentCourse: (typeof allCourses)[number] | null = null;
 
   let currentCourseProgress = 0;
   let currentCourseCompleted = 0;
@@ -241,33 +242,24 @@ export default async function DashboardPage() {
 
   let currentLesson: (typeof allLessons)[number] | null = null;
 
-  if (courseProgress.length > 0) {
-    const startedCourses = courseProgress.filter(
+  const startedUnfinishedCourses = courseProgress
+    .filter(
       (item) =>
-        item.totalWatchedSeconds > 0 &&
+        (item.totalWatchedSeconds > 0 || item.completed > 0) &&
         item.percentage < 100
+    )
+    .sort(
+      (a, b) =>
+        b.totalWatchedSeconds - a.totalWatchedSeconds
     );
 
-    if (startedCourses.length > 0) {
-      startedCourses.sort(
-        (a, b) =>
-          b.totalWatchedSeconds - a.totalWatchedSeconds
-      );
+  if (startedUnfinishedCourses.length > 0) {
+    const selected = startedUnfinishedCourses[0];
 
-      const selected = startedCourses[0];
-
-      currentCourse = selected.course;
-      currentCourseProgress = selected.percentage;
-      currentCourseCompleted = selected.completed;
-      currentCourseTotal = selected.total;
-    } else {
-      const first = courseProgress[0];
-
-      currentCourse = first.course;
-      currentCourseProgress = first.percentage;
-      currentCourseCompleted = first.completed;
-      currentCourseTotal = first.total;
-    }
+    currentCourse = selected.course;
+    currentCourseProgress = selected.percentage;
+    currentCourseCompleted = selected.completed;
+    currentCourseTotal = selected.total;
   }
 
   /* =========================================================
@@ -575,11 +567,11 @@ export default async function DashboardPage() {
               </div>
 
               <h3 className="mt-4 font-semibold text-black dark:text-[#f5f7fa]">
-                No courses available
+                Ready to start learning?
               </h3>
 
               <p className="mt-2 text-sm text-[#3f3e3e] dark:text-[#a8adb7]/70">
-                Search for a course to get started.
+                You haven&apos;t started a course yet. Browse the catalog and choose your first course.
               </p>
 
               <Link
