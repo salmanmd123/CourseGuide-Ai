@@ -22,11 +22,28 @@ const tabs: { id: Tab; label: string; icon: typeof FileText }[] = [
 export default function LessonContentTabs({ courseId, lessonId, courseTitle, lessonTitle }: LessonContentTabsProps) {
   const [activeTab, setActiveTab] = useState<Tab>("ai-notes");
   return <div className="mt-5 min-w-0 sm:mt-8">
-    <nav className="border-b border-[#cbd2dc] dark:border-[#343a45]">
-      <div className="flex max-w-full gap-1 overflow-x-auto overscroll-x-contain sm:gap-2">{tabs.map(({ id, label, icon: Icon }) => {
-        const active = activeTab === id;
-        return <button key={id} type="button" onClick={() => setActiveTab(id)} aria-pressed={active} className={`relative flex shrink-0 items-center gap-2 rounded-none px-3 py-3 text-[11px] font-semibold sm:px-4 sm:text-xs transition-colors duration-200 ${active ? "border-b-2 border-[#ff4500] text-[#ff4500] dark:text-[orangered]" : "border-b-2 border-transparent text-[#3f3e3e] hover:text-[#ff4500] dark:text-[#a8adb7] dark:hover:text-[orangered]"}`}><Icon size={15} /><span>{label}</span></button>;
-      })}</div>
+    <nav className="w-full border-b border-[#cbd2dc] dark:border-[#343a45]">
+      <div className="flex w-full gap-0 sm:gap-2">
+        {tabs.map(({ id, label, icon: Icon }) => {
+          const active = activeTab === id;
+
+          return (
+            <button
+              key={id}
+              type="button"
+              onClick={() => setActiveTab(id)}
+              aria-pressed={active}
+              className={`relative flex min-w-0 flex-1 items-center justify-center gap-1.5 rounded-none px-1 py-3 text-[11px] font-semibold transition-colors duration-200 sm:gap-2 sm:px-4 sm:text-xs ${active
+                  ? "border-b-2 border-[#ff4500] text-[#ff4500] dark:text-[orangered]"
+                  : "border-b-2 border-transparent text-[#3f3e3e] hover:text-[#ff4500] dark:text-[#a8adb7] dark:hover:text-[orangered]"
+                }`}
+            >
+              <Icon size={15} className="shrink-0" />
+              <span className="truncate">{label}</span>
+            </button>
+          );
+        })}
+      </div>
     </nav>
     <div className="mt-5 min-w-0 sm:mt-8">
       {activeTab === "ai-notes" && <section><AiNotes lessonId={lessonId} /></section>}
