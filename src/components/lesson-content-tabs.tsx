@@ -12,11 +12,10 @@ type LessonContentTabsProps = {
   courseTitle: string;
   lessonTitle: string;
 };
-type Tab = "ai-notes" | "my-notes" | "quiz" | "ai-tutor";
+type Tab = "ai-notes" | "my-notes" | "ai-tutor";
 const tabs: { id: Tab; label: string; icon: typeof FileText }[] = [
   { id: "ai-notes", label: "AI Notes", icon: FileText },
   { id: "my-notes", label: "My Notes", icon: StickyNote },
-  { id: "quiz", label: "Quiz", icon: Trophy },
   { id: "ai-tutor", label: "AI Tutor", icon: MessageCircle },
 ];
 
@@ -32,7 +31,6 @@ export default function LessonContentTabs({ courseId, lessonId, courseTitle, les
     <div className="mt-8">
       {activeTab === "ai-notes" && <section><AiNotes lessonId={lessonId} /></section>}
       {activeTab === "my-notes" && <section><MyNotes courseId={courseId} lessonId={lessonId} courseTitle={courseTitle} lessonTitle={lessonTitle} /></section>}
-      {activeTab === "quiz" && <section><div className="rounded-[20px] bg-[#e0e5ec] p-6 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] sm:p-7"><div className="flex items-start gap-4"><div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[12px] bg-[#e0e5ec] text-[#ff4500] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:text-[orangered]"><Trophy size={19} /></div><div className="min-w-0"><h2 className="text-base font-bold text-black dark:text-[#f5f7fa]">Test yourself</h2><p className="mt-1.5 max-w-xl text-sm leading-6 text-[#3f3e3e] dark:text-[#a8adb7]">Take a short quiz to check your understanding of this lesson.</p><button type="button" className="mt-5 inline-flex items-center gap-2 rounded-[12px] bg-[#ff4500] px-4 py-2.5 text-xs font-semibold text-white shadow-[5px_5px_12px_rgba(163,177,198,0.5),-5px_-5px_12px_rgba(255,255,255,0.8)] transition-all duration-200 hover:bg-red-600 dark:bg-[orangered] dark:hover:bg-[red]">Start quiz <ArrowRight size={14} /></button></div></div></div></section>}
       {activeTab === "ai-tutor" && <section><AiTutor lessonId={lessonId} courseTitle={courseTitle} lessonTitle={lessonTitle} /></section>}
     </div>
   </div>;
