@@ -462,7 +462,7 @@ export default async function LearningPage({
               LESSON NAVIGATION
           ===================================================== */}
 
-        <div className="w-full min-w-0 border-t border-[#d2d7df] dark:border-[#303640] px-0 py-4">
+        <div className="w-full min-w-0 border-t border-[#d2d7df] dark:border-[#303640] px-0 lg:py-4 sm:py-0">
           <div className="mx-auto flex w-full max-w-7xl min-w-0 items-center justify-between gap-4 px-1 py-2 sm:px-2">
             {/* PREVIOUS */}
 
