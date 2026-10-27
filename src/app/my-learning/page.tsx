@@ -565,7 +565,7 @@ export default async function MyLearningPage() {
                           COURSE INFORMATION
                       =================================== */}
 
-                      <div className="p-6 sm:p-7">
+                      <div className="p-4">
 
                         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
 
