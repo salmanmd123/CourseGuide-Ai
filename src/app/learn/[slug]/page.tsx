@@ -355,7 +355,7 @@ export default async function LearningPage({
       ===================================================== */}
 
       <header className="sticky top-0 z-50 w-full min-w-0 bg-[#e0e5ec] dark:bg-[#1e2229] px-3 py-3 sm:px-5">
-        <div className="flex h-14 min-w-0 items-center justify-between rounded-[20px] bg-[#e0e5ec] dark:bg-[#1e2229] px-3 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] sm:px-5">
+        <div className="flex min-h-14 min-w-0 items-center justify-between gap-2 rounded-[20px] bg-[#e0e5ec] px-2.5 py-2 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] sm:px-5">
           {/* LEFT */}
 
           <div className="flex min-w-0 items-center gap-3 sm:gap-5">
@@ -426,8 +426,8 @@ export default async function LearningPage({
             VIDEO AREA
         =================================================== */}
 
-        <section className="min-w-0 max-w-full overflow-hidden rounded-[30px] bg-[#e0e5ec] dark:bg-[#1e2229] p-2 shadow-[14px_14px_28px_rgba(163,177,198,0.6),-14px_-14px_28px_rgba(255,255,255,0.8)] dark:shadow-[14px_14px_28px_rgba(5,7,10,0.8),-14px_-14px_28px_rgba(43,48,58,0.8)] sm:p-3">
-          <div className="w-full max-w-full overflow-hidden rounded-[24px] bg-[#e0e5ec] dark:bg-[#1e2229] shadow-[inset_6px_6px_10px_rgba(163,177,198,0.7),inset_-6px_-6px_10px_rgba(255,255,255,0.9)] dark:shadow-[inset_6px_6px_10px_rgba(5,7,10,0.75),inset_-6px_-6px_10px_rgba(43,48,58,0.75)]">
+        <section className="min-w-0 max-w-full overflow-hidden">
+          <div className="w-full max-w-full overflow-hidden">
             {currentLesson.videoUrl ? (
               <LearningClient
                 lessonId={currentLesson.id}
@@ -465,8 +465,8 @@ export default async function LearningPage({
               LESSON NAVIGATION
           ===================================================== */}
 
-        <div className="w-full min-w-0 border-t border-[#d2d7df] dark:border-[#303640] bg-[#e0e5ec] dark:bg-[#1a1d23] px-3 py-4 sm:px-5">
-          <div className="mx-auto flex w-full max-w-7xl min-w-0 items-center justify-between gap-4 rounded-[20px] bg-[#e0e5ec] dark:bg-[#1e2229] px-4 py-3 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] sm:px-5">
+        <div className="w-full min-w-0 border-t border-[#d2d7df] dark:border-[#303640] px-0 py-4">
+          <div className="mx-auto flex w-full max-w-7xl min-w-0 items-center justify-between gap-4 px-1 py-2 sm:px-2">
             {/* PREVIOUS */}
 
             {previousLesson ? (
@@ -515,10 +515,10 @@ export default async function LearningPage({
             COURSE CONTENT SIDEBAR
         =================================================== */}
 
-        <aside className="min-w-0 max-w-full overflow-hidden rounded-[30px] bg-[#e0e5ec] dark:bg-[#1e2229] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] lg:sticky lg:top-[76px] lg:h-[calc(100vh-92px)]">
+        <aside className="flex h-[380px] max-h-[60vh] min-h-[280px] min-w-0 max-w-full flex-col overflow-hidden rounded-[30px] bg-[#e0e5ec] dark:bg-[#1e2229] shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] sm:h-[440px] sm:max-h-[65vh] lg:sticky lg:top-[76px] lg:h-[calc(100vh-92px)] lg:max-h-none">
           {/* SIDEBAR HEADER */}
 
-          <div className="flex items-center justify-between px-5 py-4">
+          <div className="flex shrink-0 items-center justify-between px-5 py-4">
             <div className="min-w-0">
               <p className="text-sm font-bold text-black dark:text-[#f5f7fa]">
                 Course content
@@ -538,7 +538,7 @@ export default async function LearningPage({
 
           {/* SIDEBAR PROGRESS */}
 
-          <div className="mx-4 rounded-[20px] bg-[#e0e5ec] dark:bg-[#1e2229] px-4 py-3 shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
+          <div className="mx-4 shrink-0 rounded-[20px] bg-[#e0e5ec] dark:bg-[#1e2229] px-4 py-3 shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
             <div className="flex items-center justify-between text-xs">
               <span className="text-[#3f3e3e] dark:text-[#a8adb7]/60">
                 Your progress
@@ -567,7 +567,7 @@ export default async function LearningPage({
               LESSON LIST
           ================================================= */}
 
-          <div className="min-h-0 overflow-y-auto overflow-x-hidden px-3 pb-3 lg:h-[calc(100%-125px)]">
+          <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain px-3 pb-3" style={{ scrollbarWidth: "thin", scrollbarColor: "orangered transparent" }}>
             {courseLessons.map(
               (
                 lessonItem,
@@ -589,8 +589,8 @@ export default async function LearningPage({
                     }
                     href={`/learn/${course.slug}?lesson=${lessonItem.id}`}
                     className={`mt-2 flex w-full min-w-0 items-center gap-3 rounded-[20px] px-4 py-3 text-left transition-all duration-200 ${current
-                        ? "bg-[#e0e5ec] dark:bg-[#1e2229] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]"
-                        : "hover:bg-[#e0e5ec] dark:hover:bg-[#252a32] hover:shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:hover:shadow-[5px_5px_10px_rgba(5,7,10,0.55),-5px_-5px_10px_rgba(43,48,58,0.55)]"
+                        ? "bg-[#d5dce6] dark:bg-[#252a32]"
+                        : "hover:bg-[#d5dce6] dark:hover:bg-[#252a32]"
                       }`}
                   >
                     {/* NUMBER */}
@@ -660,12 +660,13 @@ export default async function LearningPage({
       ===================================================== */}
 
       <section className="w-full min-w-0 max-w-full overflow-hidden border-t border-[#d2d7df] dark:border-[#303640] bg-[#e0e5ec] dark:bg-[#1a1d23]">
-        <div className="mx-auto w-full max-w-7xl min-w-0 px-5 py-8 sm:px-8 lg:px-10">
+        {/* <div className="mx-auto w-full max-w-7xl min-w-0 px-5 py-8 sm:px-8 lg:px-10"> */}
+          <div className="mx-auto w-full max-w-7xl min-w-0 py-8  lg:px-10">
           {/* =================================================
               LESSON INFORMATION
           ================================================= */}
 
-          <div className="min-w-0">
+          <div className="px-5 min-w-0">
             <p className="text-xs font-semibold uppercase tracking-wider text-[orangered]">
               LESSON{" "}
               {String(
@@ -689,7 +690,7 @@ export default async function LearningPage({
               AI NOTES / QUIZ / AI TUTOR
           ================================================= */}
 
-          <div className="mt-8 w-full min-w-0 max-w-full overflow-hidden rounded-[30px] bg-[#e0e5ec] dark:bg-[#1e2229] p-2 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] sm:p-3">
+          <div className="mt-8 w-full min-w-0 max-w-full">
             <LessonContentTabs
               courseId={course.id}
               lessonId={currentLesson.id}

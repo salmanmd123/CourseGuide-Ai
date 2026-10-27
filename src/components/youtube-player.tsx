@@ -134,6 +134,20 @@ export default function YouTubePlayer({
           events: {
             // READY
             onReady: (event: any) => {
+              // The IFrame API replaces the target div with its own iframe.
+              // Explicitly size that generated iframe to the responsive 16:9
+              // wrapper; otherwise it can retain a smaller default size on mobile.
+              const iframe = event.target.getIframe?.();
+              if (iframe) {
+                iframe.style.position = "absolute";
+                iframe.style.inset = "0";
+                iframe.style.display = "block";
+                iframe.style.width = "100%";
+                iframe.style.height = "100%";
+                iframe.style.maxWidth = "100%";
+                iframe.style.border = "0";
+              }
+
               if (startSeconds > 0) {
                 event.target.seekTo(
                   Math.floor(startSeconds),
@@ -241,40 +255,14 @@ export default function YouTubePlayer({
     };
   }, [videoId, startSeconds, lessonId]);
 
-  // UI — unchanged
+  // Responsive 16:9 player. The API replaces the inner div with an iframe,
+  // so the iframe itself is sized in onReady above as well as by these styles.
   return (
-    <div
-      className="
-        aspect-video
-        w-full
-        rounded-[20px]
-        bg-[#e0e5ec]
-        p-2
-        dark:bg-[#1e2229]
-      "
-      style={{
-        boxShadow:
-          "9px 9px 16px rgba(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.8)",
-      }}
-    >
+    <div className="relative isolate aspect-video w-full min-w-0 max-w-full overflow-hidden rounded-[12px] bg-black shadow-sm">
       <div
-        className="
-          h-full
-          w-full
-          overflow-hidden
-          rounded-[12px]
-          bg-black
-        "
-        style={{
-          boxShadow:
-            "inset 3px 3px 6px rgba(0, 0, 0, 0.35), inset -3px -3px 6px rgba(255, 255, 255, 0.08)",
-        }}
-      >
-        <div
-          id="youtube-player"
-          className="h-full w-full"
-        />
-      </div>
+        id="youtube-player"
+        className="absolute inset-0 h-full w-full"
+      />
     </div>
   );
 }
