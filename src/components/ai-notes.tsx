@@ -444,7 +444,7 @@ export default function AiNotes({
     }
 
     return (
-        <div className="py-2 sm:py-3">
+        <div className="px-4 py-2 sm:py-3">
             <div className="flex items-center gap-3">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#e0e5ec] text-[#ff4500] shadow-[5px_5px_10px_rgba(163,177,198,0.5),-5px_-5px_10px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:text-[orangered] dark:shadow-[5px_5px_10px_rgba(5,7,10,0.7),-5px_-5px_10px_rgba(43,48,58,0.7)]">
                     <Sparkles size={19} />
