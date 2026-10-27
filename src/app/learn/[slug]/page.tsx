@@ -373,9 +373,6 @@ export default async function LearningPage({
             <div className="hidden h-7 w-px shrink-0 bg-[#c7cdd5] dark:bg-[#343a45] sm:block" />
 
             <div className="flex min-w-0 items-center gap-3">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[12px] bg-[#e0e5ec] dark:bg-[#1e2229] text-xs font-bold text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">
-                C
-              </div>
 
               <div className="min-w-0">
                 <p className="max-w-[180px] truncate text-sm font-semibold text-black dark:text-[#f5f7fa] sm:max-w-[280px]">
