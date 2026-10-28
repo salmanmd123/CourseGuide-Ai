@@ -583,11 +583,6 @@ export default function QuizzesPage() {
                   </>
                 )}
               </button>
-
-              <p className="text-center text-xs leading-5 opacity-50">
-                AI-generated questions may occasionally contain errors. Review
-                explanations and verify important technical details.
-              </p>
             </form>
           </section>
         </div>
