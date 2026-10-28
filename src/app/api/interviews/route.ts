@@ -1619,68 +1619,52 @@ function selectCodingQuestions(count = 4): CodingQuestion[] {
   return shuffle(CODING_QUESTION_BANK).slice(0, Math.min(count, CODING_QUESTION_BANK.length));
 }
 
-async function generateMcqBatch(
-  categories: McqCategory[],
-  countPerCategory: number,
+async function generateMcqCategory(
+  category: McqCategory,
+  count: number,
   seed: string,
   excludedQuestions: string[] = []
 ): Promise<McqQuestion[]> {
-  const total = categories.length * countPerCategory;
+  const categoryGuidance: Record<McqCategory, string> = {
+    "Quantitative Aptitude":
+      "Use arithmetic, percentages, ratios, averages, profit/loss, time/work, or speed/distance. Ensure every calculation is correct and the exact answer appears in exactly one option.",
+    "Logical Reasoning":
+      "Use sequences, patterns, deductions, arrangements, or analytical reasoning. Ensure the rule is clear and only one option is defensibly correct.",
+    "Verbal Ability":
+      "Use grammar, vocabulary, sentence correction, fill-in-the-blanks, or short comprehension. Use standard contemporary English and ensure only one answer is correct.",
+    "Technical MCQs":
+      "Use established entry-level computer-science topics: programming, data structures, algorithms, OOP, SQL/DBMS, operating systems, or networking. Specify the language/assumptions when needed.",
+  };
 
   const exclusionList = excludedQuestions
     .map((question, index) => `${index + 1}. ${question}`)
-    .join("\\n")
-    .slice(0, 18000);
+    .join("\n")
+    .slice(0, 7000);
 
   const prompt = `
-Generate exactly ${total} FRESH, original campus-placement MCQs for entry-level computer science candidates.
+Generate exactly ${count} fresh, original campus-placement multiple-choice questions for entry-level computer science candidates.
 
-IMPORTANT NOVELTY REQUIREMENT:
-The candidate has already seen the questions listed under "PREVIOUSLY USED QUESTIONS".
-Do not repeat any of them. Do not lightly paraphrase them. Do not reuse the same question structure with only names, numbers, dates, objects, or words changed.
-For example, if a previous question asks for the average after one student leaves and another joins, do not ask the same average-replacement problem with different ages. Choose a genuinely different concept or reasoning pattern.
-For numerical questions, change both the underlying scenario and the mathematical setup, not just the values. For verbal questions, avoid the same sentence, target word, grammar error, or answer choices. For technical questions, avoid asking the same fact/concept in a near-identical form.
-Within this 20-question batch, every question must test a distinct problem or concept. Avoid repeated templates across categories too.
-Use the previous questions as a strict exclusion list, not as examples to imitate.
+CATEGORY: ${category}
+CATEGORY GUIDANCE: ${categoryGuidance[category]}
 
-Return one valid JSON object only, with this exact structure:
-{"questions":[{"category":"Quantitative Aptitude","question":"...","options":["A","B","C","D"],"correctIndex":0,"explanation":"..."}]}
+Return only one valid JSON object in this exact shape:
+{"questions":[{"category":"${category}","question":"...","options":["...","...","...","..."],"correctIndex":0,"explanation":"..."}]}
 
-Generate exactly ${countPerCategory} questions for each category, in this order:
-1. Questions 1-${countPerCategory}: Quantitative Aptitude
-2. Questions ${countPerCategory + 1}-${countPerCategory * 2}: Logical Reasoning
-3. Questions ${countPerCategory * 2 + 1}-${countPerCategory * 3}: Verbal Ability
-4. Questions ${countPerCategory * 3 + 1}-${total}: Technical MCQs
+Requirements:
+- Return exactly ${count} questions, all with category exactly "${category}".
+- Each question must be self-contained, precise, and appropriate for entry-level campus placements.
+- Each question must have exactly four distinct options and exactly one correct answer.
+- correctIndex is zero-based (0-3) and must point to the genuinely correct option.
+- The concise explanation must support the selected answer and agree with the options.
+- Privately solve/verify every question before returning it. Do not include chain-of-thought.
+- Avoid ambiguous wording, missing assumptions, duplicate options, “all of the above”, and “none of the above”.
+- Questions within this batch must test distinct concepts. Do not repeat or closely paraphrase previously used questions.
+- Keep questions and explanations concise. Return JSON only: no Markdown or extra text.
 
-Category requirements:
-- Quantitative Aptitude: arithmetic, percentages, ratios, averages, profit/loss, time/work, speed/distance. Percentage questions are allowed.
-- Logical Reasoning: sequences, patterns, deductions, arrangements, analytical reasoning.
-- Verbal Ability: grammar, vocabulary, sentence correction, fill-in-the-blanks, comprehension.
-- Technical MCQs: programming, data structures, algorithms, OOP, SQL/DBMS, operating systems, networking.
+PREVIOUSLY USED QUESTIONS (strict exclusion list):
+${exclusionList || "No prior questions supplied. Still make all questions distinct."}
 
-QUALITY, ANSWER-KEY ACCURACY, AND OPTION VALIDATION (highest priority; do not sacrifice this for novelty or speed):
-- Produce assessment-quality questions that a careful human examiner could verify. Every question must be factually correct, self-contained, precise, and appropriate for entry-level campus placements.
-- For EACH item, privately solve it from first principles BEFORE composing the options. Do not guess an answer and then invent a justification.
-- Create four distinct, mutually exclusive options. Exactly one option must be correct under the stated conditions. The other three must be clearly wrong, not arguably correct, equivalent in meaning, or dependent on unstated assumptions.
-- Set correctIndex to the zero-based index (0, 1, 2, or 3) of the option that is actually correct. After writing all options, read the question and options again and verify the indexed option directly answers the question.
-- The explanation must demonstrate why the keyed option is correct. It must agree with correctIndex and the option text. Never let the explanation, answer key, and options contradict one another.
-- For calculations: work out the exact answer independently, recompute it using a second check, check units and arithmetic, and confirm the correct answer appears exactly once in the options. Avoid accidental rounding issues unless rounding is explicitly requested. Ensure ratios and totals are mathematically consistent.
-- For sequences and patterns: use a clear, defensible rule that yields one answer. Do not use a pattern with multiple equally plausible continuations.
-- For logical deductions and seating/arrangement problems: verify that all clues can be satisfied together, that the question contains enough information, and that exactly one listed option follows. If more than one arrangement/answer is possible, rewrite the question.
-- For English grammar: provide enough context to make one answer clearly correct in standard contemporary English. Avoid regional or disputed usage, subjective style preferences, and sentences with multiple valid corrections. For vocabulary, ensure the tested word and its intended meaning are used correctly.
-- For technical questions: use established, stable computer-science facts. For code, mentally trace the exact code and state the language where behavior depends on language. For complexity questions, specify relevant assumptions (for example, sorted input and worst-case complexity). For SQL, specify semantics when needed. Do not mix language-specific rules or outdated terminology.
-- Never fabricate a technical fact, API, output, grammar rule, or definition. If unsure about a fact or cannot prove a unique answer, discard and replace the question with one you can verify confidently.
-- Do not use duplicate options, synonymous options, overlapping ranges, “all of the above,” “none of the above,” trick wording, missing constraints, hidden assumptions, or distractors that could also be correct.
-- Before returning JSON, run a final audit over EVERY item: (1) question is clear, (2) solve independently, (3) exactly four unique options, (4) exactly one correct option, (5) correctIndex points to it, (6) explanation supports it, (7) no contradiction or missing assumption. Rewrite any item that fails any check.
-- Correctness is more important than novelty, variety, or completing the batch quickly. Never keep a questionable item merely to reach the requested count; replace it with a simpler verified item.
-- Maintain novelty too: vary concepts and reasoning structures, not merely names, values, or words. Avoid repeats within this batch and against the exclusion list. Use a broad mix of quantitative operations, logical patterns, verbal constructions, and technical subtopics.
-- Use these exact category names: ${categories.join(", ")}.
-- Do not include IDs, difficulty fields, Markdown, comments, chain-of-thought, or any text outside the JSON. Return only the requested compact JSON object.
-- Keep question wording and explanations concise, but never omit information needed to make the answer uniquely correct.
-PREVIOUSLY USED QUESTIONS (must not be repeated or closely paraphrased):
-${exclusionList || "No prior questions supplied. Still ensure all questions in this batch are novel and distinct."}
-
-Variation seed: ${seed}. Use it only to encourage a different selection of topics and scenarios. Never mention the seed in any question.
+Variation seed: ${seed}. Use it only to vary topics and scenarios; never mention it in questions.
 `;
 
   const generatedResponse = await askModel(
@@ -1688,37 +1672,35 @@ Variation seed: ${seed}. Use it only to encourage a different selection of topic
       {
         role: "system",
         content:
-          "You are a meticulous assessment author and answer-key auditor. Correctness takes priority over speed. Internally solve and verify every MCQ and its options before returning only valid JSON in the requested schema. Never include chain-of-thought or text outside JSON.",
+          "You are a meticulous assessment author and answer-key auditor. Generate only the requested category and schema. Verify each answer internally; return valid compact JSON only, without chain-of-thought.",
       },
       { role: "user", content: prompt },
     ],
-    7000,
+    2200,
     true,
     MINIMAX_APTITUDE_MODEL
   );
 
-  const parsed = extractJson<{ questions: McqQuestion[] }>(
-    generatedResponse
-  );
-  const returnedQuestions = parsed?.questions;
-
-  if (!Array.isArray(returnedQuestions)) {
+  let parsed: { questions?: McqQuestion[] };
+  try {
+    parsed = extractJson<{ questions: McqQuestion[] }>(generatedResponse);
+  } catch (error) {
     throw new Error(
-      "MiniMax did not return a valid question list. Please try again."
+      `${category}: the AI returned invalid or incomplete JSON. ${error instanceof Error ? error.message : "Please retry."}`
     );
   }
 
-  // Models sometimes return extra items. Validate candidates, remove exact
-  // duplicate wording, then select the required quota from each category.
-  const validByCategory = new Map<McqCategory, McqQuestion[]>(
-    categories.map((category) => [category, []])
-  );
+  if (!Array.isArray(parsed?.questions)) {
+    throw new Error(`${category}: the AI did not return a valid question list.`);
+  }
+
+  const validQuestions: McqQuestion[] = [];
   const seenQuestions = new Set<string>();
 
-  for (const item of returnedQuestions) {
+  for (const item of parsed.questions) {
     if (
       !item ||
-      !categories.includes(item.category) ||
+      item.category !== category ||
       typeof item.question !== "string" ||
       !item.question.trim() ||
       !Array.isArray(item.options) ||
@@ -1741,38 +1723,92 @@ Variation seed: ${seed}. Use it only to encourage a different selection of topic
     if (seenQuestions.has(normalizedQuestion)) continue;
     seenQuestions.add(normalizedQuestion);
 
-    validByCategory.get(item.category)!.push({
+    validQuestions.push({
       ...item,
+      category,
       question: item.question.trim(),
       options: item.options.map((option) => option.trim()),
       explanation: item.explanation.trim(),
     });
   }
 
-  const selectedQuestions: McqQuestion[] = [];
-  const selectedCounts: Record<string, number> = {};
-
-  for (const category of categories) {
-    const candidates = shuffle(validByCategory.get(category) ?? []);
-    if (candidates.length < countPerCategory) {
-      throw new Error(
-        `MiniMax returned only ${candidates.length} valid, unique questions for ${category}; need ${countPerCategory}. Please try again.`
-      );
-    }
-    selectedQuestions.push(...candidates.slice(0, countPerCategory));
-    selectedCounts[category] = countPerCategory;
+  if (validQuestions.length < count) {
+    throw new Error(
+      `${category}: the AI returned only ${validQuestions.length} valid, unique questions; ${count} are required. Please retry the round.`
+    );
   }
 
-  if (selectedQuestions.length !== total) {
-    throw new Error(`Could not prepare ${total} valid questions. Please try again.`);
+  const selected = shuffle(validQuestions).slice(0, count);
+  console.info("[Interview AI] MCQ category batch completed", {
+    model: MINIMAX_APTITUDE_MODEL,
+    category,
+    requested: count,
+    returnedByModel: parsed.questions.length,
+    selected: selected.length,
+  });
+
+  return selected;
+}
+
+async function generateMcqBatch(
+  categories: McqCategory[],
+  countPerCategory: number,
+  seed: string,
+  excludedQuestions: string[] = []
+): Promise<McqQuestion[]> {
+  // Each category gets its own smaller request. Promise.all runs them in
+  // parallel, while preserving category-specific errors for troubleshooting.
+  const batches = await Promise.allSettled(
+    categories.map((category) =>
+      generateMcqCategory(
+        category,
+        countPerCategory,
+        `${seed}-${category}`,
+        excludedQuestions
+      )
+    )
+  );
+
+  const failed = batches
+    .map((result, index) => ({ result, category: categories[index] }))
+    .filter(
+      (item): item is { result: PromiseRejectedResult; category: McqCategory } =>
+        item.result.status === "rejected"
+    );
+
+  if (failed.length) {
+    const details = failed
+      .map(({ result, category }) => {
+        const reason = result.reason;
+        const message = reason instanceof Error ? reason.message : String(reason);
+        return `${category}: ${message}`;
+      })
+      .join(" | ");
+    console.error("[Interview AI] MCQ category generation failed", details);
+    throw new Error(`Could not prepare the Online Assessment. ${details}`);
+  }
+
+  const selectedQuestions = batches.flatMap((result) =>
+    result.status === "fulfilled" ? result.value : []
+  );
+  const expectedTotal = categories.length * countPerCategory;
+
+  if (selectedQuestions.length !== expectedTotal) {
+    throw new Error(
+      `Could not prepare all ${expectedTotal} Online Assessment questions. Please retry the round.`
+    );
   }
 
   console.info("[Interview AI] MCQ generation completed", {
     model: MINIMAX_APTITUDE_MODEL,
-    requested: total,
-    returnedByModel: returnedQuestions.length,
+    requested: expectedTotal,
     selected: selectedQuestions.length,
-    categories: selectedCounts,
+    categories: Object.fromEntries(
+      categories.map((category) => [
+        category,
+        selectedQuestions.filter((question) => question.category === category).length,
+      ])
+    ),
   });
 
   return shuffle(selectedQuestions);
@@ -1920,7 +1956,7 @@ export async function POST(request: Request) {
         session.codingQuestions = selectCodingQuestions(4);
       }
 
-      // Generate all 20 questions in one request.
+      // Generate four smaller category batches in parallel (5 questions each).
       if (roundIds[0] === "aptitude") {
         const excludedQuestions = Array.isArray(body.excludedQuestions)
           ? body.excludedQuestions
