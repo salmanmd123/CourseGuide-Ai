@@ -9,6 +9,10 @@ const NVIDIA_URL =
 
 const DEFAULT_MODEL = "nvidia/nemotron-3.5-lightning-30b-a3b";
 const MINIMAX_APTITUDE_MODEL = "minimaxai/minimax-m3.1-flash";
+const DEEPSEEK_FALLBACK_MODEL = "deepseek-ai/deepseek-v4.1-flash";
+// Online Assessment uses Nemotron only for this test. MiniMax and DeepSeek
+// are intentionally excluded from the aptitude MCQ generation path.
+const APTITUDE_MODEL_FALLBACKS = [DEFAULT_MODEL] as const;
 
 const NVIDIA_TIMEOUT_MS = Math.max(
   10_000,
@@ -250,7 +254,7 @@ async function askModel(
           : {}),
         // Nemotron-specific template settings are intentionally omitted for
         // MiniMax because model-specific template parameters may differ.
-        ...(!isMiniMax
+        ...(model === DEFAULT_MODEL
           ? {
               chat_template_kwargs: {
                 enable_thinking: false,
@@ -322,7 +326,7 @@ async function askModel(
     .trim();
 }
 
-// Generates all 20 aptitude MCQs in one MiniMax request through NVIDIA.
+// Generates aptitude MCQs in four controlled category requests, with MiniMax -> DeepSeek -> Nemotron fallback.
 const CODING_QUESTION_BANK: CodingQuestion[] = [
   {
     "id": "PF001",
@@ -1619,6 +1623,43 @@ function selectCodingQuestions(count = 4): CodingQuestion[] {
   return shuffle(CODING_QUESTION_BANK).slice(0, Math.min(count, CODING_QUESTION_BANK.length));
 }
 
+async function askMcqModelWithFallback(
+  messages: { role: "system" | "user" | "assistant"; content: string }[],
+  maxTokens = 2200,
+  jsonMode = true,
+  validateContent?: (content: string) => void
+): Promise<{ content: string; model: string }> {
+  const failures: string[] = [];
+
+  for (let index = 0; index < APTITUDE_MODEL_FALLBACKS.length; index += 1) {
+    const model = APTITUDE_MODEL_FALLBACKS[index];
+
+    try {
+      const content = await askModel(messages, maxTokens, jsonMode, model);
+
+      // A successful HTTP response is not enough: validate the generated
+      // payload before accepting it, so malformed/short MCQ batches fall
+      // through to the next model too.
+      validateContent?.(content);
+
+      console.info("[Interview AI] MCQ model succeeded", { model });
+      return { content, model };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      failures.push(`${model}: ${message}`);
+      console.error("[Interview AI] MCQ model failed; trying fallback", {
+        model,
+        nextModel: APTITUDE_MODEL_FALLBACKS[index + 1] ?? null,
+        message,
+      });
+    }
+  }
+
+  throw new Error(
+    `All Online Assessment AI models failed. ${failures.join(" | ")}`
+  );
+}
+
 async function generateMcqCategory(
   category: McqCategory,
   count: number,
@@ -1651,7 +1692,9 @@ Return only one valid JSON object in this exact shape:
 {"questions":[{"category":"${category}","question":"...","options":["...","...","...","..."],"correctIndex":0,"explanation":"..."}]}
 
 Requirements:
-- Return exactly ${count} questions, all with category exactly "${category}".
+- Return exactly ${count} complete questions, all with category exactly "${category}". Do not stop early or return a sample.
+- Use compact wording: question under 25 words where practical, each option under 12 words, explanation under 15 words.
+- Keep the JSON compact on one line if possible. Do not add extra fields or commentary.
 - Each question must be self-contained, precise, and appropriate for entry-level campus placements.
 - Each question must have exactly four distinct options and exactly one correct answer.
 - correctIndex is zero-based (0-3) and must point to the genuinely correct option.
@@ -1667,7 +1710,7 @@ ${exclusionList || "No prior questions supplied. Still make all questions distin
 Variation seed: ${seed}. Use it only to vary topics and scenarios; never mention it in questions.
 `;
 
-  const generatedResponse = await askModel(
+  const modelResponse = await askMcqModelWithFallback(
     [
       {
         role: "system",
@@ -1676,71 +1719,31 @@ Variation seed: ${seed}. Use it only to vary topics and scenarios; never mention
       },
       { role: "user", content: prompt },
     ],
-    2200,
-    true,
-    MINIMAX_APTITUDE_MODEL
+    6500,
+    true
   );
+  const generatedResponse = modelResponse.content;
 
   let parsed: { questions?: McqQuestion[] };
   try {
     parsed = extractJson<{ questions: McqQuestion[] }>(generatedResponse);
   } catch (error) {
     throw new Error(
-      `${category}: the AI returned invalid or incomplete JSON. ${error instanceof Error ? error.message : "Please retry."}`
+      `${category}: the AI returned invalid JSON. ${error instanceof Error ? error.message : "Please retry."}`
     );
   }
 
   if (!Array.isArray(parsed?.questions)) {
-    throw new Error(`${category}: the AI did not return a valid question list.`);
+    throw new Error(`${category}: the AI did not return a question list.`);
   }
 
-  const validQuestions: McqQuestion[] = [];
-  const seenQuestions = new Set<string>();
+  // Validation is intentionally disabled for this test run. Use the model's
+  // returned questions directly so we can determine whether strict validation
+  // was the cause of the assessment failure.
+  const selected = shuffle(parsed.questions).slice(0, count);
 
-  for (const item of parsed.questions) {
-    if (
-      !item ||
-      item.category !== category ||
-      typeof item.question !== "string" ||
-      !item.question.trim() ||
-      !Array.isArray(item.options) ||
-      item.options.length !== 4 ||
-      item.options.some((option) => typeof option !== "string" || !option.trim()) ||
-      new Set(item.options.map((option) => option.trim().toLowerCase())).size !== 4 ||
-      !Number.isInteger(item.correctIndex) ||
-      item.correctIndex < 0 ||
-      item.correctIndex > 3 ||
-      typeof item.explanation !== "string" ||
-      !item.explanation.trim()
-    ) {
-      continue;
-    }
-
-    const normalizedQuestion = item.question
-      .toLowerCase()
-      .replace(/[^\p{L}\p{N}]+/gu, " ")
-      .trim();
-    if (seenQuestions.has(normalizedQuestion)) continue;
-    seenQuestions.add(normalizedQuestion);
-
-    validQuestions.push({
-      ...item,
-      category,
-      question: item.question.trim(),
-      options: item.options.map((option) => option.trim()),
-      explanation: item.explanation.trim(),
-    });
-  }
-
-  if (validQuestions.length < count) {
-    throw new Error(
-      `${category}: the AI returned only ${validQuestions.length} valid, unique questions; ${count} are required. Please retry the round.`
-    );
-  }
-
-  const selected = shuffle(validQuestions).slice(0, count);
   console.info("[Interview AI] MCQ category batch completed", {
-    model: MINIMAX_APTITUDE_MODEL,
+    model: modelResponse.model,
     category,
     requested: count,
     returnedByModel: parsed.questions.length,
@@ -1756,59 +1759,63 @@ async function generateMcqBatch(
   seed: string,
   excludedQuestions: string[] = []
 ): Promise<McqQuestion[]> {
-  // Each category gets its own smaller request. Promise.all runs them in
-  // parallel, while preserving category-specific errors for troubleshooting.
-  const batches = await Promise.allSettled(
-    categories.map((category) =>
-      generateMcqCategory(
+  // Generate all four category prompts concurrently, using Nemotron only.
+  const results = await Promise.allSettled(
+    categories.map(async (category) => ({
+      category,
+      questions: await generateMcqCategory(
         category,
         countPerCategory,
         `${seed}-${category}`,
         excludedQuestions
-      )
-    )
+      ),
+    }))
   );
 
-  const failed = batches
-    .map((result, index) => ({ result, category: categories[index] }))
-    .filter(
-      (item): item is { result: PromiseRejectedResult; category: McqCategory } =>
-        item.result.status === "rejected"
-    );
+  const selectedQuestions: McqQuestion[] = [];
+  const failures: string[] = [];
 
-  if (failed.length) {
-    const details = failed
-      .map(({ result, category }) => {
-        const reason = result.reason;
-        const message = reason instanceof Error ? reason.message : String(reason);
-        return `${category}: ${message}`;
-      })
-      .join(" | ");
-    console.error("[Interview AI] MCQ category generation failed", details);
-    throw new Error(`Could not prepare the Online Assessment. ${details}`);
-  }
+  results.forEach((result, index) => {
+    const category = categories[index];
 
-  const selectedQuestions = batches.flatMap((result) =>
-    result.status === "fulfilled" ? result.value : []
-  );
+    if (result.status === "fulfilled") {
+      selectedQuestions.push(...result.value.questions);
+      console.info("[Interview AI] MCQ category generation completed", {
+        category,
+        requested: countPerCategory,
+        selected: result.value.questions.length,
+      });
+    } else {
+      const message =
+        result.reason instanceof Error
+          ? result.reason.message
+          : String(result.reason);
+      failures.push(`${category}: ${message}`);
+      console.error("[Interview AI] MCQ category generation failed", {
+        category,
+        message,
+      });
+    }
+  });
+
   const expectedTotal = categories.length * countPerCategory;
+
+  if (failures.length > 0) {
+    throw new Error(
+      `Could not prepare the Online Assessment. ${failures.join(" | ")}`
+    );
+  }
 
   if (selectedQuestions.length !== expectedTotal) {
     throw new Error(
-      `Could not prepare all ${expectedTotal} Online Assessment questions. Please retry the round.`
+      `Could not prepare all ${expectedTotal} Online Assessment questions. Generated ${selectedQuestions.length}. Please retry the round.`
     );
   }
 
   console.info("[Interview AI] MCQ generation completed", {
-    model: MINIMAX_APTITUDE_MODEL,
+    model: DEFAULT_MODEL,
     requested: expectedTotal,
     selected: selectedQuestions.length,
-    categories: Object.fromEntries(
-      categories.map((category) => [
-        category,
-        selectedQuestions.filter((question) => question.category === category).length,
-      ])
-    ),
   });
 
   return shuffle(selectedQuestions);

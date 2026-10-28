@@ -1,7 +1,29 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
-/node_modules
+# ==========================================
+# CourseGuide AI - Git Ignore
+# ==========================================
+
+# Node.js dependencies
+/node_modules/
+
+# Next.js generated files
+/.next/
+/out/
+
+# Production and build output
+/build/
+/dist/
+/coverage/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Vercel
+.vercel/
+
+# Yarn and package manager
 /.pnp
 .pnp.*
 .yarn/*
@@ -10,32 +32,48 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
-/coverage
+# Python virtual environments
+/venv/
+/.venv/
+/language-detector/venv/
+/language-detector/.venv/
 
-# next.js
-/.next/
-/out/
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
 
-# production
-/build
+# Local databases
+*.sqlite
+*.sqlite3
+*.db
 
-# misc
-.DS_Store
-*.pem
+# TypeScript generated cache
+*.tsbuildinfo
 
-# debug
+# Logs and debugging
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+*.log
 
-# env files (can opt-in for committing if needed)
-.env*
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
 
-# vercel
-.vercel
+# Editor settings
+.vscode/
+.idea/
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# Private keys and certificates
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
