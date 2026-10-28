@@ -605,7 +605,7 @@ export default async function DashboardPage() {
 
             <Link
               href="/quizzes"
-              className="group flex min-h-[190px] min-w-0 flex-col justify-between rounded-[24px] sm:rounded-[30px] bg-[#e0e5ec] p-5 sm:min-h-[210px] sm:p-6 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[12px_12px_22px_rgba(163,177,198,0.65),-12px_-12px_22px_rgba(255,255,255,0.9)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)]"
+              className="group flex min-h-[190px] min-w-0 flex-col justify-between rounded-[24px] sm:rounded-[30px] bg-[#e0e5ec] p-5 sm:min-h-[210px] sm:p-6 shadow-[9px_9px_16px_rgba(163,177,198,0.6),-9px_-9px_16px_rgba(255,255,255,0.8)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[12px_12px_22px_rgba(163,177,198,0.65),-12px_-12px_22px_rgba(255,255,255,0.9)] dark:bg-[#1e2229] dark:shadow-[9px_9px_16px_rgba(5,7,10,0.75),-9px_-9px_16px_rgba(43,48,58,0.75)] dark:hover:shadow-[12px_12px_22px_rgba(5,7,10,0.8),-12px_-12px_22px_rgba(43,48,58,0.8)]"
             >
               <div>
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#e0e5ec] text-[orangered] shadow-[inset_3px_3px_6px_rgba(163,177,198,0.6),inset_-3px_-3px_6px_rgba(255,255,255,0.8)] dark:bg-[#1e2229] dark:shadow-[inset_3px_3px_6px_rgba(5,7,10,0.7),inset_-3px_-3px_6px_rgba(43,48,58,0.7)]">

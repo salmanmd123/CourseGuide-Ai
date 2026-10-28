@@ -76,7 +76,7 @@ export default async function ProfilePage() {
           </h1>
 
           <p className="mt-2 max-w-xl text-sm leading-6 text-[#3f3e3e] dark:text-[#a8adb7] sm:text-base">
-            Manage your account and view your learning information.
+            View your account and learning information.
           </p>
         </header>
 

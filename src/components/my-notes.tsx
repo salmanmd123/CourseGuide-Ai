@@ -826,7 +826,7 @@ export default function MyNotes({
         "
       >
         <p className="text-[10px] leading-5 text-[#3f3e3e] dark:text-[#a8adb7]">
-          Your personal notes are stored locally in this browser using IndexedDB. They are not saved in the CourseGuide AI database.
+          Your personal notes are stored locally in this browser using IndexedDB. If you clear your browser data, your notes will be lost. You can export your notes to a Markdown file for backup or import them back later.
         </p>
       </div>
     </div>
