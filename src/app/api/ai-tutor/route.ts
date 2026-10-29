@@ -27,16 +27,28 @@ function getErrorMessage(data: unknown): string {
 
 async function getTranscriptContext(videoUrl: string | null): Promise<string> {
   if (!videoUrl?.trim()) return "";
+
   try {
     const transcript = (await fetchTranscript(videoUrl)) as TranscriptItem[];
-    if (!Array.isArray(transcript)) return "";
-    return transcript.map((item) => {
-      const text = item?.text?.trim();
-      if (!text) return "";
-      const offset = Math.max(0, Number(item.offset) || 0);
-      const timestamp = `${String(Math.floor(offset / 60)).padStart(2, "0")}:${String(Math.floor(offset % 60)).padStart(2, "0")}`;
-      return `[${timestamp}] ${text}`;
-    }).filter(Boolean).join("\n").slice(0, 18000);
+
+    if (!Array.isArray(transcript) || transcript.length === 0) {
+      return "";
+    }
+
+    return transcript
+      .map((item) => {
+        const text = item?.text?.trim();
+        if (!text) return "";
+
+        const offset = Math.max(0, Number(item.offset) || 0);
+        const timestamp = `${String(Math.floor(offset / 60)).padStart(2, "0")}:${String(
+          Math.floor(offset % 60)
+        ).padStart(2, "0")}`;
+
+        return `[${timestamp}] ${text}`;
+      })
+      .filter(Boolean)
+      .join("\n");
   } catch (error) {
     console.warn("AI Tutor transcript unavailable:", error);
     return "";
