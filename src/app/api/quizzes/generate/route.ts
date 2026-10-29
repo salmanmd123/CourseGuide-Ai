@@ -274,8 +274,8 @@ function buildPrompt(
     ? `
 QUESTIONS ALREADY USED — DO NOT REPEAT THESE:
 ${excludedQuestions
-  .map((question, index) => `${index + 1}. ${question}`)
-  .join("\n\n")}
+      .map((question, index) => `${index + 1}. ${question}`)
+      .join("\n\n")}
 
 Create different questions testing different examples, concepts, or scenarios.
 Do not simply reword any question listed above.
@@ -458,8 +458,7 @@ async function generateBatch(
   }
 
   throw new Error(
-    `Quiz generation failed after ${MAX_BATCH_ATTEMPTS} attempts: ${
-      previousError ?? "Unknown error."
+    `Quiz generation failed after ${MAX_BATCH_ATTEMPTS} attempts: ${previousError ?? "Unknown error."
     }`
   );
 }
@@ -575,8 +574,11 @@ export async function POST(request: Request) {
     if (!["EASY", "MEDIUM", "HARD"].includes(difficulty)) {
       return NextResponse.json({ error: "Difficulty must be EASY, MEDIUM, or HARD." }, { status: 400 });
     }
-    if (!Number.isInteger(count) || count < 5 || count > 20) {
-      return NextResponse.json({ error: "Choose between 5 and 20 questions." }, { status: 400 });
+    if (![5, 10].includes(count)) {
+      return NextResponse.json(
+        { error: "Choose either 5 or 10 questions." },
+        { status: 400 }
+      );
     }
 
     const [subject] = await db
